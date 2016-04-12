@@ -1,0 +1,21 @@
+{
+   "version": "1.8.10",
+   
+   "compilerOptions": {
+      "target": "ES5",
+      "declaration": false,
+      "noImplicitAny": false,
+      "removeComments": false,
+      "noLib": false,
+      "out": "game/game.js"
+   },
+   
+   "filesGlob": [
+      "./**/*.ts"
+   ],
+   
+   "files": [
+      "game/game.ts",
+      "Excalibur/dist/Excalibur.d.ts"
+   ]
+}
