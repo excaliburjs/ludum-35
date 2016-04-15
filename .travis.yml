@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+- '5'
+branches:
+  only:
+    - master
+env:
+  global:
+  - GH_REF: github.com/excaliburjs/ludum-35.git
+script:
+  - chmod ugo+x deploy.sh
+  - '[ "${TRAVIS_PULL_REQUEST}" != "false" ] || ./deploy.sh'
