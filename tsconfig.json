@@ -1,13 +1,14 @@
 {
    "version": "1.8.10",
-   
+   "compileOnSave": true,
    "compilerOptions": {
       "target": "ES5",
       "declaration": false,
       "noImplicitAny": false,
       "removeComments": false,
       "noLib": false,
-      "out": "game/game.js"
+      "out": "game/game.js",
+      "watch": true
    },
    
    "filesGlob": [
