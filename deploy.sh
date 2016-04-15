@@ -16,7 +16,7 @@ echo "Compiling TSC"
 tsc --sourcemap "./game/game.ts" --out "./game/game.js"
 
 echo "Copying built files"
-cp -r ./* out
+cp -R $(ls | grep -v '^out$') out
 cd out
 
 echo "Setting commit number ${CURRENT_COMMIT}"
