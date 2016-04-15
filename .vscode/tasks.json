@@ -22,7 +22,7 @@
          "isBuildCommand": true,
          "showOutput": "silent",
          "args": ["tsc"],
-         "problemMatcher": "$tsc"
+         "problemMatcher": "$tsc-watch"
       }
    ]
 }
