@@ -10,6 +10,7 @@ var Stats = (function () {
     }
     return Stats;
 }());
+/// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="analytics.ts" />
 /// <reference path="config.ts" />
 /// <reference path="resources.ts" />
@@ -21,3 +22,4 @@ var game = new ex.Engine({
 });
 game.setAntialiasing(false);
 game.start();
+//# sourceMappingURL=game.js.map
