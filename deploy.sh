@@ -16,7 +16,7 @@ echo "Compiling TSC"
 tsc --sourcemap "./game/game.ts" --out "./game/game.js"
 
 echo "Copying built files"
-cp -R $(ls | grep -v '^(out|Excalibur)$') out
+cp -R $(ls | grep -v '^\(out\|Excalibur\)$') out
 cd out
 
 echo "Setting commit number ${CURRENT_COMMIT}"
