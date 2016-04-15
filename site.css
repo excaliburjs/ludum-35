@@ -1,6 +1,11 @@
 body {
    text-align: center;
+   font: 16px 'Arial', Sans-Serif;
 }
+
+footer { color: #666; }
+
+.rate { font-size: 2em; }
 
 #commit {
   position: absolute;
