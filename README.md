@@ -7,7 +7,6 @@ To run:
 git submodule init
 git submodule update
 git fetch
-git checkout gh-pages
 ```
 
 VS Code:
