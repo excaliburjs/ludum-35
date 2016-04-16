@@ -88,6 +88,8 @@ var Config = {
 /// <reference path="weapon.ts" />
 /// <reference path="resources.ts" />
 /// <reference path="config.ts" />
+/// <reference path="stateful.ts" />
+/// <reference path="gamestate.ts" />
 var Ship = (function (_super) {
     __extends(Ship, _super);
     function Ship(x, y, width, height) {
