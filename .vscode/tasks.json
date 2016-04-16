@@ -9,27 +9,13 @@
 {
 	"version": "0.1.0",
 	"windows": {
-        "command": "cmd",
-		  "args": ["/C"]
+        "command": "tsc"
     },
-    "linux": {
-        "command": "bash"
+    "osx": {
+        "command": "tsc"
     },
 	"isShellCommand": true,	
-	"tasks": [
-      {
-         "taskName": "copy",
-         "args": ["Excalibur\\dist\\Excalibur.js", "excalibur.js"]
-      },
-      {
-         "taskName": "typescript",
-         "suppressTaskName": true,
-         "isBuildCommand": true,
-         "showOutput": "silent",
-         "args": ["tsc"],
-         "problemMatcher": "$tsc-watch"
-      }
-   ]
+	"problemMatcher": "$tsc-watch"
 }
 
 // A task runner that calls the Typescript compiler (tsc) and
