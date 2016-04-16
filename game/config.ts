@@ -5,6 +5,11 @@ var Config = {
    // Ship config
    shipSpeedScale: .2,
    
+   // Camera
+   CameraElasticity: .01,
+	CameraFriction: .21,
+   shipSpeedScale: .2,
+   
    poolSizeIncrement: 100,
    
    // Bullet config
