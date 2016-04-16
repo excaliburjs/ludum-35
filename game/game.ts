@@ -1,4 +1,5 @@
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
+/// <reference path="gamestate.ts" />
 /// <reference path="analytics.ts" />
 /// <reference path="config.ts" />
 /// <reference path="resources.ts" />
@@ -24,14 +25,6 @@ var loader = new ex.Loader();
 for(var res in Resources){
    loader.addResource(Resources[res]);
 }
-var ship;
-function init(){
-   // put game bootstrap in here;
-   ship = new Ship(100, 100, 100, 100);
-  
-   game.add(ship);
-}
-
 
 var cameraVel = new ex.Vector(0, 0);
 game.on('update', (evt: ex.UpdateEvent) => { 
@@ -40,7 +33,7 @@ game.on('update', (evt: ex.UpdateEvent) => {
 	var focus = game.currentScene.camera.getFocus().toVector();
 	
 	// Grab the "destination" position, in the spring equation the displacement location
-	var position = new ex.Vector(ship.x, ship.y);
+	var position = new ex.Vector(GameState.state.ship.x, GameState.state.ship.y);
 	
 	// Calculate the strech vector, using the spring equation
 	// F = kX
@@ -62,4 +55,4 @@ game.on('update', (evt: ex.UpdateEvent) => {
 	
 });
 
-game.start(loader).then(init);
+game.start(loader).then(() => GameState.init(game));

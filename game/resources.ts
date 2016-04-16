@@ -6,5 +6,8 @@ var Resources = {
    PlayerBullet: new ex.Texture('./img/playerbullet.png'),
    CircleBadguySheet: new ex.Texture('./img/circlebadguy.png'),
    TriangleBadguySheet: new ex.Texture('./img/trianglebadguy.png'),
-   SquareBadguySheet: new ex.Texture('./img/squarebadguy.png')
+   SquareBadguySheet: new ex.Texture('./img/squarebadguy.png'),
+   CircleBullet: new ex.Texture('./img/bullets/blueBullet.png'),
+   SquareBullet: new ex.Texture('./img/bullets/greenBullet.png'),
+   TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png')
 };
