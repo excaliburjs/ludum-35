@@ -6,9 +6,13 @@
 
 var game = new ex.Engine({
    canvasElementId: "game",
-   width: 960,
-   height: 640
+   width: Config.width,
+   height: Config.height
 });
 game.setAntialiasing(false);
 
-game.start();
+function init(){
+   // put game bootstrap in here;
+}
+
+game.start().then(init);
