@@ -67,7 +67,7 @@ var Config = {
     spaceFriction: .2,
     poolSizeIncrement: 100,
     // Starfield
-    StarfieldSize: 1000,
+    StarfieldSize: 500,
     StarfieldMinFade: 0.2,
     StarfieldMaxFade: 0.7,
     StarfieldMinFadeRefreshAmount: 0.05,
