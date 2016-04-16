@@ -62,6 +62,16 @@ var Config = {
     CameraFriction: .21,
     shipSpeedScale: .2,
     poolSizeIncrement: 100,
+    // Starfield
+    StarfieldSize: 1000,
+    StarfieldMinFade: 0.2,
+    StarfieldMaxFade: 0.7,
+    StarfieldMinFadeRefreshAmount: 0.05,
+    StarfieldMaxFadeRefreshAmount: 0.15,
+    StarfieldRefreshRate: 300,
+    StarfieldMeteorFreqMin: 2000,
+    StarfieldMeteorFreqMax: 7000,
+    StarfieldMeteorSpeed: 320,
     // Bullet config
     bullets: {
         speed: 200,
@@ -154,7 +164,7 @@ var Bullet = (function (_super) {
         var _this = this;
         _super.call(this, 0, 0, 3, 3, ex.Color.Red);
         this.reset();
-        this.on('exitviewport', function () { return _this.reset(); });
+        this.on('exitviewport', function () { return GameState.state.bullets.despawn(_this); });
     }
     Bullet.prototype.reset = function (state) {
         if (!state) {
@@ -285,6 +295,56 @@ var BadGuyFactory = (function () {
     };
     return BadGuyFactory;
 }());
+var Starfield = (function (_super) {
+    __extends(Starfield, _super);
+    function Starfield() {
+        _super.call(this, 0, 0, 0, 0);
+        this._stars = [];
+    }
+    Starfield.prototype.onInitialize = function (engine) {
+        var _this = this;
+        _super.prototype.onInitialize.call(this, engine);
+        this.setWidth(game.getWidth());
+        this.setHeight(game.getHeight());
+        // generate stars
+        for (var i = 0; i < Config.StarfieldSize; i++) {
+            this._stars.push({
+                x: ex.Util.randomIntInRange(0, this.getWidth()),
+                y: ex.Util.randomIntInRange(0, this.getHeight()),
+                o: ex.Util.randomInRange(Config.StarfieldMinFade, Config.StarfieldMaxFade)
+            });
+        }
+        this._fadeTimer = new ex.Timer(function () { return _this._updateFaded(); }, Config.StarfieldRefreshRate, true);
+        this._meteorTimer = new ex.Timer(function () { return _this._shootMeteor(); }, ex.Util.randomIntInRange(Config.StarfieldMeteorFreqMin, Config.StarfieldMeteorFreqMax), true);
+        game.add(this._fadeTimer);
+        game.add(this._meteorTimer);
+        this._updateFaded();
+    };
+    Starfield.prototype._updateFaded = function () {
+        // randomly choose % stars to fade
+        var totalFaded = Math.floor(this._stars.length *
+            ex.Util.randomInRange(Config.StarfieldMinFadeRefreshAmount, Config.StarfieldMaxFadeRefreshAmount));
+        for (var i = 0; i < totalFaded; i++) {
+            // can overwrite
+            this._stars[ex.Util.randomIntInRange(0, this._stars.length - 1)].o = ex.Util.randomInRange(Config.StarfieldMinFade, Config.StarfieldMaxFade);
+        }
+    };
+    Starfield.prototype._shootMeteor = function () {
+        var dest = new ex.Vector(ex.Util.randomInRange(0, this.getWidth()), ex.Util.randomIntInRange(50, this.getHeight() / 2));
+        var meteor = new ex.Actor(ex.Util.randomIntInRange(0, this.getWidth()), 0, 2, 2, ex.Color.fromRGB(164, 237, 255, 1));
+        meteor.moveBy(dest.x, dest.y, Config.StarfieldMeteorSpeed).asPromise().then(function () { return meteor.kill(); });
+        game.add(meteor);
+        // schedule next metor
+        this._meteorTimer.interval = ex.Util.randomIntInRange(Config.StarfieldMeteorFreqMin, Config.StarfieldMeteorFreqMax);
+    };
+    Starfield.prototype.draw = function (ctx, delta) {
+        for (var i = 0; i < this._stars.length; i++) {
+            ctx.fillStyle = ex.Color.fromRGB(255, 255, 255, this._stars[i].o);
+            ctx.fillRect(this._stars[i].x, this._stars[i].y, 1, 1);
+        }
+    };
+    return Starfield;
+}(ex.UIActor));
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="gamestate.ts" />
 /// <reference path="analytics.ts" />
@@ -293,6 +353,7 @@ var BadGuyFactory = (function () {
 /// <reference path="stats.ts" />
 /// <reference path="ship.ts" />
 /// <reference path="badguyfactory.ts" />
+/// <reference path="starfield.ts" />
 var game = new ex.Engine({
     canvasElementId: "game",
     width: Config.width,
@@ -340,5 +401,9 @@ game.on('update', function (evt) {
     updateCamera(evt);
     updateDispatchers(evt);
 });
-game.start(loader).then(function () { return GameState.init(game); });
+game.start(loader).then(function () {
+    var sf = new Starfield();
+    game.add(sf);
+    GameState.init(game);
+});
 //# sourceMappingURL=game.js.map

@@ -6,6 +6,7 @@
 /// <reference path="stats.ts" />
 /// <reference path="ship.ts" />
 /// <reference path="badguyfactory.ts" />
+/// <reference path="starfield.ts" />
 
 
 var game = new ex.Engine({
@@ -69,4 +70,8 @@ game.on('update', (evt: ex.UpdateEvent) => {
 	
 });
 
-game.start(loader).then(() => GameState.init(game));
+game.start(loader).then(() => {
+	var sf = new Starfield();
+	game.add(sf);
+	GameState.init(game);
+});
