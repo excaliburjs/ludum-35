@@ -27,7 +27,7 @@ class BadGuyFactory {
       for(var i = 0; i < numberOfBaddies; i++){
          //todo engine.add(new BadGuy());
          
-         engine.add(new Badguy(ex.Util.randomInRange(-400, 400), ex.Util.randomInRange(-400, 400), 100, 100, ex.Util.randomIntInRange(0, 2)));
+         engine.add(new Badguy(ex.Util.randomInRange(-400, 400), ex.Util.randomInRange(-400, 400), 32, 32, ex.Util.randomIntInRange(0, 2)));
       }
    }
    
