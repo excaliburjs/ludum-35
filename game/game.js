@@ -58,9 +58,10 @@ var Config = {
     width: 960,
     height: 640,
     // Camera
-    CameraElasticity: .01,
-    CameraFriction: .21,
+    CameraElasticity: .08,
+    CameraFriction: .41,
     shipSpeedScale: .2,
+    spaceFriction: .2,
     poolSizeIncrement: 100,
     // Starfield
     StarfieldSize: 1000,
@@ -141,6 +142,9 @@ var Ship = (function (_super) {
             GameState.state.ship.dy = dy * Config.shipSpeedScale;
             GameState.state.ship.rotation = (new ex.Vector(dx, dy)).toAngle();
         });
+        var oppVel = new ex.Vector(this.dx, this.dy).scale(-1).scale(Config.spaceFriction);
+        this.dx += oppVel.x;
+        this.dy += oppVel.y;
         this.state.weapon.update(evt.delta);
     };
     Ship.prototype.predraw = function (evt) {
