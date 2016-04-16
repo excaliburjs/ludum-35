@@ -32,7 +32,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       //var TriangleBadguySheet = new ex.SpriteSheet(Resources.TriangleBadguySheet, 5, 1, 48, 48);
 
       this.scale.setTo(2,2);
-      this.anchor.setTo(.1, .1);
+      //this.anchor.setTo(.1, .1);
       this.setCenterDrawing(true);
       this.onInitialize = (engine: ex.Engine) => {
          var badguy = this;

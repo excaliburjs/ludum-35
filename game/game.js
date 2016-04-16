@@ -293,7 +293,7 @@ var Badguy = (function (_super) {
         //var SquareBadguySheet = new ex.SpriteSheet(Resources.SquareBadguySheet, 5, 1, 48, 48);
         //var TriangleBadguySheet = new ex.SpriteSheet(Resources.TriangleBadguySheet, 5, 1, 48, 48);
         this.scale.setTo(2, 2);
-        this.anchor.setTo(.1, .1);
+        //this.anchor.setTo(.1, .1);
         this.setCenterDrawing(true);
         this.onInitialize = function (engine) {
             var badguy = _this;
@@ -349,7 +349,7 @@ var BadGuyFactory = (function () {
         //console.log(`Dispatch ${numberOfBaddies}`);
         for (var i = 0; i < numberOfBaddies; i++) {
             //todo engine.add(new BadGuy());
-            engine.add(new Badguy(ex.Util.randomInRange(-400, 400), ex.Util.randomInRange(-400, 400), 100, 100, ex.Util.randomIntInRange(0, 2)));
+            engine.add(new Badguy(ex.Util.randomInRange(-400, 400), ex.Util.randomInRange(-400, 400), 32, 32, ex.Util.randomIntInRange(0, 2)));
         }
     };
     BadGuyFactory.prototype.start = function () {
