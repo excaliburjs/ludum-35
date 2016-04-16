@@ -10,6 +10,17 @@ var Config = {
    
    poolSizeIncrement: 100,
       
+   // Starfield
+   StarfieldSize: 1000,
+   StarfieldMinFade: 0.2,
+   StarfieldMaxFade: 0.7,
+   StarfieldMinFadeRefreshAmount: 0.05,
+   StarfieldMaxFadeRefreshAmount: 0.15,
+   StarfieldRefreshRate: 300, // ms
+   StarfieldMeteorFreqMin: 2000,
+   StarfieldMeteorFreqMax: 7000,
+   StarfieldMeteorSpeed: 320,
+      
    // Bullet config
    bullets: {
       speed: 200, // px/s
