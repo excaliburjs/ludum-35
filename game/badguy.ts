@@ -7,6 +7,7 @@ interface BadguyState {
    y: number;
    d: ex.Vector;
    speed: number;
+   size: number;
    shape: Shape;
    
 }
@@ -28,6 +29,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
             y: 0,
             d: new ex.Vector(0, 0),
             speed: Config.badguy.speed,
+            size: Config.badguy.size,
             shape: Shape.Shape1
          }
          
