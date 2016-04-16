@@ -26,7 +26,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
          
       var ActiveType = BadguyTypes[badguytype];
       
-      var BadGuySheet = new ex.SpriteSheet(ActiveType, 5, 1, 32, 32);
+      var BadGuySheet = new ex.SpriteSheet(ActiveType, 2, 1, 32, 32);
       //var CircleBadguySheet = new ex.SpriteSheet(Resources.CircleBadguySheet, 5, 1, 48, 48);
       //var SquareBadguySheet = new ex.SpriteSheet(Resources.SquareBadguySheet, 5, 1, 48, 48);
       //var TriangleBadguySheet = new ex.SpriteSheet(Resources.TriangleBadguySheet, 5, 1, 48, 48);
@@ -37,7 +37,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       this.onInitialize = (engine: ex.Engine) => {
          var badguy = this;
          var anim = BadGuySheet.getAnimationForAll(engine, 150);
-         anim.rotation = Math.PI/2;
+         
          anim.loop = true;
          anim.anchor.setTo(.3, .3);
          this.addDrawing('default', anim);

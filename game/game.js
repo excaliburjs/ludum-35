@@ -63,8 +63,12 @@ var Config = {
     // Camera
     CameraElasticity: .08,
     CameraFriction: .41,
-    shipSpeedScale: .2,
-    spaceFriction: .2,
+    shipSpeedScale: 2,
+    spaceFriction: .01,
+    // Baddies
+    SpawnInterval: 1500,
+    MinEnemiesPerSpawn: 1,
+    MaxEnemiesPerSpawn: 5,
     poolSizeIncrement: 100,
     // Starfield
     StarfieldSize: 500,
@@ -271,7 +275,59 @@ var Stats = (function () {
     }
     return Stats;
 }());
+/// <reference path="stateful.ts" />
+/// <reference path="shape.ts" />
+var Badguy = (function (_super) {
+    __extends(Badguy, _super);
+    function Badguy(x, y, width, height, badguytype) {
+        var _this = this;
+        _super.call(this, x, y, width, height);
+        var BadguyTypes = [
+            Resources.TriangleBadguySheet,
+            Resources.SquareBadguySheet,
+            Resources.CircleBadguySheet
+        ];
+        var ActiveType = BadguyTypes[badguytype];
+        var BadGuySheet = new ex.SpriteSheet(ActiveType, 2, 1, 32, 32);
+        //var CircleBadguySheet = new ex.SpriteSheet(Resources.CircleBadguySheet, 5, 1, 48, 48);
+        //var SquareBadguySheet = new ex.SpriteSheet(Resources.SquareBadguySheet, 5, 1, 48, 48);
+        //var TriangleBadguySheet = new ex.SpriteSheet(Resources.TriangleBadguySheet, 5, 1, 48, 48);
+        this.scale.setTo(2, 2);
+        this.anchor.setTo(.1, .1);
+        this.setCenterDrawing(true);
+        this.onInitialize = function (engine) {
+            var badguy = _this;
+            var anim = BadGuySheet.getAnimationForAll(engine, 150);
+            anim.loop = true;
+            anim.anchor.setTo(.3, .3);
+            _this.addDrawing('default', anim);
+            //initialize badguy
+            badguy.on('preupdate', function (evt) {
+                badguy.dx = Config.badguy.speed;
+                badguy.dy = Config.badguy.speed;
+            });
+        };
+    }
+    Badguy.prototype.reset = function (state) {
+        if (!state) {
+            this.state = {
+                x: 0,
+                y: 0,
+                d: new ex.Vector(0, 0),
+                speed: Config.badguy.speed,
+                size: Config.badguy.size,
+                shape: Shape.Shape1
+            };
+        }
+        else {
+            this.state = state;
+        }
+        return this;
+    };
+    return Badguy;
+}(ex.Actor));
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
+/// <reference path="badguy.ts" />
 var BadGuyFactory = (function () {
     function BadGuyFactory(frequencySeconds, minEnemy, maxEnemy) {
         this.frequencySeconds = frequencySeconds;
@@ -290,8 +346,10 @@ var BadGuyFactory = (function () {
         }
     };
     BadGuyFactory.prototype.spawn = function (engine, numberOfBaddies) {
-        console.log("Dispatch " + numberOfBaddies);
+        //console.log(`Dispatch ${numberOfBaddies}`);
         for (var i = 0; i < numberOfBaddies; i++) {
+            //todo engine.add(new BadGuy());
+            engine.add(new Badguy(ex.Util.randomInRange(-400, 400), ex.Util.randomInRange(-400, 400), 100, 100, ex.Util.randomIntInRange(0, 2)));
         }
     };
     BadGuyFactory.prototype.start = function () {
@@ -400,7 +458,7 @@ function updateCamera(evt) {
     // Set new position on camera
     game.currentScene.camera.setFocus(focus.x, focus.y);
 }
-var badGuyFactory = new BadGuyFactory(500, 1, 11);
+var badGuyFactory = new BadGuyFactory(Config.SpawnInterval, Config.MinEnemiesPerSpawn, Config.MaxEnemiesPerSpawn);
 badGuyFactory.start();
 function updateDispatchers(evt) {
     badGuyFactory.update(game, evt.delta);

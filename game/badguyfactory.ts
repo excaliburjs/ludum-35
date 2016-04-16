@@ -1,4 +1,6 @@
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
+/// <reference path="badguy.ts" />
+
 
 
 class BadGuyFactory {
@@ -21,10 +23,11 @@ class BadGuyFactory {
    }
    
    spawn(engine: ex.Engine, numberOfBaddies: number){
-      console.log(`Dispatch ${numberOfBaddies}`);
+      //console.log(`Dispatch ${numberOfBaddies}`);
       for(var i = 0; i < numberOfBaddies; i++){
          //todo engine.add(new BadGuy());
          
+         engine.add(new Badguy(ex.Util.randomInRange(-400, 400), ex.Util.randomInRange(-400, 400), 100, 100, ex.Util.randomIntInRange(0, 2)));
       }
    }
    
@@ -32,7 +35,7 @@ class BadGuyFactory {
       this._started = true;
       this._currentTime = Date.now();
       this._futureDispatchTime = this._currentTime + (this.frequencySeconds);      
-   } 
+   }
    
    stop(){
       this._started = false;
