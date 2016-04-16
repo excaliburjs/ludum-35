@@ -27,7 +27,7 @@ class Bullet extends ex.Actor implements Stateful<BulletState> {
       
       if (!state) {
          
-         //this.visible = false;
+         this.visible = false;
          // defaults
          this.state = {
             x: 0,
