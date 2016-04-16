@@ -15,13 +15,17 @@ var Config = {
     width: 960,
     height: 640,
     // Ship config
-    shipSpeedScale: .2
+    shipSpeedScale: .2,
+    // Camera
+    CameraElasticity: .01,
+    CameraFriction: .21
 };
 var Resources = {
     ShipSpriteSheet: new ex.Texture('./img/ship.png'),
     CircleSheildSheet: new ex.Texture('./img/circlesheild.png'),
     SquareSheildSheet: new ex.Texture('./img/squaresheild.png'),
-    TriangleSheildSheet: new ex.Texture('./img/trianglesheild.png')
+    TriangleSheildSheet: new ex.Texture('./img/trianglesheild.png'),
+    PlayerBullet: new ex.Texture('./img/playerbullet.png')
 };
 // keep game stats here, score, powerup level, etc
 var Stats = (function () {
@@ -109,10 +113,32 @@ var loader = new ex.Loader();
 for (var res in Resources) {
     loader.addResource(Resources[res]);
 }
+var ship;
 function init() {
     // put game bootstrap in here;
-    var ship = new Ship(100, 100, 100, 100);
+    ship = new Ship(100, 100, 100, 100);
     game.add(ship);
 }
+var cameraVel = new ex.Vector(0, 0);
+game.on('update', function (evt) {
+    // Grab the current focus of the camper
+    var focus = game.currentScene.camera.getFocus().toVector();
+    // Grab the "destination" position, in the spring equation the displacement location
+    var position = new ex.Vector(ship.x, ship.y);
+    // Calculate the strech vector, using the spring equation
+    // F = kX
+    // https://en.wikipedia.org/wiki/Hooke's_law
+    // Apply to the current camera velocity
+    var stretch = position.minus(focus).scale(Config.CameraElasticity);
+    cameraVel = cameraVel.plus(stretch);
+    // Calculate the friction (-1 to apply a force in the opposition of motion)
+    // Apply to the current camera velocity
+    var friction = cameraVel.scale(-1).scale(Config.CameraFriction);
+    cameraVel = cameraVel.plus(friction);
+    // Update position by velocity deltas
+    focus = focus.plus(cameraVel);
+    // Set new position on camera
+    game.currentScene.camera.setFocus(focus.x, focus.y);
+});
 game.start(loader).then(init);
 //# sourceMappingURL=game.js.map
