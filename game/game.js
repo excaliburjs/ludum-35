@@ -158,7 +158,7 @@ var Bullet = (function (_super) {
     }
     Bullet.prototype.reset = function (state) {
         if (!state) {
-            //this.visible = false;
+            this.visible = false;
             // defaults
             this.state = {
                 x: 0,
