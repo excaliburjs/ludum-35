@@ -1,7 +1,7 @@
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 
 class Ship extends ex.Actor {
-   public sheildType: "circle" | "square" | "triangle"
+   public sheildType: "circle" | "square" | "triangle" = "square";
    private _circle: ex.Animation;
    private _triangle: ex.Animation;
    private _square: ex.Animation;
@@ -9,9 +9,9 @@ class Ship extends ex.Actor {
       super(x, y, width, height);
       this.color = ex.Color.Red.clone();
       var shipSheet = new ex.SpriteSheet(Resources.ShipSpriteSheet, 3, 1, 32, 42);
-      var squareSheild = new ex.SpriteSheet(Resources.SquareSheildSheet, 5, 1, 32, 32);      
-      var circleSheild = new ex.SpriteSheet(Resources.CircleSheildSheet, 5, 1, 32, 32);
-      var triangleSheild = new ex.SpriteSheet(Resources.TriangleSheildSheet, 5, 1, 32, 32);
+      var squareSheild = new ex.SpriteSheet(Resources.SquareSheildSheet, 5, 1, 48, 48);      
+      var circleSheild = new ex.SpriteSheet(Resources.CircleSheildSheet, 5, 1, 48, 48);
+      var triangleSheild = new ex.SpriteSheet(Resources.TriangleSheildSheet, 5, 1, 48, 48);
       
       this.scale.setTo(2,2);
       this.anchor.setTo(.5, .5);
@@ -24,13 +24,13 @@ class Ship extends ex.Actor {
          anim.anchor.setTo(.5, .5);
          this.addDrawing('default', anim);
          
-         this._circle = circleSheild.getAnimationForAll(engine, 150);
+         this._circle = circleSheild.getAnimationForAll(engine, 50);
          this._circle.loop = true;
          this._circle.anchor.setTo(.5, .5);
-         this._square = squareSheild.getAnimationForAll(engine, 150);
+         this._square = squareSheild.getAnimationForAll(engine, 50);
          this._square.loop = true;
          this._square.anchor.setTo(.5, .5);
-         this._triangle = triangleSheild.getAnimationForAll(engine, 150);
+         this._triangle = triangleSheild.getAnimationForAll(engine, 50);
          this._triangle.loop = true;
          this._triangle.anchor.setTo(.5, .5);
          //initialize ship 
@@ -48,9 +48,17 @@ class Ship extends ex.Actor {
          });
          
          
-         ship.on('postdraw', (evt: ex.PostDrawEvent) => {
+         ship.on('predraw', (evt: ex.PostDrawEvent) => {
+            if(this.sheildType === "circle"){
+               this._circle.draw(evt.ctx, 0, 0);
+            }
             
-            this._square.draw(evt.ctx, 0, 0);
+            if(this.sheildType === "square"){
+               this._square.draw(evt.ctx, 0, 0);
+            }
+            if(this.sheildType === "triangle"){
+               this._triangle.draw(evt.ctx, 0, 0);
+            }
          });
    
       }

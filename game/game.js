@@ -35,11 +35,12 @@ var Ship = (function (_super) {
     function Ship(x, y, width, height) {
         var _this = this;
         _super.call(this, x, y, width, height);
+        this.sheildType = "square";
         this.color = ex.Color.Red.clone();
         var shipSheet = new ex.SpriteSheet(Resources.ShipSpriteSheet, 3, 1, 32, 42);
-        var squareSheild = new ex.SpriteSheet(Resources.SquareSheildSheet, 5, 1, 32, 32);
-        var circleSheild = new ex.SpriteSheet(Resources.CircleSheildSheet, 5, 1, 32, 32);
-        var triangleSheild = new ex.SpriteSheet(Resources.TriangleSheildSheet, 5, 1, 32, 32);
+        var squareSheild = new ex.SpriteSheet(Resources.SquareSheildSheet, 5, 1, 48, 48);
+        var circleSheild = new ex.SpriteSheet(Resources.CircleSheildSheet, 5, 1, 48, 48);
+        var triangleSheild = new ex.SpriteSheet(Resources.TriangleSheildSheet, 5, 1, 48, 48);
         this.scale.setTo(2, 2);
         this.anchor.setTo(.5, .5);
         this.setCenterDrawing(true);
@@ -50,13 +51,13 @@ var Ship = (function (_super) {
             anim.loop = true;
             anim.anchor.setTo(.5, .5);
             _this.addDrawing('default', anim);
-            _this._circle = circleSheild.getAnimationForAll(engine, 150);
+            _this._circle = circleSheild.getAnimationForAll(engine, 50);
             _this._circle.loop = true;
             _this._circle.anchor.setTo(.5, .5);
-            _this._square = squareSheild.getAnimationForAll(engine, 150);
+            _this._square = squareSheild.getAnimationForAll(engine, 50);
             _this._square.loop = true;
             _this._square.anchor.setTo(.5, .5);
-            _this._triangle = triangleSheild.getAnimationForAll(engine, 150);
+            _this._triangle = triangleSheild.getAnimationForAll(engine, 50);
             _this._triangle.loop = true;
             _this._triangle.anchor.setTo(.5, .5);
             //initialize ship 
@@ -70,8 +71,16 @@ var Ship = (function (_super) {
                     ship.rotation = (new ex.Vector(dx, dy)).toAngle();
                 });
             });
-            ship.on('postdraw', function (evt) {
-                _this._square.draw(evt.ctx, 0, 0);
+            ship.on('predraw', function (evt) {
+                if (_this.sheildType === "circle") {
+                    _this._circle.draw(evt.ctx, 0, 0);
+                }
+                if (_this.sheildType === "square") {
+                    _this._square.draw(evt.ctx, 0, 0);
+                }
+                if (_this.sheildType === "triangle") {
+                    _this._triangle.draw(evt.ctx, 0, 0);
+                }
             });
         };
     }
