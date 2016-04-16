@@ -3,5 +3,9 @@ var Config = {
    height: 640,
    
    // Ship config
-   shipSpeedScale: .2
+   shipSpeedScale: .2,
+   
+   // Camera
+   CameraElasticity: .01,
+	CameraFriction: .21,
 }
