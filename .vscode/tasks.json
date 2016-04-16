@@ -8,9 +8,14 @@
 
 {
 	"version": "0.1.0",
-	"command": "cmd",
-	"isShellCommand": true,   
-	"args": ["/C"],
+	"windows": {
+        "command": "cmd",
+		  "args": ["/C"]
+    },
+    "linux": {
+        "command": "bash"
+    },
+	"isShellCommand": true,	
 	"tasks": [
       {
          "taskName": "copy",
