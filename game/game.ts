@@ -19,21 +19,17 @@ game.input.keyboard.on('down', (evt: ex.Input.KeyEvent) => {
    }
 });
 
+// create loader
+var loader = new ex.Loader();
+for(var res in Resources){
+   loader.addResource(Resources[res]);
+}
+
 function init(){
    // put game bootstrap in here;
    var ship = new Ship(100, 100, 100, 100);
-   ship.on('preupdate', (evt: ex.PreUpdateEvent) => {
-      //console.log(`Update: ${evt.delta}`);
-      evt.engine.input.pointers.primary.on('down', (click: ex.Input.PointerEvent) => {
-         var dx = click.x - ship.x;
-         var dy = click.y - ship.y;
-         
-         ship.dx = dx * Config.shipSpeedScale;
-         ship.dy = dy * Config.shipSpeedScale;
-      });
-   });
-   
+  
    game.add(ship);
 }
 
-game.start().then(init);
+game.start(loader).then(init);

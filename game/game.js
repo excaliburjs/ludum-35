@@ -17,7 +17,9 @@ var Config = {
     // Ship config
     shipSpeedScale: .2
 };
-var Resources = {};
+var Resources = {
+    ShipSpriteSheet: new ex.Texture('./img/ship.png')
+};
 // keep game stats here, score, powerup level, etc
 var Stats = (function () {
     function Stats() {
@@ -28,10 +30,31 @@ var Stats = (function () {
 var Ship = (function (_super) {
     __extends(Ship, _super);
     function Ship(x, y, width, height) {
+        var _this = this;
         _super.call(this, x, y, width, height);
         this.color = ex.Color.Red.clone();
+        var shipSheet = new ex.SpriteSheet(Resources.ShipSpriteSheet, 3, 1, 32, 42);
+        this.scale.setTo(2, 2);
+        this.anchor.setTo(.5, .5);
+        this.setCenterDrawing(true);
         this.onInitialize = function (engine) {
+            var ship = _this;
+            var anim = shipSheet.getAnimationForAll(engine, 150);
+            anim.rotation = Math.PI / 2;
+            anim.loop = true;
+            anim.anchor.setTo(.5, .5);
+            _this.addDrawing('default', anim);
             //initialize ship 
+            ship.on('preupdate', function (evt) {
+                //console.log(`Update: ${evt.delta}`);
+                evt.engine.input.pointers.primary.on('down', function (click) {
+                    var dx = click.x - ship.x;
+                    var dy = click.y - ship.y;
+                    ship.dx = dx * Config.shipSpeedScale;
+                    ship.dy = dy * Config.shipSpeedScale;
+                    ship.rotation = (new ex.Vector(dx, dy)).toAngle();
+                });
+            });
         };
     }
     return Ship;
@@ -54,19 +77,15 @@ game.input.keyboard.on('down', function (evt) {
         game.isDebug = !game.isDebug;
     }
 });
+// create loader
+var loader = new ex.Loader();
+for (var res in Resources) {
+    loader.addResource(Resources[res]);
+}
 function init() {
     // put game bootstrap in here;
     var ship = new Ship(100, 100, 100, 100);
-    ship.on('preupdate', function (evt) {
-        //console.log(`Update: ${evt.delta}`);
-        evt.engine.input.pointers.primary.on('down', function (click) {
-            var dx = click.x - ship.x;
-            var dy = click.y - ship.y;
-            ship.dx = dx * Config.shipSpeedScale;
-            ship.dy = dy * Config.shipSpeedScale;
-        });
-    });
     game.add(ship);
 }
-game.start().then(init);
+game.start(loader).then(init);
 //# sourceMappingURL=game.js.map
