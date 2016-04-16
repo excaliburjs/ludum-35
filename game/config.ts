@@ -3,9 +3,10 @@ var Config = {
    height: 640,
       
    // Camera
-   CameraElasticity: .01,
-	CameraFriction: .21,
+   CameraElasticity: .08,
+	CameraFriction: .41,
    shipSpeedScale: .2,
+   spaceFriction: .2,
    
    poolSizeIncrement: 100,
       
