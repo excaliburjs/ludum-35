@@ -47,6 +47,7 @@ var Stats = (function () {
 }());
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="resources.ts" />
+/// <reference path="config.ts" />
 var Ship = (function (_super) {
     __extends(Ship, _super);
     function Ship(x, y, width, height) {
