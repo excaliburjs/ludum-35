@@ -1,6 +1,6 @@
-/*! excalibur - v0.6.0 - 2016-01-19
+/*! excalibur - v0.6.0-custom - 2016-04-16
 * https://github.com/excaliburjs/Excalibur
-* Copyright (c) 2016 ; Licensed BSD-2-Clause*/
+* Copyright (c) 2016 Excalibur.js <https://github.com/excaliburjs/Excalibur/graphs/contributors>; Licensed BSD-2-Clause*/
 if (typeof window === 'undefined') {
     window = { audioContext: function () { return; } };
 }
@@ -1068,7 +1068,10 @@ var ex;
              * Removes elements from the end of the collection
              */
             Collection.prototype.pop = function () {
-                this._endPointer = this._endPointer - 1 < 0 ? 0 : this._endPointer - 1;
+                if (this._endPointer <= 0) {
+                    return undefined;
+                }
+                this._endPointer--;
                 return this._internalArray[this._endPointer];
             };
             /**
@@ -4768,11 +4771,12 @@ var ex;
          * method is part of the actor 'Action' fluent API allowing action chaining.
          * @param angleRadians  The angle to rotate to in radians
          * @param speed         The angular velocity of the rotation specified in radians per second
+         * @param rotationType  The [[RotationType]] to use for this rotation
          */
-        ActionContext.prototype.rotateTo = function (angleRadians, speed) {
+        ActionContext.prototype.rotateTo = function (angleRadians, speed, rotationType) {
             var i = 0, len = this._queues.length;
             for (i; i < len; i++) {
-                this._queues[i].add(new ex.Internal.Actions.RotateTo(this._actors[i], angleRadians, speed));
+                this._queues[i].add(new ex.Internal.Actions.RotateTo(this._actors[i], angleRadians, speed, rotationType));
             }
             return this;
         };
@@ -4782,11 +4786,12 @@ var ex;
          * of the actor 'Action' fluent API allowing action chaining.
          * @param angleRadians  The angle to rotate to in radians
          * @param time          The time it should take the actor to complete the rotation in milliseconds
+         * @param rotationType  The [[RotationType]] to use for this rotation
          */
-        ActionContext.prototype.rotateBy = function (angleRadians, time) {
+        ActionContext.prototype.rotateBy = function (angleRadians, time, rotationType) {
             var i = 0, len = this._queues.length;
             for (i; i < len; i++) {
-                this._queues[i].add(new ex.Internal.Actions.RotateBy(this._actors[i], angleRadians, time));
+                this._queues[i].add(new ex.Internal.Actions.RotateBy(this._actors[i], angleRadians, time, rotationType));
             }
             return this;
         };
@@ -5415,7 +5420,7 @@ var ex;
      * A [[Scene|scene]] has a basic lifecycle that dictacts how it is initialized, updated, and drawn. Once a [[Scene|scene]] is added to
      * the [[Engine|engine]] it will follow this lifecycle.
      *
-     * ![Scene Lifecycle](/assets/images/docs/SceneLifeCycle.png)
+     * ![Scene Lifecycle](/assets/images/docs/SceneLifecycle.png)
      *
      * ## Extending scenes
      *
@@ -5956,7 +5961,7 @@ var ex;
      * An [[Actor|actor]] has a basic lifecycle that dictacts how it is initialized, updated, and drawn. Once an actor is part of a
      * [[Scene|scene]], it will follow this lifecycle.
      *
-     * ![Actor Lifecycle](/assets/images/docs/ActorLifeCycle.png)
+     * ![Actor Lifecycle](/assets/images/docs/ActorLifecycle.png)
      *
      * ## Extending actors
      *
@@ -6263,7 +6268,6 @@ var ex;
              */
             this.opacity = 1;
             this.previousOpacity = 1;
-            this.actions = new ex.ActionContext(this);
             /**
              * Convenience reference to the global logger
              */
@@ -6330,6 +6334,7 @@ var ex;
             this.traits.push(new ex.Traits.OffscreenCulling());
             this.traits.push(new ex.Traits.CapturePointer());
             this.actionQueue = new ex.Internal.Actions.ActionQueue(this);
+            this.actions = new ex.ActionContext(this);
             this.anchor = new ex.Point(.5, .5);
         }
         /**
@@ -6520,25 +6525,25 @@ var ex;
          * Gets the left edge of the actor
          */
         Actor.prototype.getLeft = function () {
-            return this.x;
+            return this.getBounds().left;
         };
         /**
          * Gets the right edge of the actor
          */
         Actor.prototype.getRight = function () {
-            return this.x + this.getWidth();
+            return this.getBounds().right;
         };
         /**
          * Gets the top edge of the actor
          */
         Actor.prototype.getTop = function () {
-            return this.y;
+            return this.getBounds().top;
         };
         /**
          * Gets the bottom edge of the actor
          */
         Actor.prototype.getBottom = function () {
-            return this.y + this.getHeight();
+            return this.getBounds().bottom;
         };
         /**
          * Gets the x value of the Actor in global coordinates
@@ -9907,7 +9912,7 @@ var ex;
      * // loop through dictionary and add to loader
      * for (var loadable in resources) {
      *   if (resources.hasOwnProperty(loadable)) {
-     *     loader.addResource(loadable);
+     *     loader.addResource(resources[loadable]);
      *   }
      * }
      *
@@ -10416,7 +10421,9 @@ var ex;
      * var label = new ex.Label();
      * label.x = 50;
      * label.y = 50;
-     * label.font = "10px Arial";
+     * label.fontFamily = "Arial";
+     * label.fontSize = 10;
+     * lable.fontUnit = ex.FontUnit.Px // pixels are the default
      * label.text = "Foo";
      * label.color = ex.Color.White;
      * label.textAlign = ex.TextAlign.Center;
@@ -10457,7 +10464,8 @@ var ex;
      * var game = new ex.Engine();
      *
      * var label = new ex.Label();
-     * label.font = "12px Foobar, Arial, Sans-Serif";
+     * label.fontFamily = "Foobar, Arial, Sans-Serif";
+     * label.fontSize = 10;
      * label.text = "Hello World";
      *
      * game.add(label);
@@ -11971,7 +11979,7 @@ var ex;
      * scene. Only one [[Scene]] can be active at a time. The engine does not update/draw any other
      * scene, which means any actors will not be updated/drawn if they are part of a deactivated scene.
      *
-     * ![Engine Lifecycle](/assets/images/docs/EngineLifeCycle.png)
+     * ![Engine Lifecycle](/assets/images/docs/EngineLifecycle.png)
      *
      * **Scene Graph**
      *
