@@ -27,9 +27,9 @@ var Config = {
 };
 var Resources = {
     ShipSpriteSheet: new ex.Texture('./img/ship.png'),
-    CircleSheildSheet: new ex.Texture('./img/circlesheild.png'),
-    SquareSheildSheet: new ex.Texture('./img/squaresheild.png'),
-    TriangleSheildSheet: new ex.Texture('./img/trianglesheild.png'),
+    CircleShieldSheet: new ex.Texture('./img/circlesheild.png'),
+    SquareShieldSheet: new ex.Texture('./img/squaresheild.png'),
+    TriangleShieldSheet: new ex.Texture('./img/trianglesheild.png'),
     PlayerBullet: new ex.Texture('./img/playerbullet.png')
 };
 // keep game stats here, score, powerup level, etc
@@ -47,9 +47,9 @@ var Ship = (function (_super) {
         this.sheildType = "square";
         this.color = ex.Color.Red.clone();
         var shipSheet = new ex.SpriteSheet(Resources.ShipSpriteSheet, 3, 1, 32, 42);
-        var squareSheild = new ex.SpriteSheet(Resources.SquareSheildSheet, 5, 1, 48, 48);
-        var circleSheild = new ex.SpriteSheet(Resources.CircleSheildSheet, 5, 1, 48, 48);
-        var triangleSheild = new ex.SpriteSheet(Resources.TriangleSheildSheet, 5, 1, 48, 48);
+        var squareSheild = new ex.SpriteSheet(Resources.SquareShieldSheet, 5, 1, 48, 48);
+        var circleSheild = new ex.SpriteSheet(Resources.CircleShieldSheet, 5, 1, 48, 48);
+        var triangleSheild = new ex.SpriteSheet(Resources.TriangleShieldSheet, 5, 1, 48, 48);
         this.scale.setTo(2, 2);
         this.anchor.setTo(.5, .5);
         this.setCenterDrawing(true);
