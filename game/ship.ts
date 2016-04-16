@@ -3,6 +3,9 @@
 /// <reference path="weapon.ts" />
 /// <reference path="resources.ts" />
 /// <reference path="config.ts" />
+/// <reference path="stateful.ts" />
+/// <reference path="gamestate.ts" />
+
 interface ShipState {
    shieldType: Shape;
    weapon: Weapon;
