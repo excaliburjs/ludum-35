@@ -18,7 +18,7 @@ class Bullet extends ex.Actor implements Stateful<BulletState> {
       super(0, 0, 3, 3, ex.Color.Red);
       
       this.reset();
-      this.on('exitviewport', () => this.reset());
+      this.on('exitviewport', () => GameState.state.bullets.despawn(this));
    }
    
    state: BulletState;
