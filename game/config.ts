@@ -5,8 +5,13 @@ var Config = {
    // Camera
    CameraElasticity: .08,
 	CameraFriction: .41,
-   shipSpeedScale: .2,
-   spaceFriction: .2,
+   shipSpeedScale: 2,
+   spaceFriction: .01,
+   
+   // Baddies
+   SpawnInterval: 1500, //ms
+   MinEnemiesPerSpawn: 1,  
+   MaxEnemiesPerSpawn: 5,
    
    poolSizeIncrement: 100,
       
