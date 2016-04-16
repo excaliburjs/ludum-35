@@ -253,12 +253,46 @@ var Stats = (function () {
     return Stats;
 }());
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
+var BadGuyFactory = (function () {
+    function BadGuyFactory(frequencySeconds, minEnemy, maxEnemy) {
+        this.frequencySeconds = frequencySeconds;
+        this.minEnemy = minEnemy;
+        this.maxEnemy = maxEnemy;
+        this._started = false;
+        this._currentTime = Date.now();
+    }
+    BadGuyFactory.prototype.update = function (engine, delta) {
+        if (this._started) {
+            this._currentTime += delta;
+            if (this._currentTime >= this._futureDispatchTime) {
+                this.spawn(engine, ex.Util.randomIntInRange(this.minEnemy, this.maxEnemy));
+                this._futureDispatchTime = this._currentTime + (this.frequencySeconds);
+            }
+        }
+    };
+    BadGuyFactory.prototype.spawn = function (engine, numberOfBaddies) {
+        console.log("Dispatch " + numberOfBaddies);
+        for (var i = 0; i < numberOfBaddies; i++) {
+        }
+    };
+    BadGuyFactory.prototype.start = function () {
+        this._started = true;
+        this._currentTime = Date.now();
+        this._futureDispatchTime = this._currentTime + (this.frequencySeconds);
+    };
+    BadGuyFactory.prototype.stop = function () {
+        this._started = false;
+    };
+    return BadGuyFactory;
+}());
+/// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="gamestate.ts" />
 /// <reference path="analytics.ts" />
 /// <reference path="config.ts" />
 /// <reference path="resources.ts" />
 /// <reference path="stats.ts" />
 /// <reference path="ship.ts" />
+/// <reference path="badguyfactory.ts" />
 var game = new ex.Engine({
     canvasElementId: "game",
     width: Config.width,
@@ -276,8 +310,7 @@ var loader = new ex.Loader();
 for (var res in Resources) {
     loader.addResource(Resources[res]);
 }
-var cameraVel = new ex.Vector(0, 0);
-game.on('update', function (evt) {
+function updateCamera(evt) {
     // Grab the current focus of the camper
     var focus = game.currentScene.camera.getFocus().toVector();
     // Grab the "destination" position, in the spring equation the displacement location
@@ -296,6 +329,16 @@ game.on('update', function (evt) {
     focus = focus.plus(cameraVel);
     // Set new position on camera
     game.currentScene.camera.setFocus(focus.x, focus.y);
+}
+var badGuyFactory = new BadGuyFactory(500, 1, 11);
+badGuyFactory.start();
+function updateDispatchers(evt) {
+    badGuyFactory.update(game, evt.delta);
+}
+var cameraVel = new ex.Vector(0, 0);
+game.on('update', function (evt) {
+    updateCamera(evt);
+    updateDispatchers(evt);
 });
 game.start(loader).then(function () { return GameState.init(game); });
 //# sourceMappingURL=game.js.map
