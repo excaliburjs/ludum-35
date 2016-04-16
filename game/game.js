@@ -18,7 +18,10 @@ var Config = {
     shipSpeedScale: .2
 };
 var Resources = {
-    ShipSpriteSheet: new ex.Texture('./img/ship.png')
+    ShipSpriteSheet: new ex.Texture('./img/ship.png'),
+    CircleSheildSheet: new ex.Texture('./img/circlesheild.png'),
+    SquareSheildSheet: new ex.Texture('./img/squaresheild.png'),
+    TriangleSheildSheet: new ex.Texture('./img/trianglesheild.png')
 };
 // keep game stats here, score, powerup level, etc
 var Stats = (function () {
@@ -34,6 +37,9 @@ var Ship = (function (_super) {
         _super.call(this, x, y, width, height);
         this.color = ex.Color.Red.clone();
         var shipSheet = new ex.SpriteSheet(Resources.ShipSpriteSheet, 3, 1, 32, 42);
+        var squareSheild = new ex.SpriteSheet(Resources.SquareSheildSheet, 5, 1, 32, 32);
+        var circleSheild = new ex.SpriteSheet(Resources.CircleSheildSheet, 5, 1, 32, 32);
+        var triangleSheild = new ex.SpriteSheet(Resources.TriangleSheildSheet, 5, 1, 32, 32);
         this.scale.setTo(2, 2);
         this.anchor.setTo(.5, .5);
         this.setCenterDrawing(true);
@@ -44,6 +50,15 @@ var Ship = (function (_super) {
             anim.loop = true;
             anim.anchor.setTo(.5, .5);
             _this.addDrawing('default', anim);
+            _this._circle = circleSheild.getAnimationForAll(engine, 150);
+            _this._circle.loop = true;
+            _this._circle.anchor.setTo(.5, .5);
+            _this._square = squareSheild.getAnimationForAll(engine, 150);
+            _this._square.loop = true;
+            _this._square.anchor.setTo(.5, .5);
+            _this._triangle = triangleSheild.getAnimationForAll(engine, 150);
+            _this._triangle.loop = true;
+            _this._triangle.anchor.setTo(.5, .5);
             //initialize ship 
             ship.on('preupdate', function (evt) {
                 //console.log(`Update: ${evt.delta}`);
@@ -54,6 +69,9 @@ var Ship = (function (_super) {
                     ship.dy = dy * Config.shipSpeedScale;
                     ship.rotation = (new ex.Vector(dx, dy)).toAngle();
                 });
+            });
+            ship.on('postdraw', function (evt) {
+                _this._square.draw(evt.ctx, 0, 0);
             });
         };
     }
