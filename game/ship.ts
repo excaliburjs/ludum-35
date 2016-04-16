@@ -75,6 +75,10 @@ class Ship extends ex.Actor implements Stateful<ShipState> {
          GameState.state.ship.rotation = (new ex.Vector(dx, dy)).toAngle();
       });
       
+      var oppVel = new ex.Vector(this.dx, this.dy).scale(-1).scale(Config.spaceFriction);
+      this.dx += oppVel.x;
+      this.dy += oppVel.y;
+      
       this.state.weapon.update(evt.delta);
    }
    
