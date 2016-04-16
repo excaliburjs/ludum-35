@@ -1,7 +1,8 @@
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="shape.ts" />
 /// <reference path="weapon.ts" />
-
+/// <reference path="resources.ts" />
+/// <reference path="config.ts" />
 interface ShipState {
    shieldType: Shape;
    weapon: Weapon;

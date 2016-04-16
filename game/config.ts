@@ -13,5 +13,12 @@ var Config = {
    bullets: {
       speed: 200, // px/s
       damage: 1
+   },
+   
+   badguy: {
+      speed: 1,
+      size: 1 //multiplier from original?
    }
+   
+   
 }
