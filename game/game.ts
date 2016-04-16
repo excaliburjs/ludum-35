@@ -5,7 +5,9 @@
 /// <reference path="resources.ts" />
 /// <reference path="stats.ts" />
 /// <reference path="ship.ts" />
+/// <reference path="badguyfactory.ts" />
 /// <reference path="starfield.ts" />
+
 
 var game = new ex.Engine({
    canvasElementId: "game",
@@ -26,10 +28,10 @@ var loader = new ex.Loader();
 for(var res in Resources){
    loader.addResource(Resources[res]);
 }
+  
 
-var cameraVel = new ex.Vector(0, 0);
-game.on('update', (evt: ex.UpdateEvent) => { 
-	
+function updateCamera(evt: ex.UpdateEvent){
+		
 	// Grab the current focus of the camper
 	var focus = game.currentScene.camera.getFocus().toVector();
 	
@@ -53,6 +55,18 @@ game.on('update', (evt: ex.UpdateEvent) => {
 	
 	// Set new position on camera
 	game.currentScene.camera.setFocus(focus.x, focus.y);
+}
+
+var badGuyFactory = new BadGuyFactory(500, 1, 11);
+badGuyFactory.start();
+function updateDispatchers(evt: ex.UpdateEvent) {
+	badGuyFactory.update(game, evt.delta);
+}
+
+var cameraVel = new ex.Vector(0, 0);
+game.on('update', (evt: ex.UpdateEvent) => {
+	updateCamera(evt);
+	updateDispatchers(evt);
 	
 });
 
