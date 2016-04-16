@@ -8,10 +8,10 @@ var Config = {
    shipSpeedScale: .2,
    
    poolSizeIncrement: 100,
-   
+      
    // Bullet config
    bullets: {
-      speed: 5, // px/s
+      speed: 200, // px/s
       damage: 1
    }
 }

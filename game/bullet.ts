@@ -7,7 +7,7 @@ interface BulletState {
    d: ex.Vector;
    speed: number;
    damage: number;
-   shape: Shape;
+   shape?: Shape;
 }
 
 class Bullet extends ex.Actor implements Stateful<BulletState> {
@@ -15,7 +15,10 @@ class Bullet extends ex.Actor implements Stateful<BulletState> {
    id: number;
    
    constructor() {
-      super(0, 0, 1, 1);
+      super(0, 0, 3, 3, ex.Color.Red);
+      
+      this.reset();
+      this.on('exitviewport', () => this.reset());
    }
    
    state: BulletState;
@@ -24,6 +27,7 @@ class Bullet extends ex.Actor implements Stateful<BulletState> {
       
       if (!state) {
          
+         //this.visible = false;
          // defaults
          this.state = {
             x: 0,
@@ -34,10 +38,15 @@ class Bullet extends ex.Actor implements Stateful<BulletState> {
             shape: Shape.Shape1
          }         
       } else {
+         this.visible = true;
          this.state = state;
+         this.x = state.x;
+         this.y = state.y;
+         var normalized = this.state.d.normalize();
+         this.dx = normalized.x * this.state.speed;
+         this.dy = normalized.y * this.state.speed;
       }
       
       return this;
    }
-   
 }
