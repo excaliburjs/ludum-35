@@ -9,9 +9,9 @@ class Ship extends ex.Actor {
       super(x, y, width, height);
       this.color = ex.Color.Red.clone();
       var shipSheet = new ex.SpriteSheet(Resources.ShipSpriteSheet, 3, 1, 32, 42);
-      var squareSheild = new ex.SpriteSheet(Resources.SquareShieldSheet, 5, 1, 48, 48);      
-      var circleSheild = new ex.SpriteSheet(Resources.CircleShieldSheet, 5, 1, 48, 48);
-      var triangleSheild = new ex.SpriteSheet(Resources.TriangleShieldSheet, 5, 1, 48, 48);
+      var squareSheild = new ex.SpriteSheet(Resources.SquareSheildSheet, 5, 1, 48, 48);      
+      var circleSheild = new ex.SpriteSheet(Resources.CircleSheildSheet, 5, 1, 48, 48);
+      var triangleSheild = new ex.SpriteSheet(Resources.TriangleSheildSheet, 5, 1, 48, 48);
       
       this.scale.setTo(2,2);
       this.anchor.setTo(.5, .5);
@@ -51,7 +51,8 @@ class Ship extends ex.Actor {
          ship.on('predraw', (evt: ex.PostDrawEvent) => {
             if(this.sheildType === "circle"){
                this._circle.draw(evt.ctx, 0, 0);
-            }            
+            }
+            
             if(this.sheildType === "square"){
                this._square.draw(evt.ctx, 0, 0);
             }
