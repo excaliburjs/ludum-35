@@ -12,7 +12,7 @@ class Pool<T extends Stateful<U>, U> {
       this._free = new ex.Util.Collection<number>(poolSize);
    }   
    
-   fill(count = this._pool.count()) {
+   fill(count = this._pool.internalSize()) {
       for(let i = 0; i < count; i++) {         
          let o = this.factory();
          o.id = i;
@@ -28,15 +28,8 @@ class Pool<T extends Stateful<U>, U> {
       if (i === undefined) {
           throw "Make poolSize bigger for factory: " + this.factory.toString();
       }
-      
-      var o = this._pool[i];
-      
-      if (!o) {
-         o = this.factory();
-         o.id = i;
-         this._pool[i] = o;
-      }
-      this._pool[i].reset(state);
+            
+      this._pool.elementAt(i).reset(state);
    }
    
    despawn(obj: Stateful<BulletState>) {

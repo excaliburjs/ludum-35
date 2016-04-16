@@ -9,14 +9,21 @@ interface IGameState {
 
 // one global area to track game state, makes the game easier to restart
 class GameState {
-      static state: IGameState = {
-         ship: null,
-         bullets: new Pool<Bullet, BulletState>(500, () => new Bullet())
-      }
+      static state: IGameState;
       
       // set any defaults
-      init(state: IGameState){
-         GameState.state = state;
+      static init(game: ex.Engine) {
+         GameState.state = {
+            ship: new Ship(100, 100, 100, 100),
+            bullets: new Pool<Bullet, BulletState>(500, () => {
+                  var b = new Bullet();
+                  game.add(b);
+                  return b;
+            })
+         };
+         GameState.state.bullets.fill();
+         
+         game.add(GameState.state.ship);
       }
    
 }

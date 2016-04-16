@@ -3,32 +3,47 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-// wire into app insights to send events to our anlytics provider, trackEvent
-// documentation
-//https://github.com/Microsoft/ApplicationInsights-JS/blob/master/API-reference.md
-var Analytics = (function () {
-    function Analytics() {
+var Shape;
+(function (Shape) {
+    Shape[Shape["Shape1"] = 0] = "Shape1";
+    Shape[Shape["Shape2"] = 1] = "Shape2";
+    Shape[Shape["Shape3"] = 2] = "Shape3";
+})(Shape || (Shape = {}));
+var WeaponBase = (function () {
+    function WeaponBase(interval, source) {
+        var _this = this;
+        this.interval = interval;
+        this.source = source;
+        this._bulletTimer = new ex.Timer(function () { return _this.shoot(); }, interval, true);
     }
-    return Analytics;
+    WeaponBase.prototype.update = function (delta) {
+        this._bulletTimer.update(delta);
+    };
+    WeaponBase.prototype.shoot = function () {
+        // override
+    };
+    return WeaponBase;
 }());
-var Config = {
-    width: 960,
-    height: 640,
-    // Camera
-    CameraElasticity: .01,
-    CameraFriction: .21,
-    shipSpeedScale: .2,
-    poolSizeIncrement: 100,
-    // Bullet config
-    bullets: {
-        speed: 5,
-        damage: 1
-    },
-    badguy: {
-        speed: 1,
-        size: 1 //multiplier from original?
+var StraightShooter = (function (_super) {
+    __extends(StraightShooter, _super);
+    function StraightShooter(source, speed, damage) {
+        _super.call(this, 500, source);
+        this.source = source;
+        this.speed = speed;
+        this.damage = damage;
     }
-};
+    StraightShooter.prototype.shoot = function () {
+        // spawn bullet traveling in direction actor is facing
+        GameState.state.bullets.spawn({
+            d: ex.Vector.fromAngle(this.source.rotation),
+            damage: this.damage,
+            x: this.source.x,
+            y: this.source.y,
+            speed: this.speed
+        });
+    };
+    return StraightShooter;
+}(WeaponBase));
 var Resources = {
     ShipSpriteSheet: new ex.Texture('./img/ship.png'),
     CircleShieldSheet: new ex.Texture('./img/circlesheild.png'),
@@ -39,6 +54,198 @@ var Resources = {
     SquareBullet: new ex.Texture('./img/bullets/greenBullet.png'),
     TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png')
 };
+var Config = {
+    width: 960,
+    height: 640,
+    // Camera
+    CameraElasticity: .01,
+    CameraFriction: .21,
+    shipSpeedScale: .2,
+    poolSizeIncrement: 100,
+    // Bullet config
+    bullets: {
+        speed: 200,
+        damage: 1
+    },
+    badguy: {
+        speed: 1,
+        size: 1 //multiplier from original?
+    }
+};
+/// <reference path="../Excalibur/dist/Excalibur.d.ts" />
+/// <reference path="shape.ts" />
+/// <reference path="weapon.ts" />
+/// <reference path="resources.ts" />
+/// <reference path="config.ts" />
+var Ship = (function (_super) {
+    __extends(Ship, _super);
+    function Ship(x, y, width, height) {
+        _super.call(this, x, y, width, height);
+        this.color = ex.Color.Red.clone();
+        this.scale.setTo(2, 2);
+        this.anchor.setTo(.5, .5);
+        this.setCenterDrawing(true);
+        this.reset();
+    }
+    Ship.prototype.onInitialize = function (engine) {
+        var shipSheet = new ex.SpriteSheet(Resources.ShipSpriteSheet, 3, 1, 32, 42);
+        var squareSheild = new ex.SpriteSheet(Resources.SquareShieldSheet, 5, 1, 48, 48);
+        var circleSheild = new ex.SpriteSheet(Resources.CircleShieldSheet, 5, 1, 48, 48);
+        var triangleSheild = new ex.SpriteSheet(Resources.TriangleShieldSheet, 5, 1, 48, 48);
+        var ship = this;
+        var anim = shipSheet.getAnimationForAll(engine, 150);
+        anim.rotation = Math.PI / 2;
+        anim.loop = true;
+        anim.anchor.setTo(.5, .5);
+        this.addDrawing('default', anim);
+        this._circle = circleSheild.getAnimationForAll(engine, 50);
+        this._circle.loop = true;
+        this._circle.anchor.setTo(.5, .5);
+        this._square = squareSheild.getAnimationForAll(engine, 50);
+        this._square.loop = true;
+        this._square.anchor.setTo(.5, .5);
+        this._triangle = triangleSheild.getAnimationForAll(engine, 50);
+        this._triangle.loop = true;
+        this._triangle.anchor.setTo(.5, .5);
+        ship.on('preupdate', this.preupdate);
+        ship.on('predraw', this.predraw);
+    };
+    Ship.prototype.reset = function (state) {
+        if (!state) {
+            this.state = {
+                shieldType: Shape.Shape1,
+                weapon: new StraightShooter(this, Config.bullets.speed, Config.bullets.damage)
+            };
+        }
+        else {
+            this.state = state;
+        }
+        return this;
+    };
+    Ship.prototype.preupdate = function (evt) {
+        //console.log(`Update: ${evt.delta}`);
+        evt.engine.input.pointers.primary.on('down', function (click) {
+            var dx = click.x - GameState.state.ship.x;
+            var dy = click.y - GameState.state.ship.y;
+            GameState.state.ship.dx = dx * Config.shipSpeedScale;
+            GameState.state.ship.dy = dy * Config.shipSpeedScale;
+            GameState.state.ship.rotation = (new ex.Vector(dx, dy)).toAngle();
+        });
+        this.state.weapon.update(evt.delta);
+    };
+    Ship.prototype.predraw = function (evt) {
+        if (this.state.shieldType === Shape.Shape1) {
+            this._square.draw(evt.ctx, 0, 0);
+        }
+        if (this.state.shieldType === Shape.Shape2) {
+            this._circle.draw(evt.ctx, 0, 0);
+        }
+        if (this.state.shieldType === Shape.Shape3) {
+            this._triangle.draw(evt.ctx, 0, 0);
+        }
+    };
+    return Ship;
+}(ex.Actor));
+/// <reference path="stateful.ts" />
+/// <reference path="shape.ts" />
+var Bullet = (function (_super) {
+    __extends(Bullet, _super);
+    function Bullet() {
+        var _this = this;
+        _super.call(this, 0, 0, 3, 3, ex.Color.Red);
+        this.reset();
+        this.on('exitviewport', function () { return _this.reset(); });
+    }
+    Bullet.prototype.reset = function (state) {
+        if (!state) {
+            //this.visible = false;
+            // defaults
+            this.state = {
+                x: 0,
+                y: 0,
+                d: new ex.Vector(0, 0),
+                damage: Config.bullets.damage,
+                speed: Config.bullets.speed,
+                shape: Shape.Shape1
+            };
+        }
+        else {
+            this.visible = true;
+            this.state = state;
+            this.x = state.x;
+            this.y = state.y;
+            var normalized = this.state.d.normalize();
+            this.dx = normalized.x * this.state.speed;
+            this.dy = normalized.y * this.state.speed;
+        }
+        return this;
+    };
+    return Bullet;
+}(ex.Actor));
+/// <reference path="shape.ts" />
+/// <reference path="stateful.ts" />
+/// <reference path="gamestate.ts" />
+var Pool = (function () {
+    function Pool(poolSize, factory) {
+        this.factory = factory;
+        this._pool = new ex.Util.Collection(poolSize);
+        this._free = new ex.Util.Collection(poolSize);
+    }
+    Pool.prototype.fill = function (count) {
+        if (count === void 0) { count = this._pool.internalSize(); }
+        for (var i = 0; i < count; i++) {
+            var o = this.factory();
+            o.id = i;
+            this._pool.push(o);
+            this._free.push(i);
+        }
+    };
+    Pool.prototype.spawn = function (state) {
+        var i = this._free.pop();
+        // TODO dynamically resize collections and initialize
+        if (i === undefined) {
+            throw "Make poolSize bigger for factory: " + this.factory.toString();
+        }
+        this._pool.elementAt(i).reset(state);
+    };
+    Pool.prototype.despawn = function (obj) {
+        if (!obj)
+            return;
+        obj.reset();
+        this._free.push(obj.id);
+    };
+    return Pool;
+}());
+/// <reference path="./ship.ts" />
+/// <reference path="bullet.ts" />
+/// <reference path="pool.ts" />
+// one global area to track game state, makes the game easier to restart
+var GameState = (function () {
+    function GameState() {
+    }
+    // set any defaults
+    GameState.init = function (game) {
+        GameState.state = {
+            ship: new Ship(100, 100, 100, 100),
+            bullets: new Pool(500, function () {
+                var b = new Bullet();
+                game.add(b);
+                return b;
+            })
+        };
+        GameState.state.bullets.fill();
+        game.add(GameState.state.ship);
+    };
+    return GameState;
+}());
+// wire into app insights to send events to our anlytics provider, trackEvent
+// documentation
+//https://github.com/Microsoft/ApplicationInsights-JS/blob/master/API-reference.md
+var Analytics = (function () {
+    function Analytics() {
+    }
+    return Analytics;
+}());
 // keep game stats here, score, powerup level, etc
 var Stats = (function () {
     function Stats() {
@@ -46,65 +253,7 @@ var Stats = (function () {
     return Stats;
 }());
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
-/// <reference path="resources.ts" />
-/// <reference path="config.ts" />
-var Ship = (function (_super) {
-    __extends(Ship, _super);
-    function Ship(x, y, width, height) {
-        var _this = this;
-        _super.call(this, x, y, width, height);
-        this.sheildType = "square";
-        this.color = ex.Color.Red.clone();
-        var shipSheet = new ex.SpriteSheet(Resources.ShipSpriteSheet, 3, 1, 32, 42);
-        var squareSheild = new ex.SpriteSheet(Resources.SquareShieldSheet, 5, 1, 48, 48);
-        var circleSheild = new ex.SpriteSheet(Resources.CircleShieldSheet, 5, 1, 48, 48);
-        var triangleSheild = new ex.SpriteSheet(Resources.TriangleShieldSheet, 5, 1, 48, 48);
-        this.scale.setTo(2, 2);
-        this.anchor.setTo(.5, .5);
-        this.setCenterDrawing(true);
-        this.onInitialize = function (engine) {
-            var ship = _this;
-            var anim = shipSheet.getAnimationForAll(engine, 150);
-            anim.rotation = Math.PI / 2;
-            anim.loop = true;
-            anim.anchor.setTo(.5, .5);
-            _this.addDrawing('default', anim);
-            _this._circle = circleSheild.getAnimationForAll(engine, 50);
-            _this._circle.loop = true;
-            _this._circle.anchor.setTo(.5, .5);
-            _this._square = squareSheild.getAnimationForAll(engine, 50);
-            _this._square.loop = true;
-            _this._square.anchor.setTo(.5, .5);
-            _this._triangle = triangleSheild.getAnimationForAll(engine, 50);
-            _this._triangle.loop = true;
-            _this._triangle.anchor.setTo(.5, .5);
-            //initialize ship 
-            ship.on('preupdate', function (evt) {
-                //console.log(`Update: ${evt.delta}`);
-                evt.engine.input.pointers.primary.on('down', function (click) {
-                    var dx = click.x - ship.x;
-                    var dy = click.y - ship.y;
-                    ship.dx = dx * Config.shipSpeedScale;
-                    ship.dy = dy * Config.shipSpeedScale;
-                    ship.rotation = (new ex.Vector(dx, dy)).toAngle();
-                });
-            });
-            ship.on('predraw', function (evt) {
-                if (_this.sheildType === "circle") {
-                    _this._circle.draw(evt.ctx, 0, 0);
-                }
-                if (_this.sheildType === "square") {
-                    _this._square.draw(evt.ctx, 0, 0);
-                }
-                if (_this.sheildType === "triangle") {
-                    _this._triangle.draw(evt.ctx, 0, 0);
-                }
-            });
-        };
-    }
-    return Ship;
-}(ex.Actor));
-/// <reference path="../Excalibur/dist/Excalibur.d.ts" />
+/// <reference path="gamestate.ts" />
 /// <reference path="analytics.ts" />
 /// <reference path="config.ts" />
 /// <reference path="resources.ts" />
@@ -127,18 +276,12 @@ var loader = new ex.Loader();
 for (var res in Resources) {
     loader.addResource(Resources[res]);
 }
-var ship;
-function init() {
-    // put game bootstrap in here;
-    ship = new Ship(100, 100, 100, 100);
-    game.add(ship);
-}
 var cameraVel = new ex.Vector(0, 0);
 game.on('update', function (evt) {
     // Grab the current focus of the camper
     var focus = game.currentScene.camera.getFocus().toVector();
     // Grab the "destination" position, in the spring equation the displacement location
-    var position = new ex.Vector(ship.x, ship.y);
+    var position = new ex.Vector(GameState.state.ship.x, GameState.state.ship.y);
     // Calculate the strech vector, using the spring equation
     // F = kX
     // https://en.wikipedia.org/wiki/Hooke's_law
@@ -154,5 +297,5 @@ game.on('update', function (evt) {
     // Set new position on camera
     game.currentScene.camera.setFocus(focus.x, focus.y);
 });
-game.start(loader).then(init);
+game.start(loader).then(function () { return GameState.init(game); });
 //# sourceMappingURL=game.js.map
