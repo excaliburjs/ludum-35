@@ -32,6 +32,7 @@ function init(){
    game.add(ship);
 }
 
+
 var cameraVel = new ex.Vector(0, 0);
 game.on('update', (evt: ex.UpdateEvent) => { 
 	
