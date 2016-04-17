@@ -269,12 +269,42 @@ var Analytics = (function () {
     }
     return Analytics;
 }());
-// keep game stats here, score, powerup level, etc
-var Stats = (function () {
-    function Stats() {
+/// <reference path="../Excalibur/dist/Excalibur.d.ts" />
+/// <reference path="stateful.ts" />
+var Stat = (function () {
+    function Stat(name, defaultValue) {
+        this.name = name;
+        this.defaultValue = defaultValue;
+        this.state.value = defaultValue;
     }
-    return Stats;
+    Stat.prototype.reset = function (state) {
+        if (!state) {
+            this.state = {
+                value: this.defaultValue
+            };
+        }
+        else {
+            this.state = state;
+        }
+        return this;
+    };
+    return Stat;
 }());
+var HUDStat = (function (_super) {
+    __extends(HUDStat, _super);
+    function HUDStat(stat, x, y, width, height) {
+        _super.call(this, x, y, width, height);
+        this.stat = stat;
+    }
+    HUDStat.prototype.onInitialize = function () {
+        var hudStat = this;
+        hudStat = this.stat.state.value;
+        hudsStat.on('postdraw', postdraw);
+    };
+    HUDStat.prototype.postdraw = function () {
+    };
+    return HUDStat;
+}(ex.UIActor));
 /// <reference path="stateful.ts" />
 /// <reference path="shape.ts" />
 var Badguy = (function (_super) {
