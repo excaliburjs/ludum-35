@@ -104,8 +104,11 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
           return false;
       }
       
-      GameState.state.ship.dx = dx * Config.shipSpeedScale;
-      GameState.state.ship.dy = dy * Config.shipSpeedScale;
+      var clampDx = ex.Util.clamp(dx * Config.shipSpeedScale, Config.playerMinVelocity, Config.playerMaxVelocity);
+      var clampDy = ex.Util.clamp(dy * Config.shipSpeedScale, Config.playerMinVelocity, Config.playerMaxVelocity);
+      
+      GameState.state.ship.dx = clampDx;
+      GameState.state.ship.dy = clampDy;
       
       GameState.state.ship.rotation = (new ex.Vector(dx, dy)).toAngle();
    }

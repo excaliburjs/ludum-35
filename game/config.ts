@@ -4,6 +4,7 @@ var Config = {
    
    MapWidth: 5000,
    MapHeight: 960,
+   
       
    // Camera
    CameraElasticity: .08,
@@ -11,6 +12,10 @@ var Config = {
    shipSpeedScale: 2,
    spaceFriction: .01,
    ShieldCoolDownTime: 1000,
+   
+   // Player
+   playerMinVelocity: -500,
+   playerMaxVelocity: 500,
    
    // Baddies
    SpawnInterval: 5500, //ms

@@ -104,6 +104,9 @@ var Config = {
     shipSpeedScale: 2,
     spaceFriction: .01,
     ShieldCoolDownTime: 1000,
+    // Player
+    playerMinVelocity: -500,
+    playerMaxVelocity: 500,
     // Baddies
     SpawnInterval: 5500,
     MinEnemiesPerSpawn: 1,
@@ -213,8 +216,10 @@ var Ship = (function (_super) {
         if (!gameBounds.contains(new ex.Point(this.x, this.y))) {
             return false;
         }
-        GameState.state.ship.dx = dx * Config.shipSpeedScale;
-        GameState.state.ship.dy = dy * Config.shipSpeedScale;
+        var clampDx = ex.Util.clamp(dx * Config.shipSpeedScale, Config.playerMinVelocity, Config.playerMaxVelocity);
+        var clampDy = ex.Util.clamp(dy * Config.shipSpeedScale, Config.playerMinVelocity, Config.playerMaxVelocity);
+        GameState.state.ship.dx = clampDx;
+        GameState.state.ship.dy = clampDy;
         GameState.state.ship.rotation = (new ex.Vector(dx, dy)).toAngle();
     };
     Ship.prototype.preupdate = function (evt) {
