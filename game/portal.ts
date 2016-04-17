@@ -12,13 +12,13 @@ class Portal extends ex.Actor {
       var tx: ex.Texture;
       switch(this.state.type) {
          case Shape.Shape1:
-            tx = Resources.TrianglePortal;
+            tx = Resources.SquarePortal;
             break;
          case Shape.Shape2:
             tx = Resources.CirclePortal;
             break;
          case Shape.Shape3:
-            tx = Resources.SquarePortal;
+            tx = Resources.TrianglePortal;
             break;
       }
       var ss = new ex.SpriteSheet(tx, 5, 1, 48, 48);

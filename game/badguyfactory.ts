@@ -9,6 +9,7 @@ interface PortalSpawn {
    rateTimer: number;
    baddies: Badguy[];
    maxSimultaneous: number;
+   closeAmount: number;
 }
 interface Wave {
    portals: PortalSpawn[];
@@ -32,28 +33,58 @@ class BadGuyFactory {
       }
       
       // check if portals can be closed
+      var portalsToClose: Portal[] = [];
+      for (let p of this._openPortals) {
+         var poolAmount = 0;
+         switch(p.state.type) {
+            case Shape.Shape1:
+               poolAmount = GameState.state.ship.state.trianglePool;
+               break;
+            case Shape.Shape2:
+               poolAmount = GameState.state.ship.state.circlePool;
+               break;
+            case Shape.Shape3:
+               poolAmount = GameState.state.ship.state.squarePool;
+               break;
+         }
+         if (poolAmount >= p.state.closeAmount) {
+            // close portal
+            portalsToClose.push(p);
+         }
+      }
+      
+      for (let p of portalsToClose) {
+         this.closePortal(p);
+      }
+      
+      if (this._openPortals.length === 0) {
+         this.nextWave();
+         return;
+      }
       
       // after portal spawns, spawn enemies
       if (this._portalSpawnWaitTimer <= 0) {
-         for (let p of this._waveInfo.portals) {
+         
+         // for open portals, spawn baddies
+         for (let p of this._openPortals) {
             
             // remove killed baddies
             let baddiesToRemove: Badguy[] = [];
-            for (let b of p.baddies) {
+            for (let b of p.state.baddies) {
                if (b.isKilled()) {
                   baddiesToRemove.push(b);
                }
             }
             for (let b of baddiesToRemove) {
-               p.baddies.splice(p.baddies.indexOf(b), 1);
+               p.state.baddies.splice(p.state.baddies.indexOf(b), 1);
             }
             
-            if (p.rateTimer <= 0 && p.baddies.length < p.maxSimultaneous) {
+            if (p.state.rateTimer <= 0 && p.state.baddies.length < p.state.maxSimultaneous) {
                
-               this.spawnBaddie(p);
-               p.rateTimer = p.rate;
+               this.spawnBaddie(p.state);
+               p.state.rateTimer = p.state.rate;
             } else {
-               p.rateTimer -= delta;
+               p.state.rateTimer -= delta;
             }
          }
          
@@ -100,7 +131,8 @@ class BadGuyFactory {
                rateTimer: 0,
                baddies: [],
                maxSimultaneous: 3,
-               type: Shape.Shape1
+               type: Shape.Shape1,
+               closeAmount: 5
             }]
          };
          this.spawnPortals();
@@ -115,5 +147,11 @@ class BadGuyFactory {
          game.add(p);
          this._openPortals.push(p);
       }
+   }
+   
+   closePortal(p: Portal) {
+      var idx = this._openPortals.indexOf(p);
+      this._openPortals.splice(idx, 1);
+      game.remove(p);
    }
 }
