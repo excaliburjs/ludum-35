@@ -11,12 +11,13 @@ interface ShipState {
    weapon: Weapon;
 }
 
-class Ship extends ex.Actor implements Stateful<ShipState> {
+class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
    private _circle: ex.Animation;
    private _triangle: ex.Animation;
    private _square: ex.Animation;
    private _mouseDown: boolean = false;
    
+   public poolId: number;
    public state: ShipState;
    
    constructor(x, y, width, height){

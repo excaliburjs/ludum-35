@@ -11,9 +11,10 @@ interface BulletState {
    shape?: Shape;
 }
 
-class Bullet extends ex.Actor implements Stateful<BulletState> {
+class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
    
-   id: number;
+   poolId: number;
+  
    public owner: ex.Actor = null;
    constructor() {
       super(0, 0, 3, 3, ex.Color.Red);
