@@ -33,7 +33,6 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
    _collision(collision: ex.CollisionEvent) {
       if(this.visible){
          if(this.owner.constructor !== collision.other.constructor && this.constructor !== collision.other.constructor) {
-             console.log(this.owner.constructor + " collided with " + collision.other.constructor);
             Resources.Explode.play();
             collision.other.kill();
             var currKills = parseInt(GameState.getGameStat("KILLS").toString()) + 1;
