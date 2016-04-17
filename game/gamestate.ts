@@ -62,5 +62,21 @@ class GameState {
          
          game.add(GameState.state.ship);
       }
+      
+      static reset() {
+            //TODO
+            this._resetPlayer();
+            this._resetStats();
+      }
+      
+      private static _resetPlayer() {
+            GameState.state.ship.dx = 0;
+            GameState.state.ship.dy = 0;
+            //TODO
+      }
+      
+      private static _resetStats() {
+            this.setGameStat('KILLS', 0);
+      }
    
 }
