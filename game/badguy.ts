@@ -24,9 +24,9 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
          , Resources.CircleBadguySheet
          ];
          
-      var ActiveType = BadguyTypes[badguytype];
+      this.ActiveType = BadguyTypes[badguytype];
       
-      var BadGuySheet = new ex.SpriteSheet(ActiveType, 2, 1, 32, 32);
+      var BadGuySheet = new ex.SpriteSheet(this.ActiveType, 2, 1, 32, 32);
       
       this.scale.setTo(2,2);
       //this.anchor.setTo(.1, .1);
@@ -44,42 +44,29 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
          
          //initialize badguy
          badguy.on('preupdate', this.preupdate);
+         badguy.on('collision', this._collision);
       }
    }
     preupdate(evt: ex.PreUpdateEvent){
       
-      //var multiplier = Math.random();
       
-      //if (multiplier !== 1){
-      //  multiplier = -1;
-      //}
+      var dx = GameState.state.ship.x;
+      var dy = GameState.state.ship.y;
+      var oppVel = new ex.Vector(this.dx, this.dy).scale(-1).scale(Config.spaceFriction);
       
+      this.dx += oppVel.x;
+      this.dy += oppVel.y;
       
-      
-      if (this.x < 0) {
-        this.dx = Config.badguy.speed;
-      } else {
-        if (this.x > Config.width){
-          this.dx = Config.badguy.speed * -1;
-        } else {
-        var dy = this.y;// * multiplier;
-        this.dx = dy * .5;
-        }
-      }
-      
-      if (this.y < 0) {
-        this.dy = Config.badguy.speed;
-      } else {
-        if (this.y > Config.height){
-          this.dy = Config.badguy.speed * -1;
-        } else {
-        var dx = this.x;// * multiplier;
-        this.dy = dx * .5;
-      }
+     
     }
+    
+    _collision(collision: ex.CollisionEvent){
+      //var BadGuySheet = new ex.SpriteSheet(this.ActiveType, 5, 1, 32, 32);
       
+      //var anim = BadGuySheet.getAnimationForAll(ex.Engine, 150);
       
     }
+    
    state: BadguyState;
    
    reset(state?: BadguyState) {
@@ -93,7 +80,6 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
             size: Config.badguy.size,
             shape: Shape.Shape1
          }
-         
       } else {
          this.state = state;
       }
