@@ -1,6 +1,9 @@
 var Config = {
    width: 960,
    height: 640,
+   
+   MapWidth: 5000,
+   MapHeight: 960,
       
    // Camera
    CameraElasticity: .08,
