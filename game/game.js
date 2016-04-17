@@ -435,7 +435,7 @@ var Badguy = (function (_super) {
             Resources.SquareBadguySheet,
             Resources.CircleBadguySheet
         ];
-        var ActiveType = BadguyTypes[badguytype];
+        this.ActiveType = BadguyTypes[badguytype];
         var BadGuySheet = new ex.SpriteSheet(ActiveType, 2, 1, 32, 32);
         this.scale.setTo(2, 2);
         //this.anchor.setTo(.1, .1);
@@ -449,39 +449,20 @@ var Badguy = (function (_super) {
             _this.addDrawing('default', anim);
             //initialize badguy
             badguy.on('preupdate', _this.preupdate);
+            badguy.on('collision', _this._collision);
         };
         this.weapon = new StraightShooter(this, Config.bullets.speed, Config.bullets.damage);
     }
     Badguy.prototype.preupdate = function (evt) {
-        //var multiplier = Math.random();
-        //if (multiplier !== 1){
-        //  multiplier = -1;
-        //}
-        if (this.x < 0) {
-            this.dx = Config.badguy.speed;
-        }
-        else {
-            if (this.x > Config.width) {
-                this.dx = Config.badguy.speed * -1;
-            }
-            else {
-                var dy = this.y; // * multiplier;
-                this.dx = dy * .5;
-            }
-        }
-        if (this.y < 0) {
-            this.dy = Config.badguy.speed;
-        }
-        else {
-            if (this.y > Config.height) {
-                this.dy = Config.badguy.speed * -1;
-            }
-            else {
-                var dx = this.x; // * multiplier;
-                this.dy = dx * .5;
-            }
-        }
-        this.weapon.update(evt.delta);
+        var dx = GameState.state.ship.x;
+        var dy = GameState.state.ship.y;
+        var oppVel = new ex.Vector(this.dx, this.dy).scale(-1).scale(Config.spaceFriction);
+        this.dx += oppVel.x;
+        this.dy += oppVel.y;
+    };
+    Badguy.prototype._collision = function (collision) {
+        //var BadGuySheet = new ex.SpriteSheet(this.ActiveType, 5, 1, 32, 32);
+        //var anim = BadGuySheet.getAnimationForAll(ex.Engine, 150);
     };
     Badguy.prototype.reset = function (state) {
         if (!state) {
