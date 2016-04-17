@@ -69,7 +69,9 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       ship.on('preupdate', this.preupdate);            
       ship.on('predraw', this.predraw);
       
-      engine.input.pointers.primary.on('down', this._pointerDown);
+      engine.input.pointers.primary.on('down', (evt: ex.Input.PointerEvent) => {
+        this._pointerDown(evt);   
+      });
       engine.input.pointers.primary.on('move', (evt: ex.Input.PointerEvent) => {
          if(this._mouseDown){
             this._pointerDown(evt);
@@ -98,7 +100,7 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       var dy = click.y - GameState.state.ship.y;
       
       if (!gameBounds.contains(new ex.Point(this.x, this.y))) {
-          return;
+          return false;
       }
       
       GameState.state.ship.dx = dx * Config.shipSpeedScale;
