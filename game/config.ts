@@ -30,6 +30,7 @@ var Config = {
    StarfieldMeteorFreqMax: 7000,
    StarfieldMeteorSpeed: 320,
       
+   StraightShooterFrequency: 500,
    // Bullet config
    bullets: {
       speed: 500, // px/s
