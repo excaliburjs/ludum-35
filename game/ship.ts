@@ -41,11 +41,6 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       var circleSheild = new ex.SpriteSheet(Resources.CircleShieldSheet, 5, 1, 96, 96);
       var triangleSheild = new ex.SpriteSheet(Resources.TriangleShieldSheet, 5, 1, 96, 96);
       var ship = this;
-      this._rightAnim = witchSheet.getAnimationForAll(engine, 300);
-      this._rightAnim.rotation = Math.PI/8;
-      this._rightAnim.loop = true;
-      this._rightAnim.anchor.setTo(.5, .5);
-      this.addDrawing('right', this._rightAnim);
       
       this._leftAnim = witchSheet.getAnimationForAll(engine, 300);
       this._leftAnim.rotation = -Math.PI/8;
@@ -53,6 +48,12 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       this._leftAnim.loop = true;
       this._leftAnim.anchor.setTo(.1, .1);
       this.addDrawing('left', this._leftAnim);
+      
+      this._rightAnim = witchSheet.getAnimationForAll(engine, 300);
+      this._rightAnim.rotation = Math.PI/8;
+      this._rightAnim.loop = true;
+      this._rightAnim.anchor.setTo(.5, .5);
+      this.addDrawing('right', this._rightAnim);
       
       
       this._circle = circleSheild.getAnimationForAll(engine, 50);
@@ -114,7 +115,7 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       this.dx += oppVel.x;
       this.dy += oppVel.y;
       
-      if(this.dx > 0){
+      if(this.dx >= 0){
           this.setDrawing('right');
       }else{
           this.setDrawing('left');
