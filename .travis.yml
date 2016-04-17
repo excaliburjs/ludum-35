@@ -3,10 +3,13 @@ node_js:
 - '5'
 branches:
   only:
-    - master
+  - master
+notifications:
+  slack:
+    secure: ddZWiUkkU4F42A16mg2OI1aASiJ9LqPpxXwH/MmhCGsKsBDIZGqWHQnN8a7v8am5rdxWRWJkPuiQqnSr5eh2WZjSNB5nw7zTJPSje5ZL4h8kxf/neqHV+YzSIKOeDLgNNkR9Rt5RInGjepKk0hzUvXexjfHg29k/83iqhc/a/w2SkZk2e2Muyif68F64bMDtAof9acFn47t/ql6ZQg4qpy1PvVtibO8DAIm/MWxB7A9cVzwHCmU4DalrVQdNiD7tp4JawW50uaUuQnYL0xEpkZ7e6wpjw/whQtW23NGd3NcG9jS9+WUkaVZ+1z7Vcot3j4Uj7nkVQ/0j7/R0pp3SlRyN8OXsusCqpF3cU9erZ4g5jOesZzgKMMSI1csA+eKyP9JqHBd30pUfgD4BFAiXf1UHHiRCPsK0uPK83BixL+KEMIvE/Dt+IYj6/QeJ6l9ld+hv2nwURaiCcpIdxZ561k7n2lq2Rx/dB+h5bGeWHeM5PtEhH1OccjTH+GNrsaGxkZRCxqguAqX8q9y4CCrv7AO4BYnAvoMXbKd9QZ9aELojYUhQ5G0AcD72uAfS5Pe+OtjFy2DNEVynFhQfPD3CrH3f0RNmTCoFDDikHNLyvY6ge1EHebsLcvxjCMe6WqrM8KNODpl0zgWTAtakjC1FESox6yxKG7Mmfkt9Cs5q6q0=
 env:
   global:
   - GH_REF: github.com/excaliburjs/ludum-35.git
 script:
-  - chmod ugo+x deploy.sh
-  - '[ "${TRAVIS_PULL_REQUEST}" != "false" ] || ./deploy.sh'
+- chmod ugo+x deploy.sh
+- '[ "${TRAVIS_PULL_REQUEST}" != "false" ] || ./deploy.sh'
