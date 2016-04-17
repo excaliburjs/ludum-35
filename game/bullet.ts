@@ -1,5 +1,7 @@
 /// <reference path="stateful.ts" />
 /// <reference path="shape.ts" />
+/// <reference path="gamestate.ts" />
+
 
 interface BulletState {
    owner: ex.Actor;
@@ -35,6 +37,8 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
          if(this.owner.constructor !== collision.other.constructor) {
             Resources.Explode.play();
             collision.other.kill();
+            var currKills = parseInt(GameState.getGameStat("KILLS").toString()) + 1;
+            GameState.setGameStat("KILLS", currKills);
             GameState.state.bullets.despawn(this);
          }
       }

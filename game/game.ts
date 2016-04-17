@@ -78,10 +78,13 @@ game.on('update', (evt: ex.UpdateEvent) => {
 var gameBounds = new ex.BoundingBox(0, 0, Config.MapWidth, Config.MapHeight);
 game.start(loader).then(() => {
 	var sf = new Starfield();
-	var statBox = new HUDStat(new Stat("KILLS", "0"), 10, 50, 150, 50);
 	var bg = new Background();
 	game.add(sf);
 	game.add(bg);
-	game.add(statBox);
 	GameState.init(game);
+	var killIdx = GameState.getStatIdx("KILLS");
+	
+	var killHUDUI = new HUDStat(GameState.state.stats[killIdx], 10, 60, 150, 50);
+	game.add(killHUDUI);
+	
 });
