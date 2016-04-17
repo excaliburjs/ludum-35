@@ -36,7 +36,7 @@ var Config = {
    },
    
    badguy: {
-      speed: 1,
+      speed: 25,
       size: 1 //multiplier from original?
    }
    
