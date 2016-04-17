@@ -81,7 +81,7 @@ var Resources = {
     CircleBullet: new ex.Texture('./img/bullets/blueBullet.png'),
     SquareBullet: new ex.Texture('./img/bullets/greenBullet.png'),
     TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png'),
-    DigitalFontSheet: new ex.Texture("./fonts/DigitalFont.bmp"),
+    DiabloFontSheet: new ex.Texture("./fonts/DiabloFont.bmp"),
     Explode: new ex.Sound('./snd/explode1.wav'),
     On: new ex.Sound('./snd/on.wav'),
     No: new ex.Sound('./snd/no.wav'),
@@ -277,6 +277,7 @@ var Ship = (function (_super) {
 }(ex.Actor));
 /// <reference path="stateful.ts" />
 /// <reference path="shape.ts" />
+/// <reference path="gamestate.ts" />
 var Bullet = (function (_super) {
     __extends(Bullet, _super);
     function Bullet() {
@@ -296,6 +297,8 @@ var Bullet = (function (_super) {
             if (this.owner.constructor !== collision.other.constructor) {
                 Resources.Explode.play();
                 collision.other.kill();
+                var currKills = parseInt(GameState.getGameStat("KILLS").toString()) + 1;
+                GameState.setGameStat("KILLS", currKills);
                 GameState.state.bullets.despawn(this);
             }
         }
@@ -387,36 +390,6 @@ var Pool = (function () {
     };
     return Pool;
 }());
-/// <reference path="./ship.ts" />
-/// <reference path="bullet.ts" />
-/// <reference path="pool.ts" />
-// one global area to track game state, makes the game easier to restart
-var GameState = (function () {
-    function GameState() {
-    }
-    // set any defaults
-    GameState.init = function (game) {
-        GameState.state = {
-            ship: new Ship(100, 100, 48, 48),
-            bullets: new Pool(500, function () {
-                var b = new Bullet();
-                game.add(b);
-                return b;
-            })
-        };
-        GameState.state.bullets.fill();
-        game.add(GameState.state.ship);
-    };
-    return GameState;
-}());
-// wire into app insights to send events to our anlytics provider, trackEvent
-// documentation
-//https://github.com/Microsoft/ApplicationInsights-JS/blob/master/API-reference.md
-var Analytics = (function () {
-    function Analytics() {
-    }
-    return Analytics;
-}());
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="stateful.ts" />
 /// <reference path="resources.ts" />
@@ -452,18 +425,79 @@ var HUDStat = (function (_super) {
     HUDStat.prototype.onInitialize = function (engine) {
         _super.prototype.onInitialize.call(this, engine);
         var hudStat = this;
-        this.font = new ex.SpriteFont(Resources.DigitalFontSheet, " !\"#$%&'{}*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_", false, 8, 8, 32, 32);
+        this.font = new ex.SpriteFont(Resources.DiabloFontSheet, " !\"#$%&'{}*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_", false, 8, 8, 32, 32);
         var displayText = this.stat.getStatName() + ":" + this.stat.state.value;
-        var statLabel = new ex.Label(displayText, 0, 0, null, this.font);
-        statLabel.fontSize = 40;
-        statLabel.letterSpacing = -20;
-        this.add(statLabel);
+        this.statLabel = new ex.Label(displayText, 0, 0, null, this.font);
+        this.statLabel.fontSize = 60;
+        this.statLabel.letterSpacing = -44;
+        this.add(this.statLabel);
         hudStat.on('postdraw', this.postdraw);
     };
     HUDStat.prototype.postdraw = function (evt) {
+        this.statLabel.text = this.stat.getStatName() + ":" + this.stat.state.value;
     };
     return HUDStat;
 }(ex.UIActor));
+/// <reference path="./ship.ts" />
+/// <reference path="bullet.ts" />
+/// <reference path="pool.ts" />
+/// <reference path="stats.ts" />
+// one global area to track game state, makes the game easier to restart
+var GameState = (function () {
+    function GameState() {
+    }
+    GameState.getStatIdx = function (name) {
+        var idx = -1;
+        GameState.state.stats.filter(function (itm, currIdx) {
+            if (itm.getStatName() === name) {
+                idx = currIdx;
+            }
+            return itm.getStatName() === name;
+        });
+        return idx;
+    };
+    GameState.getGameStat = function (name) {
+        var statIdx = this.getStatIdx(name);
+        if (statIdx != -1) {
+            return GameState.state.stats[statIdx].state.value;
+        }
+        else {
+            console.error(name + " isn't the name of any game stat.");
+        }
+    };
+    GameState.setGameStat = function (name, value) {
+        var statIdx = this.getStatIdx(name);
+        if (statIdx != -1) {
+            GameState.state.stats[statIdx].state.value = value;
+        }
+        else {
+            console.error(name + " isn't the name of any game stat.");
+        }
+    };
+    // set any defaults
+    GameState.init = function (game) {
+        GameState.state = {
+            ship: new Ship(100, 100, 48, 48),
+            bullets: new Pool(500, function () {
+                var b = new Bullet();
+                game.add(b);
+                return b;
+            }),
+            stats: [new Stat("KILLS", 0)]
+        };
+        GameState.state.bullets.fill();
+        game.add(GameState.state.ship);
+    };
+    return GameState;
+}());
+// wire into app insights to send events to our anlytics provider, trackEvent
+// documentation
+//https://github.com/Microsoft/ApplicationInsights-JS/blob/master/API-reference.md
+var Analytics = (function () {
+    function Analytics() {
+    }
+    return Analytics;
+}());
 /// <reference path="stateful.ts" />
 /// <reference path="shape.ts" />
 var Badguy = (function (_super) {
@@ -762,14 +796,14 @@ game.on('update', function (evt) {
 var gameBounds = new ex.BoundingBox(0, 0, Config.MapWidth, Config.MapHeight);
 game.start(loader).then(function () {
     var sf = new Starfield();
-    var statBox = new HUDStat(new Stat("KILLS", "0"), 10, 50, 150, 50);
     var bg = new Background();
     var fbg = new Frontground();
     game.add(sf);
     game.add(bg);
-    game.add(statBox);
     Torch.place(game);
     GameState.init(game);
-    game.add(fbg);
+    var killIdx = GameState.getStatIdx("KILLS");
+    var killHUDUI = new HUDStat(GameState.state.stats[killIdx], 10, 60, 150, 50);
+    game.add(killHUDUI);
 });
 //# sourceMappingURL=game.js.map
