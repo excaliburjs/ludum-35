@@ -45,23 +45,50 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
          this.addDrawing('default', anim);
          
          //initialize badguy
-         badguy.on('preupdate', this.preupdate);
+         badguy.on('preupdate', this._preupdate);
+         badguy.on('update', this._update);
          badguy.on('collision', this._collision);
       }
       this.weapon = new StraightShooter(this, Config.bullets.speed, Config.bullets.damage)
    }
-   preupdate(evt: ex.PreUpdateEvent){
+   _preupdate(evt: ex.PreUpdateEvent){
       
-      
-      var dx = GameState.state.ship.x;
-      var dy = GameState.state.ship.y;
-      var oppVel = new ex.Vector(this.dx, this.dy).scale(-1).scale(Config.spaceFriction);
-      
-      this.dx += oppVel.x;
-      this.dy += oppVel.y;
-   
-    }
     
+      if (this.dx >= 0){
+        this.dx = Config.badguy.speed;
+      } else {
+        this.dx = Config.badguy.speed * -1;
+      }
+      
+      if (this.dy >= 0) {
+        this.dy = Config.badguy.speed;
+      } else {
+        this.dy = Config.badguy.speed * -1;
+      }
+      
+    }
+    _update(evt: ex.UpdateEvent){
+       if (this.x > gameBounds.right) {
+           this.x = gameBounds.right;
+           this.dx *= -1;
+           this.dy *= -1;
+       }
+       if (this.x < gameBounds.left) {
+           this.x = gameBounds.left;
+           this.dx *= -1;
+           this.dy *= -1; 
+      }
+       if (this.y > gameBounds.bottom) {
+           this.y = gameBounds.bottom;
+           this.dy *= -1;
+           this.dx *= -1;
+       }
+       if (this.y < gameBounds.top) {
+           this.y = gameBounds.top;
+           this.dy *= -1;
+           this.dx *= -1;
+       }
+    }
     _collision(collision: ex.CollisionEvent){
       //var BadGuySheet = new ex.SpriteSheet(this.ActiveType, 5, 1, 32, 32);
       
