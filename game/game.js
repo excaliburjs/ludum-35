@@ -794,6 +794,7 @@ var SoundManager = (function () {
     return SoundManager;
 }());
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
+/// <reference path="../lodash.d.ts" />
 /// <reference path="gamestate.ts" />
 /// <reference path="analytics.ts" />
 /// <reference path="config.ts" />
