@@ -14,5 +14,6 @@ var Resources = {
    DigitalFontSheet: new ex.Texture("./fonts/DigitalFont.bmp"),
    Explode: new ex.Sound('./snd/explode1.wav'),
    PlanetBg: new ex.Texture('./img/planet-bg.png'),
-   FrontBg: new ex.Texture('./img/front-bg.png')
+   FrontBg: new ex.Texture('./img/front-bg.png'),
+   Torch: new ex.Texture('./img/torch.png')
 };
