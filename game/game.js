@@ -436,7 +436,7 @@ var Badguy = (function (_super) {
             Resources.SquareBadguySheet,
             Resources.CircleBadguySheet
         ];
-        this.ActiveType = BadguyTypes[badguytype];
+        var ActiveType = BadguyTypes[badguytype];
         var BadGuySheet = new ex.SpriteSheet(ActiveType, 2, 1, 32, 32);
         this.scale.setTo(2, 2);
         //this.anchor.setTo(.1, .1);
