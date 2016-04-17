@@ -218,7 +218,7 @@ var Pool = (function () {
         if (count === void 0) { count = this._pool.internalSize(); }
         for (var i = 0; i < count; i++) {
             var o = this.factory();
-            o.id = i;
+            o.poolId = i;
             this._pool.push(o);
             this._free.push(i);
         }
@@ -235,7 +235,7 @@ var Pool = (function () {
         if (!obj)
             return;
         obj.reset();
-        this._free.push(obj.id);
+        this._free.push(obj.poolId);
     };
     return Pool;
 }());
@@ -412,6 +412,21 @@ var Starfield = (function (_super) {
     };
     return Starfield;
 }(ex.UIActor));
+var Background = (function (_super) {
+    __extends(Background, _super);
+    function Background() {
+        _super.call(this, 0, 0, 50, 50);
+        this.color = ex.Color.Red;
+    }
+    Background.prototype.update = function (engine, delta) {
+        _super.prototype.update.call(this, engine, delta);
+        var pdx = -GameState.state.ship.dx;
+        var pdy = -GameState.state.ship.dy;
+        this.dx = pdx * 0.01;
+        this.dy = pdy * 0.01;
+    };
+    return Background;
+}(ex.UIActor));
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="gamestate.ts" />
 /// <reference path="analytics.ts" />
@@ -421,6 +436,7 @@ var Starfield = (function (_super) {
 /// <reference path="ship.ts" />
 /// <reference path="badguyfactory.ts" />
 /// <reference path="starfield.ts" />
+/// <reference path="background.ts" />
 var game = new ex.Engine({
     canvasElementId: "game",
     width: Config.width,

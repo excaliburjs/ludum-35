@@ -7,6 +7,7 @@
 /// <reference path="ship.ts" />
 /// <reference path="badguyfactory.ts" />
 /// <reference path="starfield.ts" />
+/// <reference path="background.ts" />
 
 
 var game = new ex.Engine({
