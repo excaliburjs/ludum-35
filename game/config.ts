@@ -10,6 +10,7 @@ var Config = {
 	CameraFriction: .41,
    shipSpeedScale: 2,
    spaceFriction: .01,
+   ShieldCoolDownTime: 1000,
    
    // Baddies
    SpawnInterval: 5500, //ms
@@ -37,7 +38,7 @@ var Config = {
    },
    
    badguy: {
-      speed: 25,
+      speed: 200,
       size: 1 //multiplier from original?
    }
    

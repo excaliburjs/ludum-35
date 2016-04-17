@@ -1,5 +1,6 @@
 var Resources = {
    ShipSpriteSheet: new ex.Texture('./img/ship.png'),
+   WitchSpriteSheet: new ex.Texture('./img/witch.png'),
    CircleShieldSheet: new ex.Texture('./img/circlesheild.png'),
    SquareShieldSheet: new ex.Texture('./img/squaresheild.png'),
    TriangleShieldSheet: new ex.Texture('./img/trianglesheild.png'),
@@ -12,5 +13,8 @@ var Resources = {
    TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png'),
    DiabloFontSheet: new ex.Texture("./fonts/DiabloFont.bmp"),
    Explode: new ex.Sound('./snd/explode1.wav'),
-   PlanetBg: new ex.Texture('./img/planet-bg.png')
+   On: new ex.Sound('./snd/on.wav'),
+   No: new ex.Sound('./snd/no.wav'),
+   PlanetBg: new ex.Texture('./img/planet-bg.png'),
+   FrontBg: new ex.Texture('./img/front-bg.png')
 };
