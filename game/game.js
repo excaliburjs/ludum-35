@@ -83,7 +83,8 @@ var Resources = {
     TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png'),
     DigitalFontSheet: new ex.Texture("./fonts/DigitalFont.bmp"),
     Explode: new ex.Sound('./snd/explode1.wav'),
-    PlanetBg: new ex.Texture('./img/planet-bg.png')
+    PlanetBg: new ex.Texture('./img/planet-bg.png'),
+    FrontBg: new ex.Texture('./img/front-bg.png')
 };
 var Config = {
     width: 960,
@@ -546,12 +547,13 @@ var Starfield = (function (_super) {
     function Starfield() {
         _super.call(this, 0, 0, 0, 0);
         this._stars = [];
+        this.anchor.setTo(0, 0);
     }
     Starfield.prototype.onInitialize = function (engine) {
         var _this = this;
         _super.prototype.onInitialize.call(this, engine);
-        this.setWidth(game.getWidth());
-        this.setHeight(game.getHeight());
+        this.setWidth(gameBounds.getWidth());
+        this.setHeight(gameBounds.getHeight());
         // generate stars
         for (var i = 0; i < Config.StarfieldSize; i++) {
             this._stars.push({
@@ -590,7 +592,7 @@ var Starfield = (function (_super) {
         }
     };
     return Starfield;
-}(ex.UIActor));
+}(ex.Actor));
 var Background = (function (_super) {
     __extends(Background, _super);
     function Background() {
@@ -601,6 +603,24 @@ var Background = (function (_super) {
         this.addDrawing(Resources.PlanetBg);
     };
     return Background;
+}(ex.Actor));
+var Frontground = (function (_super) {
+    __extends(Frontground, _super);
+    function Frontground() {
+        _super.call(this, 0, -100, 10000, 1920);
+        this.anchor.setTo(0, 0);
+    }
+    Frontground.prototype.onInitialize = function () {
+        this.addDrawing(Resources.FrontBg);
+    };
+    Frontground.prototype.update = function (engine, delta) {
+        _super.prototype.update.call(this, engine, delta);
+        var pdx = GameState.state.ship.dx;
+        var pdy = GameState.state.ship.dy;
+        this.dx = -pdx;
+        this.dy = -pdy;
+    };
+    return Frontground;
 }(ex.Actor));
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="gamestate.ts" />
@@ -667,9 +687,11 @@ game.start(loader).then(function () {
     var sf = new Starfield();
     var statBox = new HUDStat(new Stat("KILLS", "0"), 10, 50, 150, 50);
     var bg = new Background();
+    var fbg = new Frontground();
     game.add(sf);
     game.add(bg);
     game.add(statBox);
     GameState.init(game);
+    game.add(fbg);
 });
 //# sourceMappingURL=game.js.map

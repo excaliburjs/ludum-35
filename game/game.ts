@@ -80,8 +80,10 @@ game.start(loader).then(() => {
 	var sf = new Starfield();
 	var statBox = new HUDStat(new Stat("KILLS", "0"), 10, 50, 150, 50);
 	var bg = new Background();
+	var fbg = new Frontground();
 	game.add(sf);
-	game.add(bg);
+	game.add(bg);	
 	game.add(statBox);
 	GameState.init(game);
+	game.add(fbg);
 });
