@@ -27,30 +27,41 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       var ActiveType = BadguyTypes[badguytype];
       
       var BadGuySheet = new ex.SpriteSheet(ActiveType, 2, 1, 32, 32);
-      //var CircleBadguySheet = new ex.SpriteSheet(Resources.CircleBadguySheet, 5, 1, 48, 48);
-      //var SquareBadguySheet = new ex.SpriteSheet(Resources.SquareBadguySheet, 5, 1, 48, 48);
-      //var TriangleBadguySheet = new ex.SpriteSheet(Resources.TriangleBadguySheet, 5, 1, 48, 48);
-
+      
       this.scale.setTo(2,2);
       //this.anchor.setTo(.1, .1);
+      
       this.setCenterDrawing(true);
       this.onInitialize = (engine: ex.Engine) => {
          var badguy = this;
          var anim = BadGuySheet.getAnimationForAll(engine, 150);
+         //var anim = BadGuySheet.getAnimationBetween(engine, 0, 5, 150);
+         
          
          anim.loop = true;
          anim.anchor.setTo(.3, .3);
          this.addDrawing('default', anim);
          
          //initialize badguy
-         badguy.on('preupdate', (evt: ex.PreUpdateEvent) => {
-            badguy.dx = Config.badguy.speed;
-            badguy.dy = Config.badguy.speed;
-            
-         });
+         badguy.on('preupdate', this.preupdate);
       }
    }
-
+    preupdate(evt: ex.PreUpdateEvent){
+      
+      var multiplier = Math.random();
+      
+      if (multiplier !== 1){
+        multiplier = -1;
+      }
+      
+      
+      var dy = this.y * multiplier;
+      var dx = this.x * multiplier;
+      this.dx = dy;
+      this.dy = dx;
+      
+      
+    }
    state: BadguyState;
    
    reset(state?: BadguyState) {

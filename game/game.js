@@ -51,9 +51,9 @@ var Resources = {
     SquareShieldSheet: new ex.Texture('./img/squaresheild.png'),
     TriangleShieldSheet: new ex.Texture('./img/trianglesheild.png'),
     PlayerBullet: new ex.Texture('./img/playerbullet.png'),
-    CircleBadguySheet: new ex.Texture('./img/circlebadguy.png'),
-    TriangleBadguySheet: new ex.Texture('./img/trianglebadguy.png'),
-    SquareBadguySheet: new ex.Texture('./img/squarebadguy.png'),
+    CircleBadguySheet: new ex.Texture('./img/circlebadguyexplodes.png'),
+    TriangleBadguySheet: new ex.Texture('./img/trianglebadguyexplodes.png'),
+    SquareBadguySheet: new ex.Texture('./img/squarebadguyexplodes.png'),
     CircleBullet: new ex.Texture('./img/bullets/blueBullet.png'),
     SquareBullet: new ex.Texture('./img/bullets/greenBullet.png'),
     TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png'),
@@ -89,7 +89,7 @@ var Config = {
         damage: 1
     },
     badguy: {
-        speed: 1,
+        speed: 25,
         size: 1 //multiplier from original?
     }
 };
@@ -366,25 +366,30 @@ var Badguy = (function (_super) {
         ];
         var ActiveType = BadguyTypes[badguytype];
         var BadGuySheet = new ex.SpriteSheet(ActiveType, 2, 1, 32, 32);
-        //var CircleBadguySheet = new ex.SpriteSheet(Resources.CircleBadguySheet, 5, 1, 48, 48);
-        //var SquareBadguySheet = new ex.SpriteSheet(Resources.SquareBadguySheet, 5, 1, 48, 48);
-        //var TriangleBadguySheet = new ex.SpriteSheet(Resources.TriangleBadguySheet, 5, 1, 48, 48);
         this.scale.setTo(2, 2);
         //this.anchor.setTo(.1, .1);
         this.setCenterDrawing(true);
         this.onInitialize = function (engine) {
             var badguy = _this;
             var anim = BadGuySheet.getAnimationForAll(engine, 150);
+            //var anim = BadGuySheet.getAnimationBetween(engine, 0, 5, 150);
             anim.loop = true;
             anim.anchor.setTo(.3, .3);
             _this.addDrawing('default', anim);
             //initialize badguy
-            badguy.on('preupdate', function (evt) {
-                badguy.dx = Config.badguy.speed;
-                badguy.dy = Config.badguy.speed;
-            });
+            badguy.on('preupdate', _this.preupdate);
         };
     }
+    Badguy.prototype.preupdate = function (evt) {
+        var multiplier = Math.random();
+        if (multiplier !== 1) {
+            multiplier = -1;
+        }
+        var dy = this.y * multiplier;
+        var dx = this.x * multiplier;
+        this.dx = dy;
+        this.dy = dx;
+    };
     Badguy.prototype.reset = function (state) {
         if (!state) {
             this.state = {
