@@ -307,6 +307,9 @@ var Stat = (function () {
         this.reset();
         this.state.value = defaultValue;
     }
+    Stat.prototype.getStatName = function () {
+        return this.name;
+    };
     Stat.prototype.reset = function (state) {
         if (!state) {
             this.state = {
@@ -330,7 +333,8 @@ var HUDStat = (function (_super) {
         _super.prototype.onInitialize.call(this, engine);
         var hudStat = this;
         this.font = new ex.SpriteFont(Resources.DigitalFontSheet, " !\"#$%&'{}*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_", false, 8, 8, 32, 32);
-        var statLabel = new ex.Label("TEST PLOX", 100, 100, null, this.font);
+        var displayText = this.stat.getStatName() + ":" + this.stat.state.value;
+        var statLabel = new ex.Label(displayText, 0, 0, null, this.font);
         statLabel.fontSize = 40;
         statLabel.letterSpacing = -20;
         this.add(statLabel);
@@ -557,13 +561,7 @@ game.on('update', function (evt) {
 });
 game.start(loader).then(function () {
     var sf = new Starfield();
-    var statBox = new HUDStat(new Stat("test", "derp"), 100, 100, 150, 50);
-    var spriteFont = new ex.SpriteFont(Resources.DigitalFontSheet, " !\"#$%&'{}*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_", false, 8, 8, 32, 32);
-    var statLabel = new ex.Label("TEST PLOX", 100, 100, null, spriteFont);
-    statLabel.fontSize = 40;
-    statLabel.letterSpacing = -20;
-    //statLabel.color = ex.Color.Red.clone();
-    statBox.add(statLabel);
+    var statBox = new HUDStat(new Stat("KILLS", "0"), 10, 50, 150, 50);
     game.add(sf);
     game.add(statBox);
     GameState.init(game);
