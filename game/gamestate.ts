@@ -7,7 +7,8 @@
 interface IGameState {
    ship: Ship;
    bullets: Pool<Bullet, BulletState>;
-   stats: Stat[]
+   stats: Stat[],
+   stage: number
 }
 
 // one global area to track game state, makes the game easier to restart
@@ -46,21 +47,25 @@ class GameState {
       }
       
       // set any defaults
-      static init(game: ex.Engine) {
-                      
+      static init() {
+            
+         // reset current engine state
+         if (GameState.state) {
+            game.remove(GameState.state.ship);
+         }
+         
          GameState.state = {
-            ship: new Ship(100, 100, 48, 48),
+            ship: new Ship(Config.PlayerSpawn.x, Config.PlayerSpawn.y, 48, 48),
             bullets: null,
-            /*bullets: new Pool<Bullet, BulletState>(500, () => {
-                  var b = new Bullet();
-                  //game.add(b);
-                  return b;
-            }),*/
-            stats: [new Stat("KILLS", 0)]
+            stats: [new Stat("KILLS", 0)],
+            stage: 0
          };
          //GameState.state.bullets.fill();
          
          game.add(GameState.state.ship);
+         
+         // start the waves
+         badGuyFactory.nextWave();
       }
       
       static reset() {

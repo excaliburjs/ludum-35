@@ -129,8 +129,8 @@ function updateCamera(evt: ex.UpdateEvent){
 	game.currentScene.camera.setFocus(focus.x, focus.y);
 }
 
-var badGuyFactory = new BadGuyFactory(Config.SpawnInterval, Config.MinEnemiesPerSpawn, Config.MaxEnemiesPerSpawn);
-badGuyFactory.start();
+var badGuyFactory = new BadGuyFactory();
+
 function updateDispatchers(evt: ex.UpdateEvent) {
 	badGuyFactory.update(game, evt.delta);
 }
@@ -150,7 +150,7 @@ game.start(loader).then(() => {
 	game.add(sf);
 	game.add(bg);	
 	Torch.place(game);
-	GameState.init(game);
+	GameState.init();
 	game.add(fbg);
 	var killIdx = GameState.getStatIdx("KILLS");
 	

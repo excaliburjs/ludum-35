@@ -88,6 +88,9 @@ var Resources = {
     CircleBullet: new ex.Texture('./img/bullets/blueBullet.png'),
     SquareBullet: new ex.Texture('./img/bullets/greenBullet.png'),
     TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png'),
+    CirclePortal: new ex.Texture('./img/blueportal.png'),
+    SquarePortal: new ex.Texture('./img/greenportal.png'),
+    TrianglePortal: new ex.Texture('./img/yellowportal.png'),
     DiabloFontSheet: new ex.Texture("./fonts/DiabloFont.png"),
     Explode: new ex.Sound('./snd/explode1.wav'),
     On: new ex.Sound('./snd/on.wav'),
@@ -101,6 +104,8 @@ var Config = {
     height: 640,
     MapWidth: 5000,
     MapHeight: 960,
+    // Ship
+    PlayerSpawn: new ex.Point(2500, 700),
     // Camera
     CameraElasticity: .08,
     CameraFriction: .41,
@@ -111,9 +116,7 @@ var Config = {
     playerMinVelocity: -500,
     playerMaxVelocity: 500,
     // Baddies
-    SpawnInterval: 5500,
-    MinEnemiesPerSpawn: 1,
-    MaxEnemiesPerSpawn: 5,
+    PortalSpawnWaitTime: 3000,
     poolSizeIncrement: 100,
     // Starfield
     StarfieldSize: 500,
@@ -203,7 +206,10 @@ var Ship = (function (_super) {
         if (!state) {
             this.state = {
                 shieldType: Shape.Shape1,
-                weapon: new StraightShooter(this, Config.bullets.speed, Config.bullets.damage)
+                weapon: new StraightShooter(this, Config.bullets.speed, Config.bullets.damage),
+                squarePool: 0,
+                circlePool: 0,
+                trianglePool: 0
             };
         }
         else {
@@ -484,19 +490,21 @@ var GameState = (function () {
         }
     };
     // set any defaults
-    GameState.init = function (game) {
+    GameState.init = function () {
+        // reset current engine state
+        if (GameState.state) {
+            game.remove(GameState.state.ship);
+        }
         GameState.state = {
-            ship: new Ship(100, 100, 48, 48),
+            ship: new Ship(Config.PlayerSpawn.x, Config.PlayerSpawn.y, 48, 48),
             bullets: null,
-            /*bullets: new Pool<Bullet, BulletState>(500, () => {
-                  var b = new Bullet();
-                  //game.add(b);
-                  return b;
-            }),*/
-            stats: [new Stat("KILLS", 0)]
+            stats: [new Stat("KILLS", 0)],
+            stage: 0
         };
         //GameState.state.bullets.fill();
         game.add(GameState.state.ship);
+        // start the waves
+        badGuyFactory.nextWave();
     };
     GameState.reset = function () {
         //TODO
@@ -525,9 +533,9 @@ var Analytics = (function () {
 /// <reference path="shape.ts" />
 var Badguy = (function (_super) {
     __extends(Badguy, _super);
-    function Badguy(x, y, width, height, badguytype) {
+    function Badguy(x, y, badguytype) {
         var _this = this;
-        _super.call(this, x, y, width, height);
+        _super.call(this, x, y, 32, 32);
         this.badguytype = badguytype;
         this.BadguyTypes = [
             Resources.SquareBadguySheet,
@@ -617,39 +625,167 @@ var Badguy = (function (_super) {
     };
     return Badguy;
 }(ex.Actor));
+var Portal = (function (_super) {
+    __extends(Portal, _super);
+    function Portal(state) {
+        _super.call(this, state.location.x, state.location.y);
+        this.state = state;
+    }
+    Portal.prototype.onInitialize = function () {
+        this.setZIndex(1);
+        this.scale.setTo(3, 3);
+        var tx;
+        switch (this.state.type) {
+            case Shape.Shape1:
+                tx = Resources.SquarePortal;
+                break;
+            case Shape.Shape2:
+                tx = Resources.CirclePortal;
+                break;
+            case Shape.Shape3:
+                tx = Resources.TrianglePortal;
+                break;
+        }
+        var ss = new ex.SpriteSheet(tx, 5, 1, 48, 48);
+        var anim = ss.getAnimationForAll(game, 125);
+        anim.loop = true;
+        this.addDrawing('default', anim);
+        this.setDrawing('default');
+    };
+    return Portal;
+}(ex.Actor));
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="badguy.ts" />
+/// <reference path="portal.ts" />
 var BadGuyFactory = (function () {
-    function BadGuyFactory(frequencySeconds, minEnemy, maxEnemy) {
-        this.frequencySeconds = frequencySeconds;
-        this.minEnemy = minEnemy;
-        this.maxEnemy = maxEnemy;
-        this._started = false;
-        this._currentTime = Date.now();
+    function BadGuyFactory() {
+        this._waveStarted = false;
+        this._portalSpawnWaitTimer = 0;
+        this._openPortals = [];
     }
     BadGuyFactory.prototype.update = function (engine, delta) {
-        if (this._started) {
-            this._currentTime += delta;
-            if (this._currentTime >= this._futureDispatchTime) {
-                this.spawn(engine, ex.Util.randomIntInRange(this.minEnemy, this.maxEnemy));
-                this._futureDispatchTime = this._currentTime + (this.frequencySeconds);
+        if (this._waveStarted) {
+            this._portalSpawnWaitTimer = Config.PortalSpawnWaitTime;
+            this._waveStarted = false;
+        }
+        // check if portals can be closed
+        var portalsToClose = [];
+        for (var _i = 0, _a = this._openPortals; _i < _a.length; _i++) {
+            var p = _a[_i];
+            var poolAmount = 0;
+            switch (p.state.type) {
+                case Shape.Shape1:
+                    poolAmount = GameState.state.ship.state.trianglePool;
+                    break;
+                case Shape.Shape2:
+                    poolAmount = GameState.state.ship.state.circlePool;
+                    break;
+                case Shape.Shape3:
+                    poolAmount = GameState.state.ship.state.squarePool;
+                    break;
+            }
+            if (poolAmount >= p.state.closeAmount) {
+                // close portal
+                portalsToClose.push(p);
             }
         }
-    };
-    BadGuyFactory.prototype.spawn = function (engine, numberOfBaddies) {
-        //console.log(`Dispatch ${numberOfBaddies}`);
-        for (var i = 0; i < numberOfBaddies; i++) {
-            //todo engine.add(new BadGuy());
-            engine.add(new Badguy(ex.Util.randomInRange(-400, 400), ex.Util.randomInRange(-400, 400), 32, 32, ex.Util.randomIntInRange(0, 2)));
+        for (var _b = 0, portalsToClose_1 = portalsToClose; _b < portalsToClose_1.length; _b++) {
+            var p = portalsToClose_1[_b];
+            this.closePortal(p);
+        }
+        if (this._openPortals.length === 0) {
+            this.nextWave();
+            return;
+        }
+        // after portal spawns, spawn enemies
+        if (this._portalSpawnWaitTimer <= 0) {
+            // for open portals, spawn baddies
+            for (var _c = 0, _d = this._openPortals; _c < _d.length; _c++) {
+                var p = _d[_c];
+                // remove killed baddies
+                var baddiesToRemove = [];
+                for (var _e = 0, _f = p.state.baddies; _e < _f.length; _e++) {
+                    var b = _f[_e];
+                    if (b.isKilled()) {
+                        baddiesToRemove.push(b);
+                    }
+                }
+                for (var _g = 0, baddiesToRemove_1 = baddiesToRemove; _g < baddiesToRemove_1.length; _g++) {
+                    var b = baddiesToRemove_1[_g];
+                    p.state.baddies.splice(p.state.baddies.indexOf(b), 1);
+                }
+                if (p.state.rateTimer <= 0 && p.state.baddies.length < p.state.maxSimultaneous) {
+                    this.spawnBaddie(p.state);
+                    p.state.rateTimer = p.state.rate;
+                }
+                else {
+                    p.state.rateTimer -= delta;
+                }
+            }
+        }
+        else {
+            this._portalSpawnWaitTimer -= delta;
         }
     };
-    BadGuyFactory.prototype.start = function () {
-        this._started = true;
-        this._currentTime = Date.now();
-        this._futureDispatchTime = this._currentTime + (this.frequencySeconds);
+    BadGuyFactory.prototype.spawnBaddie = function (portal) {
+        var baddie = new Badguy(portal.location.x, portal.location.y, portal.type);
+        // baddie.on('kill', () => {
+        //    var idx = portal.baddies.indexOf(baddie);
+        //    portal.baddies.splice(idx, 1);         
+        // });
+        game.add(baddie);
+        portal.baddies.push(baddie);
     };
-    BadGuyFactory.prototype.stop = function () {
-        this._started = false;
+    BadGuyFactory.prototype.nextWave = function () {
+        this._waveStarted = true;
+        if (this._waveInfo) {
+            for (var _i = 0, _a = this._waveInfo.portals; _i < _a.length; _i++) {
+                var p = _a[_i];
+                for (var _b = 0, _c = p.baddies; _b < _c.length; _b++) {
+                    var b = _c[_b];
+                    game.remove(b);
+                }
+                p.baddies.length = 0;
+            }
+        }
+        // despawn portals
+        for (var _d = 0, _e = this._openPortals; _d < _e.length; _d++) {
+            var p = _e[_d];
+            game.remove(p);
+        }
+        this._openPortals.length = 0;
+        var stage = GameState.state.stage += 1;
+        // set spawn locations
+        if (stage === 1) {
+            // place portal in center
+            this._waveInfo = {
+                portals: [{
+                        location: new ex.Point(2500, 420),
+                        rate: 2000,
+                        rateTimer: 0,
+                        baddies: [],
+                        maxSimultaneous: 3,
+                        type: Shape.Shape1,
+                        closeAmount: 5
+                    }]
+            };
+            this.spawnPortals();
+        }
+        else {
+        }
+    };
+    BadGuyFactory.prototype.spawnPortals = function () {
+        for (var _i = 0, _a = this._waveInfo.portals; _i < _a.length; _i++) {
+            var portal = _a[_i];
+            var p = new Portal(portal);
+            game.add(p);
+            this._openPortals.push(p);
+        }
+    };
+    BadGuyFactory.prototype.closePortal = function (p) {
+        var idx = this._openPortals.indexOf(p);
+        this._openPortals.splice(idx, 1);
+        game.remove(p);
     };
     return BadGuyFactory;
 }());
@@ -917,8 +1053,7 @@ function updateCamera(evt) {
     // Set new position on camera
     game.currentScene.camera.setFocus(focus.x, focus.y);
 }
-var badGuyFactory = new BadGuyFactory(Config.SpawnInterval, Config.MinEnemiesPerSpawn, Config.MaxEnemiesPerSpawn);
-badGuyFactory.start();
+var badGuyFactory = new BadGuyFactory();
 function updateDispatchers(evt) {
     badGuyFactory.update(game, evt.delta);
 }
@@ -935,7 +1070,7 @@ game.start(loader).then(function () {
     game.add(sf);
     game.add(bg);
     Torch.place(game);
-    GameState.init(game);
+    GameState.init();
     game.add(fbg);
     var killIdx = GameState.getStatIdx("KILLS");
     var killHUDUI = new HUDStat(GameState.state.stats[killIdx], 10, 60, 150, 50);
