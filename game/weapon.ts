@@ -38,7 +38,7 @@ class StraightShooter extends WeaponBase {
          x: this.source.x,
          y: this.source.y,
          speed: this.speed,
-         shape: Shape.Shape1
+         shape: Shape.PlayerBullet
       });
    }
    

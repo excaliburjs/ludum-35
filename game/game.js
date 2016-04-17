@@ -8,6 +8,7 @@ var Shape;
     Shape[Shape["Shape1"] = 0] = "Shape1";
     Shape[Shape["Shape2"] = 1] = "Shape2";
     Shape[Shape["Shape3"] = 2] = "Shape3";
+    Shape[Shape["PlayerBullet"] = 3] = "PlayerBullet";
 })(Shape || (Shape = {}));
 var WeaponBase = (function () {
     function WeaponBase(interval, source) {
@@ -41,7 +42,7 @@ var StraightShooter = (function (_super) {
             x: this.source.x,
             y: this.source.y,
             speed: this.speed,
-            shape: Shape.Shape1
+            shape: Shape.PlayerBullet
         });
     };
     return StraightShooter;
@@ -74,7 +75,7 @@ var Resources = {
     CircleShieldSheet: new ex.Texture('./img/circlesheildbig.png'),
     SquareShieldSheet: new ex.Texture('./img/squaresheildbig.png'),
     TriangleShieldSheet: new ex.Texture('./img/trianglesheildbig.png'),
-    PlayerBullet: new ex.Texture('./img/playerbullet.png'),
+    PlayerBullet: new ex.Texture('./img/WitchSpell.png'),
     CircleBadguySheet: new ex.Texture('./img/circlebadguyexplodes.png'),
     TriangleBadguySheet: new ex.Texture('./img/trianglebadguyexplodes.png'),
     SquareBadguySheet: new ex.Texture('./img/squarebadguyexplodes.png'),
@@ -308,6 +309,7 @@ var Bullet = (function (_super) {
         var triangleBulletSheet = new ex.SpriteSheet(Resources.TriangleBullet, 3, 1, 32, 32);
         var circleBulletSheet = new ex.SpriteSheet(Resources.CircleBullet, 3, 1, 32, 32);
         var squareBulletSheet = new ex.SpriteSheet(Resources.SquareBullet, 3, 1, 32, 32);
+        var playerBulletSheet = new ex.SpriteSheet(Resources.PlayerBullet, 6, 1, 32, 32);
         this._triangleBulletAnim = triangleBulletSheet.getAnimationForAll(engine, 100);
         this._triangleBulletAnim.anchor.setTo(.5, .5);
         this._triangleBulletAnim.loop = true;
@@ -317,6 +319,9 @@ var Bullet = (function (_super) {
         this._squareBulletAnim = squareBulletSheet.getAnimationForAll(engine, 100);
         this._squareBulletAnim.anchor.setTo(.5, .5);
         this._squareBulletAnim.loop = true;
+        this._playerBulletAnim = playerBulletSheet.getAnimationForAll(engine, 100);
+        this._playerBulletAnim.anchor.setTo(.5, .5);
+        this._playerBulletAnim.loop = true;
     };
     Bullet.prototype.reset = function (state) {
         if (!state) {
@@ -353,6 +358,10 @@ var Bullet = (function (_super) {
         }
         if (this.state.shape === Shape.Shape3) {
             this._triangleBulletAnim.draw(evt.ctx, 0, 0);
+        }
+        if (this.state.shape === Shape.PlayerBullet) {
+            this._playerBulletAnim.draw(evt.ctx, 0, 0);
+            this.scale.setTo(2, 2);
         }
     };
     return Bullet;
