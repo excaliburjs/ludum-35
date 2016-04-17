@@ -8,7 +8,7 @@
 /// <reference path="badguyfactory.ts" />
 /// <reference path="starfield.ts" />
 /// <reference path="background.ts" />
-
+/// <reference path="torch.ts" />
 
 var game = new ex.Engine({
    canvasElementId: "game",
@@ -80,10 +80,11 @@ game.start(loader).then(() => {
 	var sf = new Starfield();
 	var statBox = new HUDStat(new Stat("KILLS", "0"), 10, 50, 150, 50);
 	var bg = new Background();
-	var fbg = new Frontground();
+	var fbg = new Frontground();	
 	game.add(sf);
 	game.add(bg);	
 	game.add(statBox);
+	Torch.place(game);
 	GameState.init(game);
 	game.add(fbg);
 });
