@@ -70,6 +70,7 @@ var ShapeShooter = (function (_super) {
 }(WeaponBase));
 var Resources = {
     ShipSpriteSheet: new ex.Texture('./img/ship.png'),
+    WitchSpriteSheet: new ex.Texture('./img/witch.png'),
     CircleShieldSheet: new ex.Texture('./img/circlesheild.png'),
     SquareShieldSheet: new ex.Texture('./img/squaresheild.png'),
     TriangleShieldSheet: new ex.Texture('./img/trianglesheild.png'),
@@ -94,6 +95,7 @@ var Config = {
     CameraFriction: .41,
     shipSpeedScale: 2,
     spaceFriction: .01,
+    ShieldCoolDownTime: 1000,
     // Baddies
     SpawnInterval: 5500,
     MinEnemiesPerSpawn: 1,
@@ -141,13 +143,13 @@ var Ship = (function (_super) {
     }
     Ship.prototype.onInitialize = function (engine) {
         var _this = this;
-        var shipSheet = new ex.SpriteSheet(Resources.ShipSpriteSheet, 3, 1, 32, 42);
+        var shipSheet = new ex.SpriteSheet(Resources.WitchSpriteSheet, 2, 1, 48, 48);
         var squareSheild = new ex.SpriteSheet(Resources.SquareShieldSheet, 5, 1, 48, 48);
         var circleSheild = new ex.SpriteSheet(Resources.CircleShieldSheet, 5, 1, 48, 48);
         var triangleSheild = new ex.SpriteSheet(Resources.TriangleShieldSheet, 5, 1, 48, 48);
         var ship = this;
-        var anim = shipSheet.getAnimationForAll(engine, 150);
-        anim.rotation = Math.PI / 2;
+        var anim = shipSheet.getAnimationForAll(engine, 300);
+        anim.rotation = Math.PI / 8;
         anim.loop = true;
         anim.anchor.setTo(.5, .5);
         this.addDrawing('default', anim);
@@ -221,6 +223,7 @@ var Ship = (function (_super) {
             this.y = gameBounds.top;
             this.dy = 0;
         }
+        this._currentTime += delta;
         if (engine.input.keyboard.wasPressed(ex.Input.Keys.A)) {
             this.state.shieldType = Shape.Shape1;
         }
@@ -229,6 +232,14 @@ var Ship = (function (_super) {
         }
         else if (engine.input.keyboard.wasPressed(ex.Input.Keys.D)) {
             this.state.shieldType = Shape.Shape3;
+        }
+    };
+    Ship.prototype._switchShield = function (shape) {
+        if (this._currentTime > Config.ShieldCoolDownTime) {
+            this._currentTime = 0;
+            this.state.shieldType = shape;
+        }
+        else {
         }
     };
     Ship.prototype.predraw = function (evt) {

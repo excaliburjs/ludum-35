@@ -16,6 +16,7 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
    private _triangle: ex.Animation;
    private _square: ex.Animation;
    private _mouseDown: boolean = false;
+   private _currentTime: number;
    
    public poolId: number;
    public state: ShipState;
@@ -31,13 +32,13 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
    }
    
    onInitialize(engine: ex.Engine) {
-      var shipSheet = new ex.SpriteSheet(Resources.ShipSpriteSheet, 3, 1, 32, 42);
+      var shipSheet = new ex.SpriteSheet(Resources.WitchSpriteSheet, 2, 1, 48, 48);
       var squareSheild = new ex.SpriteSheet(Resources.SquareShieldSheet, 5, 1, 48, 48);      
       var circleSheild = new ex.SpriteSheet(Resources.CircleShieldSheet, 5, 1, 48, 48);
       var triangleSheild = new ex.SpriteSheet(Resources.TriangleShieldSheet, 5, 1, 48, 48);
       var ship = this;
-      var anim = shipSheet.getAnimationForAll(engine, 150);
-      anim.rotation = Math.PI/2;
+      var anim = shipSheet.getAnimationForAll(engine, 300);
+      anim.rotation = Math.PI/8;
       anim.loop = true;
       anim.anchor.setTo(.5, .5);
       this.addDrawing('default', anim);
@@ -121,13 +122,26 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
            this.y = gameBounds.top;
            this.dy = 0;
        }
-       
+       this._currentTime += delta;
        if(engine.input.keyboard.wasPressed(ex.Input.Keys.A)){
            this.state.shieldType = Shape.Shape1;
        } else if (engine.input.keyboard.wasPressed(ex.Input.Keys.S)){
            this.state.shieldType = Shape.Shape2;
        } else if (engine.input.keyboard.wasPressed(ex.Input.Keys.D)){
            this.state.shieldType = Shape.Shape3;
+       }
+       
+   }
+   
+   private _switchShield(shape: Shape){
+       
+       if(this._currentTime > Config.ShieldCoolDownTime){
+          this._currentTime = 0;
+          this.state.shieldType = shape;
+          // play bling sound
+       }else{
+          // play nah-uh sound
+             
        }
    }
    
