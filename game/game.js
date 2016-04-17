@@ -35,6 +35,7 @@ var StraightShooter = (function (_super) {
     StraightShooter.prototype.shoot = function () {
         // spawn bullet traveling in direction actor is facing
         GameState.state.bullets.spawn({
+            owner: this.source,
             d: ex.Vector.fromAngle(this.source.rotation),
             damage: this.damage,
             x: this.source.x,
@@ -55,7 +56,8 @@ var Resources = {
     SquareBadguySheet: new ex.Texture('./img/squarebadguy.png'),
     CircleBullet: new ex.Texture('./img/bullets/blueBullet.png'),
     SquareBullet: new ex.Texture('./img/bullets/greenBullet.png'),
-    TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png')
+    TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png'),
+    Explode: new ex.Sound('./snd/explode1.wav')
 };
 var Config = {
     width: 960,
@@ -66,7 +68,7 @@ var Config = {
     shipSpeedScale: 2,
     spaceFriction: .01,
     // Baddies
-    SpawnInterval: 1500,
+    SpawnInterval: 5500,
     MinEnemiesPerSpawn: 1,
     MaxEnemiesPerSpawn: 5,
     poolSizeIncrement: 100,
@@ -101,6 +103,7 @@ var Ship = (function (_super) {
     __extends(Ship, _super);
     function Ship(x, y, width, height) {
         _super.call(this, x, y, width, height);
+        this._mouseDown = false;
         this.color = ex.Color.Red.clone();
         this.scale.setTo(2, 2);
         this.anchor.setTo(.5, .5);
@@ -108,6 +111,7 @@ var Ship = (function (_super) {
         this.reset();
     }
     Ship.prototype.onInitialize = function (engine) {
+        var _this = this;
         var shipSheet = new ex.SpriteSheet(Resources.ShipSpriteSheet, 3, 1, 32, 42);
         var squareSheild = new ex.SpriteSheet(Resources.SquareShieldSheet, 5, 1, 48, 48);
         var circleSheild = new ex.SpriteSheet(Resources.CircleShieldSheet, 5, 1, 48, 48);
@@ -129,6 +133,15 @@ var Ship = (function (_super) {
         this._triangle.anchor.setTo(.5, .5);
         ship.on('preupdate', this.preupdate);
         ship.on('predraw', this.predraw);
+        engine.input.pointers.primary.on('down', this._pointerDown);
+        engine.input.pointers.primary.on('move', function (evt) {
+            if (_this._mouseDown) {
+                _this._pointerDown(evt);
+            }
+        });
+        engine.input.pointers.primary.on('up', function (evt) {
+            _this._mouseDown = false;
+        });
     };
     Ship.prototype.reset = function (state) {
         if (!state) {
@@ -142,15 +155,16 @@ var Ship = (function (_super) {
         }
         return this;
     };
-    Ship.prototype.preupdate = function (evt) {
+    Ship.prototype._pointerDown = function (click) {
         //console.log(`Update: ${evt.delta}`);
-        evt.engine.input.pointers.primary.on('down', function (click) {
-            var dx = click.x - GameState.state.ship.x;
-            var dy = click.y - GameState.state.ship.y;
-            GameState.state.ship.dx = dx * Config.shipSpeedScale;
-            GameState.state.ship.dy = dy * Config.shipSpeedScale;
-            GameState.state.ship.rotation = (new ex.Vector(dx, dy)).toAngle();
-        });
+        GameState.state.ship._mouseDown = true;
+        var dx = click.x - GameState.state.ship.x;
+        var dy = click.y - GameState.state.ship.y;
+        GameState.state.ship.dx = dx * Config.shipSpeedScale;
+        GameState.state.ship.dy = dy * Config.shipSpeedScale;
+        GameState.state.ship.rotation = (new ex.Vector(dx, dy)).toAngle();
+    };
+    Ship.prototype.preupdate = function (evt) {
         var oppVel = new ex.Vector(this.dx, this.dy).scale(-1).scale(Config.spaceFriction);
         this.dx += oppVel.x;
         this.dy += oppVel.y;
@@ -176,14 +190,25 @@ var Bullet = (function (_super) {
     function Bullet() {
         var _this = this;
         _super.call(this, 0, 0, 3, 3, ex.Color.Red);
+        this.owner = null;
+        this.collisionType = ex.CollisionType.Passive;
         this.reset();
         this.on('exitviewport', function () { return GameState.state.bullets.despawn(_this); });
+        this.on('collision', this._collision);
     }
+    Bullet.prototype._collision = function (collision) {
+        if (this.visible) {
+            console.log(this.owner);
+            Resources.Explode.play();
+            collision.other.kill();
+        }
+    };
     Bullet.prototype.reset = function (state) {
         if (!state) {
             this.visible = false;
             // defaults
             this.state = {
+                owner: null,
                 x: 0,
                 y: 0,
                 d: new ex.Vector(0, 0),
@@ -197,6 +222,7 @@ var Bullet = (function (_super) {
             this.state = state;
             this.x = state.x;
             this.y = state.y;
+            this.owner = state.owner;
             var normalized = this.state.d.normalize();
             this.dx = normalized.x * this.state.speed;
             this.dy = normalized.y * this.state.speed;
@@ -312,6 +338,7 @@ var Badguy = (function (_super) {
     function Badguy(x, y, width, height, badguytype) {
         var _this = this;
         _super.call(this, x, y, width, height);
+        this.collisionType = ex.CollisionType.Active;
         var BadguyTypes = [
             Resources.TriangleBadguySheet,
             Resources.SquareBadguySheet,

@@ -15,6 +15,7 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
    private _circle: ex.Animation;
    private _triangle: ex.Animation;
    private _square: ex.Animation;
+   private _mouseDown: boolean = false;
    
    public poolId: number;
    public state: ShipState;
@@ -53,6 +54,16 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       
       ship.on('preupdate', this.preupdate);            
       ship.on('predraw', this.predraw);
+      
+      engine.input.pointers.primary.on('down', this._pointerDown);
+      engine.input.pointers.primary.on('move', (evt: ex.Input.PointerEvent) => {
+         if(this._mouseDown){
+            this._pointerDown(evt);
+         }
+      });
+      engine.input.pointers.primary.on('up', (evt: ex.Input.PointerEvent) => {
+         this._mouseDown = false;
+      });
    }
    
    reset(state?: ShipState) {
@@ -66,19 +77,19 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       }
       return this;
    }
+   private _pointerDown(click: ex.Input.PointerEvent){
+       //console.log(`Update: ${evt.delta}`);
+      GameState.state.ship._mouseDown = true;
+      var dx = click.x - GameState.state.ship.x;
+      var dy = click.y - GameState.state.ship.y;
+      
+      GameState.state.ship.dx = dx * Config.shipSpeedScale;
+      GameState.state.ship.dy = dy * Config.shipSpeedScale;
+      
+      GameState.state.ship.rotation = (new ex.Vector(dx, dy)).toAngle();
+   }
    
    preupdate(evt: ex.PreUpdateEvent) {
-      //console.log(`Update: ${evt.delta}`);
-      evt.engine.input.pointers.primary.on('down', (click: ex.Input.PointerEvent) => {
-         var dx = click.x - GameState.state.ship.x;
-         var dy = click.y - GameState.state.ship.y;
-         
-         GameState.state.ship.dx = dx * Config.shipSpeedScale;
-         GameState.state.ship.dy = dy * Config.shipSpeedScale;
-         
-         GameState.state.ship.rotation = (new ex.Vector(dx, dy)).toAngle();
-      });
-      
       var oppVel = new ex.Vector(this.dx, this.dy).scale(-1).scale(Config.spaceFriction);
       this.dx += oppVel.x;
       this.dy += oppVel.y;
