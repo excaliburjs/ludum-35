@@ -83,6 +83,10 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       var dx = click.x - GameState.state.ship.x;
       var dy = click.y - GameState.state.ship.y;
       
+      if (!gameBounds.contains(new ex.Point(this.x, this.y))) {
+          return;
+      }
+      
       GameState.state.ship.dx = dx * Config.shipSpeedScale;
       GameState.state.ship.dy = dy * Config.shipSpeedScale;
       
@@ -95,6 +99,27 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       this.dy += oppVel.y;
       
       this.state.weapon.update(evt.delta);
+   }
+   
+   update(engine: ex.Engine, delta: number) {
+       super.update(engine, delta);
+       
+       if (this.x > gameBounds.right) {
+           this.x = gameBounds.right;
+           this.dx = 0;
+       }
+       if (this.x < gameBounds.left) {
+           this.x = gameBounds.left;
+           this.dx = 0;
+       }
+       if (this.y > gameBounds.bottom) {
+           this.y = gameBounds.bottom;
+           this.dy = 0;
+       }
+       if (this.y < gameBounds.top) {
+           this.y = gameBounds.top;
+           this.dy = 0;
+       }
    }
    
    predraw(evt: ex.PreDrawEvent) {

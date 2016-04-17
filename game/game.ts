@@ -54,6 +54,10 @@ function updateCamera(evt: ex.UpdateEvent){
 	// Update position by velocity deltas
 	focus = focus.plus(cameraVel);
 	
+	// clamp focus to game bounds
+	focus.x = ex.Util.clamp(focus.x, game.width / 2, gameBounds.right - (game.width / 2));
+	focus.y = ex.Util.clamp(focus.y, game.height / 2, gameBounds.bottom - (game.height / 2));
+	
 	// Set new position on camera
 	game.currentScene.camera.setFocus(focus.x, focus.y);
 }
@@ -71,10 +75,13 @@ game.on('update', (evt: ex.UpdateEvent) => {
 	
 });
 
+var gameBounds = new ex.BoundingBox(0, 0, Config.MapWidth, Config.MapHeight);
 game.start(loader).then(() => {
 	var sf = new Starfield();
 	var statBox = new HUDStat(new Stat("KILLS", "0"), 10, 50, 150, 50);
+	var bg = new Background();
 	game.add(sf);
+	game.add(bg);
 	game.add(statBox);
 	GameState.init(game);
 });

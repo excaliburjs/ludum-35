@@ -1,6 +1,9 @@
 var Config = {
    width: 960,
    height: 640,
+   
+   MapWidth: 5000,
+   MapHeight: 960,
       
    // Camera
    CameraElasticity: .08,
@@ -28,8 +31,9 @@ var Config = {
       
    // Bullet config
    bullets: {
-      speed: 200, // px/s
-      damage: 1
+      speed: 500, // px/s
+      damage: 1,
+      rotation: Math.PI 
    },
    
    badguy: {

@@ -16,7 +16,7 @@ class Stat implements Stateful<StatState>{
       this.reset();
       this.state.value = defaultValue;
 
-   }
+   }   
       public getStatName(): string {
         return this.name;
       }
@@ -55,6 +55,4 @@ class HUDStat extends ex.UIActor {
    postdraw(evt: ex.PostDrawEvent) : void {
 
    }
-   
-   
 }
