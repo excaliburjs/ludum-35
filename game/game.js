@@ -832,6 +832,33 @@ var loader = new ex.Loader();
 for (var res in Resources) {
     loader.addResource(Resources[res]);
 }
+// mute/unmute button
+document.getElementById("sound").addEventListener('click', function () {
+    if (hasClass(this, 'fa-volume-up')) {
+        replaceClass(this, 'fa-volume-up', 'fa-volume-off');
+        SoundManager.stop();
+    }
+    else {
+        replaceClass(this, 'fa-volume-off', 'fa-volume-up');
+        SoundManager.start();
+    }
+});
+// class manipulation
+function hasClass(element, cls) {
+    return element.classList.contains(cls);
+}
+function replaceClass(element, search, replace) {
+    if (hasClass(element, search)) {
+        this.removeClass(element, search);
+        this.addClass(element, replace);
+    }
+}
+function addClass(element, cls) {
+    element.classList.add(cls);
+}
+function removeClass(element, cls) {
+    element.classList.remove(cls);
+}
 function updateCamera(evt) {
     // Grab the current focus of the camper
     var focus = game.currentScene.camera.getFocus().toVector();
