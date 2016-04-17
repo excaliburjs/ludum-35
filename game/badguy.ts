@@ -9,12 +9,14 @@ interface BadguyState {
    speed: number;
    size: number;
    shape: Shape;
-   
+   weapon: Weapon;
 }
 
 class Badguy extends ex.Actor implements Stateful<BadguyState> {
    id: number;
    
+   //todo remove when pooling is implemented
+   public weapon: Weapon; 
    constructor(x, y, width, height, badguytype) {
       super(x, y, width, height);
       this.collisionType = ex.CollisionType.Active;
@@ -27,7 +29,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       var ActiveType = BadguyTypes[badguytype];
       
       var BadGuySheet = new ex.SpriteSheet(ActiveType, 2, 1, 32, 32);
-      
+
       this.scale.setTo(2,2);
       //this.anchor.setTo(.1, .1);
       
@@ -45,8 +47,9 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
          //initialize badguy
          badguy.on('preupdate', this.preupdate);
       }
+      this.weapon = new StraightShooter(this, Config.bullets.speed, Config.bullets.damage)
    }
-    preupdate(evt: ex.PreUpdateEvent){
+   preupdate(evt: ex.PreUpdateEvent){
       
       //var multiplier = Math.random();
       
@@ -73,13 +76,13 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
         if (this.y > Config.height){
           this.dy = Config.badguy.speed * -1;
         } else {
-        var dx = this.x;// * multiplier;
-        this.dy = dx * .5;
+          var dx = this.x;// * multiplier;
+          this.dy = dx * .5;
+        }
       }
-    }
-      
-      
-    }
+
+      this.weapon.update(evt.delta);
+   }
    state: BadguyState;
    
    reset(state?: BadguyState) {
@@ -91,7 +94,8 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
             d: new ex.Vector(0, 0),
             speed: Config.badguy.speed,
             size: Config.badguy.size,
-            shape: Shape.Shape1
+            shape: Shape.Shape1,
+            weapon: new StraightShooter(this, Config.bullets.speed, Config.bullets.damage)
          }
          
       } else {
@@ -100,5 +104,4 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       
       return this;
    }
-
 }

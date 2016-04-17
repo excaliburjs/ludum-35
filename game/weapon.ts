@@ -37,7 +37,30 @@ class StraightShooter extends WeaponBase {
          damage: this.damage,
          x: this.source.x,
          y: this.source.y,
-         speed: this.speed
+         speed: this.speed,
+         shape: Shape.Shape1
+      });
+   }
+   
+}
+
+class ShapeShooter extends WeaponBase {
+      
+   constructor(protected source: ex.Actor, public speed: number, public damage: number) { 
+      super(1500, source);
+   }
+   
+   shoot() {
+      
+      // spawn bullet traveling in direction actor is facing
+      GameState.state.bullets.spawn({
+         owner: this.source,
+         d: ex.Vector.fromAngle(this.source.rotation),
+         damage: this.damage,
+         x: this.source.x,
+         y: this.source.y,
+         speed: this.speed,
+         shape: Shape.Shape1
       });
    }
    

@@ -40,10 +40,33 @@ var StraightShooter = (function (_super) {
             damage: this.damage,
             x: this.source.x,
             y: this.source.y,
-            speed: this.speed
+            speed: this.speed,
+            shape: Shape.Shape1
         });
     };
     return StraightShooter;
+}(WeaponBase));
+var ShapeShooter = (function (_super) {
+    __extends(ShapeShooter, _super);
+    function ShapeShooter(source, speed, damage) {
+        _super.call(this, 1500, source);
+        this.source = source;
+        this.speed = speed;
+        this.damage = damage;
+    }
+    ShapeShooter.prototype.shoot = function () {
+        // spawn bullet traveling in direction actor is facing
+        GameState.state.bullets.spawn({
+            owner: this.source,
+            d: ex.Vector.fromAngle(this.source.rotation),
+            damage: this.damage,
+            x: this.source.x,
+            y: this.source.y,
+            speed: this.speed,
+            shape: Shape.Shape1
+        });
+    };
+    return ShapeShooter;
 }(WeaponBase));
 var Resources = {
     ShipSpriteSheet: new ex.Texture('./img/ship.png'),
@@ -88,8 +111,9 @@ var Config = {
     StarfieldMeteorSpeed: 320,
     // Bullet config
     bullets: {
-        speed: 200,
-        damage: 1
+        speed: 500,
+        damage: 1,
+        rotation: Math.PI
     },
     badguy: {
         speed: 25,
@@ -219,16 +243,34 @@ var Bullet = (function (_super) {
         this.owner = null;
         this.collisionType = ex.CollisionType.Passive;
         this.reset();
+        this.rx = Config.bullets.rotation;
+        this.scale.setTo(.5, .5);
         this.on('exitviewport', function () { return GameState.state.bullets.despawn(_this); });
         this.on('collision', this._collision);
+        this.on('postdraw', this.postdraw);
     }
     Bullet.prototype._collision = function (collision) {
         if (this.visible) {
-            console.log(this.owner);
-            Resources.Explode.play();
-            collision.other.kill();
-            GameState.state.bullets.despawn(this);
+            if (this.owner !== collision.other && typeof this.owner !== typeof collision.other) {
+                Resources.Explode.play();
+                collision.other.kill();
+                GameState.state.bullets.despawn(this);
+            }
         }
+    };
+    Bullet.prototype.onInitialize = function (engine) {
+        var triangleBulletSheet = new ex.SpriteSheet(Resources.TriangleBullet, 3, 1, 32, 32);
+        var circleBulletSheet = new ex.SpriteSheet(Resources.CircleBullet, 3, 1, 32, 32);
+        var squareBulletSheet = new ex.SpriteSheet(Resources.SquareBullet, 3, 1, 32, 32);
+        this._triangleBulletAnim = triangleBulletSheet.getAnimationForAll(engine, 100);
+        this._triangleBulletAnim.anchor.setTo(.5, .5);
+        this._triangleBulletAnim.loop = true;
+        this._circleBulletAnim = circleBulletSheet.getAnimationForAll(engine, 100);
+        this._circleBulletAnim.anchor.setTo(.5, .5);
+        this._circleBulletAnim.loop = true;
+        this._squareBulletAnim = squareBulletSheet.getAnimationForAll(engine, 100);
+        this._squareBulletAnim.anchor.setTo(.5, .5);
+        this._squareBulletAnim.loop = true;
     };
     Bullet.prototype.reset = function (state) {
         if (!state) {
@@ -255,6 +297,17 @@ var Bullet = (function (_super) {
             this.dy = normalized.y * this.state.speed;
         }
         return this;
+    };
+    Bullet.prototype.postdraw = function (evt) {
+        if (this.state.shape === Shape.Shape1) {
+            this._squareBulletAnim.draw(evt.ctx, 0, 0);
+        }
+        if (this.state.shape === Shape.Shape2) {
+            this._circleBulletAnim.draw(evt.ctx, 0, 0);
+        }
+        if (this.state.shape === Shape.Shape3) {
+            this._triangleBulletAnim.draw(evt.ctx, 0, 0);
+        }
     };
     return Bullet;
 }(ex.Actor));
@@ -397,6 +450,7 @@ var Badguy = (function (_super) {
             //initialize badguy
             badguy.on('preupdate', _this.preupdate);
         };
+        this.weapon = new StraightShooter(this, Config.bullets.speed, Config.bullets.damage);
     }
     Badguy.prototype.preupdate = function (evt) {
         //var multiplier = Math.random();
@@ -427,6 +481,7 @@ var Badguy = (function (_super) {
                 this.dy = dx * .5;
             }
         }
+        this.weapon.update(evt.delta);
     };
     Badguy.prototype.reset = function (state) {
         if (!state) {
@@ -436,7 +491,8 @@ var Badguy = (function (_super) {
                 d: new ex.Vector(0, 0),
                 speed: Config.badguy.speed,
                 size: Config.badguy.size,
-                shape: Shape.Shape1
+                shape: Shape.Shape1,
+                weapon: new StraightShooter(this, Config.bullets.speed, Config.bullets.damage)
             };
         }
         else {
