@@ -103,6 +103,10 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       if (!gameBounds.contains(new ex.Point(this.x, this.y))) {
           return false;
       }
+      var canvasBounds = new ex.BoundingBox(0, 0, game.width, game.height);
+      if (!canvasBounds.contains(new ex.Point(click.x, click.y))) {
+          return false;
+      }
       
       GameState.state.ship.dx = dx * Config.shipSpeedScale;
       GameState.state.ship.dy = dy * Config.shipSpeedScale;
