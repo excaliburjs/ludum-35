@@ -18,8 +18,8 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
    //todo remove when pooling is implemented
    //public weapon: Weapon; 
    public state: BadguyState;
-   constructor(x, y, width, height, badguytype) {
-      super(x, y, width, height);
+   constructor(x: number, y: number, badguytype: Shape) {
+      super(x, y, 32, 32);
       //this.collisionType = ex.CollisionType.Active;
       this.collisionType = ex.CollisionType.Passive;
       var BadguyTypes = [

@@ -47,10 +47,15 @@ class GameState {
       }
       
       // set any defaults
-      static init(game: ex.Engine) {
-                      
+      static init() {
+            
+         // reset current engine state
+         if (GameState.state) {
+            game.remove(GameState.state.ship);
+         }
+         
          GameState.state = {
-            ship: new Ship(100, 100, 48, 48),
+            ship: new Ship(Config.PlayerSpawn.x, Config.PlayerSpawn.y, 48, 48),
             bullets: new Pool<Bullet, BulletState>(500, () => {
                   var b = new Bullet();
                   //game.add(b);
@@ -59,9 +64,12 @@ class GameState {
             stats: [new Stat("KILLS", 0)],
             stage: 0
          };
-         GameState.state.bullets.fill();
          
+         GameState.state.bullets.fill();                 
+                  
          game.add(GameState.state.ship);
+         
+         // start the waves
+         badGuyFactory.nextWave();
       }
-   
 }
