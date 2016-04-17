@@ -17,7 +17,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
    
    constructor(x, y, width, height, badguytype) {
       super(x, y, width, height);
-      
+      this.collisionType = ex.CollisionType.Active;
       var BadguyTypes = [
            Resources.TriangleBadguySheet
          , Resources.SquareBadguySheet
