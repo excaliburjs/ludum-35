@@ -17,6 +17,7 @@
    
    "files": [
       "game/game.ts",
-      "Excalibur/dist/Excalibur.d.ts"
+      "Excalibur/dist/Excalibur.d.ts",
+      "lodash.d.ts"
    ]
 }
