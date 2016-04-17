@@ -7,7 +7,8 @@
 interface IGameState {
    ship: Ship;
    bullets: Pool<Bullet, BulletState>;
-   stats: Stat[]
+   stats: Stat[],
+   stage: number
 }
 
 // one global area to track game state, makes the game easier to restart
@@ -55,7 +56,8 @@ class GameState {
                   game.add(b);
                   return b;
             }),
-            stats: [new Stat("KILLS", 0)]
+            stats: [new Stat("KILLS", 0)],
+            stage: 0
          };
          GameState.state.bullets.fill();
          
