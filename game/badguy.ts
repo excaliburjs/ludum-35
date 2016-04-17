@@ -26,7 +26,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
          , Resources.CircleBadguySheet
          ];
          
-      this.ActiveType = BadguyTypes[badguytype];
+      var ActiveType = BadguyTypes[badguytype];
       
       var BadGuySheet = new ex.SpriteSheet(ActiveType, 2, 1, 32, 32);
       
