@@ -18,22 +18,12 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
    //todo remove when pooling is implemented
    //public weapon: Weapon; 
    public state: BadguyState;
-  private BadguyTypes = [
-    Resources.SquareBadguySheet
-  , Resources.CircleBadguySheet
-  , Resources.TriangleBadguySheet
-  , 
-  ];
   
   private BadGuySheet: ex.SpriteSheet;
    
    constructor(x, y, private badguytype: Shape) {
       super(x, y, 32, 32);
       this.collisionType = ex.CollisionType.Passive;
-
-         
-      var ActiveType = this.BadguyTypes[badguytype];
-      var BadGuySheet = new ex.SpriteSheet(ActiveType, 2, 1, 32, 32);
       
       this.scale.setTo(2,2);
       //this.anchor.setTo(.1, .1);
@@ -41,11 +31,14 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       this.setCenterDrawing(true);
       this.onInitialize = (engine: ex.Engine) => {
          var badguy = this;
-         var anim = BadGuySheet.getAnimationForAll(engine, 150);
          
-         anim.loop = true;
-         anim.anchor.setTo(.3, .3);
-         this.addDrawing('default', anim);
+         if(this.badguytype == Shape.Shape1){
+           this.addDrawing('default', GlobalAnimations.SquareBaddie);
+         }else if (this.badguytype == Shape.Shape2){
+           this.addDrawing('default', GlobalAnimations.CircleBaddie);
+         }else if (this.badguytype === Shape.Shape3){
+           this.addDrawing('default', GlobalAnimations.TriangleBaddie);
+         }
          
          //initialize badguy
          badguy.on('preupdate', this._preupdate);
