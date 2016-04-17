@@ -21,8 +21,8 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
   
   private BadGuySheet: ex.SpriteSheet;
    
-   constructor(x, y, width, height, private badguytype: Shape) {
-      super(x, y, width, height);
+   constructor(x, y, private badguytype: Shape) {
+      super(x, y, 32, 32);
       this.collisionType = ex.CollisionType.Passive;
       
       this.scale.setTo(2,2);

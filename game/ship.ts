@@ -9,6 +9,9 @@
 interface ShipState {
    shieldType: Shape;
    weapon: Weapon;
+   circlePool: number;
+   squarePool: number;
+   trianglePool: number;
 }
 
 class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
@@ -23,7 +26,7 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
    private _currentTime: number = 0;
    
    public poolId: number;
-   public state: ShipState;
+   public state: ShipState;   
    
    constructor(x, y, width, height){
       super(x, y, width, height);
@@ -87,7 +90,10 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       if (!state) {
          this.state = {
             shieldType: Shape.Shape1,
-            weapon: new StraightShooter(this, Config.bullets.speed, Config.bullets.damage)
+            weapon: new StraightShooter(this, Config.bullets.speed, Config.bullets.damage),
+            squarePool: 0,
+            circlePool: 0,
+            trianglePool: 0
          }
       } else {
          this.state = state;

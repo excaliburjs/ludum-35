@@ -5,6 +5,8 @@ var Config = {
    MapWidth: 5000,
    MapHeight: 960,
    
+   // Ship
+   PlayerSpawn: new ex.Point(2500, 700),
       
    // Camera
    CameraElasticity: .08,
@@ -18,9 +20,7 @@ var Config = {
    playerMaxVelocity: 500,
    
    // Baddies
-   SpawnInterval: 5500, //ms
-   MinEnemiesPerSpawn: 1,  
-   MaxEnemiesPerSpawn: 5,
+   PortalSpawnWaitTime: 3000, //ms
    
    poolSizeIncrement: 100,
       
