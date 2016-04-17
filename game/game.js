@@ -365,7 +365,7 @@ var Badguy = (function (_super) {
         this.onInitialize = function (engine) {
             var badguy = _this;
             var anim = BadGuySheet.getAnimationForAll(engine, 150);
-            //var anim = BadGuySheet.getAnimationBetween(engine, 0, 5, 150);
+            //var anim = BadGuySheet.getAnimationBetween(engine, 1, 2, 150);
             anim.loop = true;
             anim.anchor.setTo(.3, .3);
             _this.addDrawing('default', anim);
@@ -374,14 +374,34 @@ var Badguy = (function (_super) {
         };
     }
     Badguy.prototype.preupdate = function (evt) {
-        var multiplier = Math.random();
-        if (multiplier !== 1) {
-            multiplier = -1;
+        //var multiplier = Math.random();
+        //if (multiplier !== 1){
+        //  multiplier = -1;
+        //}
+        if (this.x < 0) {
+            this.dx = Config.badguy.speed;
         }
-        var dy = this.y * multiplier;
-        var dx = this.x * multiplier;
-        this.dx = dy;
-        this.dy = dx;
+        else {
+            if (this.x > Config.width) {
+                this.dx = Config.badguy.speed * -1;
+            }
+            else {
+                var dy = this.y; // * multiplier;
+                this.dx = dy * .5;
+            }
+        }
+        if (this.y < 0) {
+            this.dy = Config.badguy.speed;
+        }
+        else {
+            if (this.y > Config.height) {
+                this.dy = Config.badguy.speed * -1;
+            }
+            else {
+                var dx = this.x; // * multiplier;
+                this.dy = dx * .5;
+            }
+        }
     };
     Badguy.prototype.reset = function (state) {
         if (!state) {

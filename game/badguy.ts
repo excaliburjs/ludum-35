@@ -35,7 +35,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       this.onInitialize = (engine: ex.Engine) => {
          var badguy = this;
          var anim = BadGuySheet.getAnimationForAll(engine, 150);
-         //var anim = BadGuySheet.getAnimationBetween(engine, 0, 5, 150);
+         //var anim = BadGuySheet.getAnimationBetween(engine, 1, 2, 150);
          
          
          anim.loop = true;
@@ -48,17 +48,35 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
    }
     preupdate(evt: ex.PreUpdateEvent){
       
-      var multiplier = Math.random();
+      //var multiplier = Math.random();
       
-      if (multiplier !== 1){
-        multiplier = -1;
+      //if (multiplier !== 1){
+      //  multiplier = -1;
+      //}
+      
+      
+      
+      if (this.x < 0) {
+        this.dx = Config.badguy.speed;
+      } else {
+        if (this.x > Config.width){
+          this.dx = Config.badguy.speed * -1;
+        } else {
+        var dy = this.y;// * multiplier;
+        this.dx = dy * .5;
+        }
       }
       
-      
-      var dy = this.y * multiplier;
-      var dx = this.x * multiplier;
-      this.dx = dy;
-      this.dy = dx;
+      if (this.y < 0) {
+        this.dy = Config.badguy.speed;
+      } else {
+        if (this.y > Config.height){
+          this.dy = Config.badguy.speed * -1;
+        } else {
+        var dx = this.x;// * multiplier;
+        this.dy = dx * .5;
+      }
+    }
       
       
     }
