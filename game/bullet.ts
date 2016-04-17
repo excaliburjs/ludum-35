@@ -10,6 +10,7 @@ interface BulletState {
    d: ex.Vector;
    speed: number;
    damage: number;
+   scale: number;
    shape?: Shape;
 }
 
@@ -26,7 +27,7 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
       this.collisionType = ex.CollisionType.Passive;
       this.reset();
       this.rx = Config.bullets.rotation;
-      this.scale.setTo(.5, .5);
+
       this.on('exitviewport', () => GameState.state.bullets.despawn(this));
       this.on('collision', this._collision);
       this.on('postdraw', this.postdraw);
@@ -66,6 +67,7 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
       }
    }
    onInitialize(engine: ex.Engine){
+       
    }
    reset(state?: BulletState) {
       
@@ -77,6 +79,7 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
             owner: null,
             x: 0,
             y: 0,
+            scale: .5,
             d: new ex.Vector(0, 0),
             damage: Config.bullets.damage,
             speed: Config.bullets.speed,
@@ -87,6 +90,7 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
          this.state = state;
          this.x = state.x;
          this.y = state.y;
+         this.scale = new ex.Vector(state.scale, state.scale);
          this.owner = state.owner;
          var normalized = this.state.d.normalize();
          this.dx = normalized.x * this.state.speed;
@@ -108,7 +112,6 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
       }
      if(this.state.shape === Shape.PlayerBullet){
          this._playerBulletAnim.draw(evt.ctx, 0, 0);
-         this.scale.setTo(2,2);
       }
    }
    

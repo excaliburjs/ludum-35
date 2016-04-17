@@ -17,6 +17,7 @@ var game = new ex.Engine({
    canvasElementId: "game",
    width: Config.width,
    height: Config.height,
+	pointerScope: ex.Input.PointerScope.Canvas,
 });
 
 game.backgroundColor = ex.Color.Black.clone();
@@ -31,6 +32,37 @@ game.input.keyboard.on('down', (evt: ex.Input.KeyEvent) => {
 var loader = new ex.Loader();
 for(var res in Resources){
    loader.addResource(Resources[res]);
+}
+
+// mute/unmute button
+document.getElementById("sound").addEventListener('click', function () {
+   if (hasClass(this, 'fa-volume-up')) {
+      replaceClass(this, 'fa-volume-up', 'fa-volume-off');
+      SoundManager.stop();
+	} else {
+      replaceClass(this, 'fa-volume-off', 'fa-volume-up');
+      SoundManager.start();
+   }
+});
+
+// class manipulation
+function hasClass(element, cls) {
+   return element.classList.contains(cls);
+}
+
+function replaceClass(element, search, replace) {
+   if (hasClass(element, search)) {
+      this.removeClass(element, search);
+      this.addClass(element, replace);
+   }
+}
+
+function addClass(element, cls) {
+   element.classList.add(cls);
+}
+
+function removeClass(element, cls) {
+   element.classList.remove(cls);
 }
   
 

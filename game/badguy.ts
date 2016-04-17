@@ -18,18 +18,21 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
    //todo remove when pooling is implemented
    //public weapon: Weapon; 
    public state: BadguyState;
-   constructor(x: number, y: number, badguytype: Shape) {
-      super(x, y, 32, 32);
-      //this.collisionType = ex.CollisionType.Active;
+  private BadguyTypes = [
+    Resources.SquareBadguySheet
+  , Resources.CircleBadguySheet
+  , Resources.TriangleBadguySheet
+  , 
+  ];
+  
+  private BadGuySheet: ex.SpriteSheet;
+   
+   constructor(x, y, width, height, private badguytype: Shape) {
+      super(x, y, width, height);
       this.collisionType = ex.CollisionType.Passive;
-      var BadguyTypes = [
-           Resources.TriangleBadguySheet
-         , Resources.SquareBadguySheet
-         , Resources.CircleBadguySheet
-         ];
+
          
-      var ActiveType = BadguyTypes[badguytype];
-      
+      var ActiveType = this.BadguyTypes[badguytype];
       var BadGuySheet = new ex.SpriteSheet(ActiveType, 2, 1, 32, 32);
       
       this.scale.setTo(2,2);
@@ -49,7 +52,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
          badguy.on('update', this._update);
          badguy.on('collision', this._collision);
       }
-      this.reset(this.state);
+      this.reset();
    }
    _preupdate(evt: ex.PreUpdateEvent){
       
@@ -110,8 +113,8 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
             d: new ex.Vector(0, 0),
             speed: Config.badguy.speed,
             size: Config.badguy.size,
-            shape: Shape.Shape1,
-            weapon: new StraightShooter(this, Config.bullets.speed, Config.bullets.damage)
+            shape: this.badguytype,
+            weapon: new ShapeShooter(this, Config.bullets.speed, Config.bullets.damage, this.badguytype)
          }
       } else {
          this.state = state;

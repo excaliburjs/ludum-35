@@ -38,7 +38,8 @@ class StraightShooter extends WeaponBase {
          x: this.source.x,
          y: this.source.y,
          speed: this.speed,
-         shape: Shape.PlayerBullet
+         shape: Shape.PlayerBullet,
+         scale: 2
       });
    }
    
@@ -46,7 +47,7 @@ class StraightShooter extends WeaponBase {
 
 class ShapeShooter extends WeaponBase {
       
-   constructor(protected source: ex.Actor, public speed: number, public damage: number) { 
+   constructor(protected source: ex.Actor, public speed: number, public damage: number, public badguyType: Shape) { 
       super(1500, source);
    }
    
@@ -60,7 +61,8 @@ class ShapeShooter extends WeaponBase {
          x: this.source.x,
          y: this.source.y,
          speed: this.speed,
-         shape: Shape.Shape1
+         shape: this.badguyType,
+         scale: .5
       });
    }
    

@@ -15,6 +15,10 @@ var Config = {
    spaceFriction: .01,
    ShieldCoolDownTime: 1000,
    
+   // Player
+   playerMinVelocity: -500,
+   playerMaxVelocity: 500,
+   
    // Baddies
    PortalSpawnWaitTime: 3000, //ms
    
