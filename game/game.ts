@@ -84,6 +84,7 @@ game.start(loader).then(() => {
 	game.add(bg);	
 	Torch.place(game);
 	GameState.init(game);
+	game.add(fbg);
 	var killIdx = GameState.getStatIdx("KILLS");
 	
 	var killHUDUI = new HUDStat(GameState.state.stats[killIdx], 10, 60, 150, 50);
