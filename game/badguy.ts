@@ -19,7 +19,8 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
    public weapon: Weapon; 
    constructor(x, y, width, height, badguytype) {
       super(x, y, width, height);
-      this.collisionType = ex.CollisionType.Active;
+      //this.collisionType = ex.CollisionType.Active;
+      this.collisionType = ex.CollisionType.Passive;
       var BadguyTypes = [
            Resources.TriangleBadguySheet
          , Resources.SquareBadguySheet
@@ -68,31 +69,36 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       
     }
     _update(evt: ex.UpdateEvent){
+      var hitborder = false;
+      
        if (this.x > gameBounds.right) {
            this.x = gameBounds.right;
            this.dx *= -1;
-           this.dy *= -1;
+           //this.dy *= -1;
+           hitborder = true;
        }
        if (this.x < gameBounds.left) {
            this.x = gameBounds.left;
            this.dx *= -1;
-           this.dy *= -1; 
+           //this.dy *= -1; 
+           hitborder = true;
       }
        if (this.y > gameBounds.bottom) {
            this.y = gameBounds.bottom;
            this.dy *= -1;
-           this.dx *= -1;
+           //this.dx *= -1;
+           hitborder = true;
        }
        if (this.y < gameBounds.top) {
            this.y = gameBounds.top;
            this.dy *= -1;
-           this.dx *= -1;
+           //this.dx *= -1;
+           hitborder = true;
        }
+      
     }
     _collision(collision: ex.CollisionEvent){
-      //var BadGuySheet = new ex.SpriteSheet(this.ActiveType, 5, 1, 32, 32);
-      
-      //var anim = BadGuySheet.getAnimationForAll(ex.Engine, 150);
+      //explode?
       
     }
     

@@ -519,7 +519,8 @@ var Badguy = (function (_super) {
     function Badguy(x, y, width, height, badguytype) {
         var _this = this;
         _super.call(this, x, y, width, height);
-        this.collisionType = ex.CollisionType.Active;
+        //this.collisionType = ex.CollisionType.Active;
+        this.collisionType = ex.CollisionType.Passive;
         var BadguyTypes = [
             Resources.TriangleBadguySheet,
             Resources.SquareBadguySheet,
@@ -559,30 +560,34 @@ var Badguy = (function (_super) {
         }
     };
     Badguy.prototype._update = function (evt) {
+        var hitborder = false;
         if (this.x > gameBounds.right) {
             this.x = gameBounds.right;
             this.dx *= -1;
-            this.dy *= -1;
+            //this.dy *= -1;
+            hitborder = true;
         }
         if (this.x < gameBounds.left) {
             this.x = gameBounds.left;
             this.dx *= -1;
-            this.dy *= -1;
+            //this.dy *= -1; 
+            hitborder = true;
         }
         if (this.y > gameBounds.bottom) {
             this.y = gameBounds.bottom;
             this.dy *= -1;
-            this.dx *= -1;
+            //this.dx *= -1;
+            hitborder = true;
         }
         if (this.y < gameBounds.top) {
             this.y = gameBounds.top;
             this.dy *= -1;
-            this.dx *= -1;
+            //this.dx *= -1;
+            hitborder = true;
         }
     };
     Badguy.prototype._collision = function (collision) {
-        //var BadGuySheet = new ex.SpriteSheet(this.ActiveType, 5, 1, 32, 32);
-        //var anim = BadGuySheet.getAnimationForAll(ex.Engine, 150);
+        //explode?
     };
     Badguy.prototype.reset = function (state) {
         if (!state) {
