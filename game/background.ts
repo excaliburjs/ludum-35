@@ -1,7 +1,8 @@
-class Background extends ex.Actor {
+class Background extends ex.UIActor {
    
    constructor() {
-      super(0, 0, 50, 50, ex.Color.Red);
+      super(0, 0, 50, 50);
+      this.color = ex.Color.Red;
    }
    
    update(engine: ex.Engine, delta: number) {
@@ -10,7 +11,7 @@ class Background extends ex.Actor {
       var pdx = -GameState.state.ship.dx;
       var pdy = -GameState.state.ship.dy;
       
-      this.dx = pdx*0.1;
-      this.dy = pdy*0.1;
+      this.dx = pdx * 0.01;
+      this.dy = pdy * 0.01;
    }
 }

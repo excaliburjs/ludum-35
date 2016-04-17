@@ -74,9 +74,5 @@ game.on('update', (evt: ex.UpdateEvent) => {
 game.start(loader).then(() => {
 	var sf = new Starfield();
 	game.add(sf);
-	var bg = new Background();
-	game.add(bg);
-	var someactor = new ex.Actor(100, 100, 10, 10, ex.Color.Green);
-	game.add(someactor);
 	GameState.init(game);
 });
