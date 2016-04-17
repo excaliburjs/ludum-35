@@ -17,6 +17,7 @@ var game = new ex.Engine({
    canvasElementId: "game",
    width: Config.width,
    height: Config.height,
+	pointerScope: ex.Input.PointerScope.Canvas,
 });
 
 game.backgroundColor = ex.Color.Black.clone();
