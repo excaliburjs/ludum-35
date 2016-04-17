@@ -44,13 +44,14 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       
       this._circle = circleSheild.getAnimationForAll(engine, 50);
       this._circle.loop = true;
-      this._circle.anchor.setTo(.5, .5);
+      this._circle.anchor.setTo(.4, .5);
       this._square = squareSheild.getAnimationForAll(engine, 50);
       this._square.loop = true;
-      this._square.anchor.setTo(.5, .5);
+      this._square.anchor.setTo(.3, .5);
       this._triangle = triangleSheild.getAnimationForAll(engine, 50);
       this._triangle.loop = true;
-      this._triangle.anchor.setTo(.5, .5);           
+      this._triangle.anchor.setTo(.5, .7);
+      this._triangle.rotation = Math.PI/2;           
       
       ship.on('preupdate', this.preupdate);            
       ship.on('predraw', this.predraw);
@@ -119,6 +120,14 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
        if (this.y < gameBounds.top) {
            this.y = gameBounds.top;
            this.dy = 0;
+       }
+       
+       if(engine.input.keyboard.wasPressed(ex.Input.Keys.A)){
+           this.state.shieldType = Shape.Shape1;
+       } else if (engine.input.keyboard.wasPressed(ex.Input.Keys.S)){
+           this.state.shieldType = Shape.Shape2;
+       } else if (engine.input.keyboard.wasPressed(ex.Input.Keys.D)){
+           this.state.shieldType = Shape.Shape3;
        }
    }
    

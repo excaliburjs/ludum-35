@@ -19,7 +19,7 @@ var game = new ex.Engine({
 game.backgroundColor = ex.Color.Black.clone();
 game.setAntialiasing(false);
 game.input.keyboard.on('down', (evt: ex.Input.KeyEvent) => {
-   if(evt.key === ex.Input.Keys.D){
+   if(evt.key === ex.Input.Keys.Semicolon){
       game.isDebug = !game.isDebug;
    }
 });
