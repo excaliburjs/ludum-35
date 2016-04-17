@@ -27,7 +27,7 @@ var WeaponBase = (function () {
 var StraightShooter = (function (_super) {
     __extends(StraightShooter, _super);
     function StraightShooter(source, speed, damage) {
-        _super.call(this, 500, source);
+        _super.call(this, Config.StraightShooterFrequency, source);
         this.source = source;
         this.speed = speed;
         this.damage = damage;
@@ -71,9 +71,9 @@ var ShapeShooter = (function (_super) {
 var Resources = {
     ShipSpriteSheet: new ex.Texture('./img/ship.png'),
     WitchSpriteSheet: new ex.Texture('./img/witch.png'),
-    CircleShieldSheet: new ex.Texture('./img/circlesheild.png'),
-    SquareShieldSheet: new ex.Texture('./img/squaresheild.png'),
-    TriangleShieldSheet: new ex.Texture('./img/trianglesheild.png'),
+    CircleShieldSheet: new ex.Texture('./img/circlesheildbig.png'),
+    SquareShieldSheet: new ex.Texture('./img/squaresheildbig.png'),
+    TriangleShieldSheet: new ex.Texture('./img/trianglesheildbig.png'),
     PlayerBullet: new ex.Texture('./img/playerbullet.png'),
     CircleBadguySheet: new ex.Texture('./img/circlebadguyexplodes.png'),
     TriangleBadguySheet: new ex.Texture('./img/trianglebadguyexplodes.png'),
@@ -115,6 +115,7 @@ var Config = {
     StarfieldMeteorFreqMin: 2000,
     StarfieldMeteorFreqMax: 7000,
     StarfieldMeteorSpeed: 320,
+    StraightShooterFrequency: 500,
     // Bullet config
     bullets: {
         speed: 500,
@@ -149,9 +150,9 @@ var Ship = (function (_super) {
     Ship.prototype.onInitialize = function (engine) {
         var _this = this;
         var witchSheet = new ex.SpriteSheet(Resources.WitchSpriteSheet, 2, 1, 48, 48);
-        var squareSheild = new ex.SpriteSheet(Resources.SquareShieldSheet, 5, 1, 48, 48);
-        var circleSheild = new ex.SpriteSheet(Resources.CircleShieldSheet, 5, 1, 48, 48);
-        var triangleSheild = new ex.SpriteSheet(Resources.TriangleShieldSheet, 5, 1, 48, 48);
+        var squareSheild = new ex.SpriteSheet(Resources.SquareShieldSheet, 5, 1, 96, 96);
+        var circleSheild = new ex.SpriteSheet(Resources.CircleShieldSheet, 5, 1, 96, 96);
+        var triangleSheild = new ex.SpriteSheet(Resources.TriangleShieldSheet, 5, 1, 96, 96);
         var ship = this;
         this._rightAnim = witchSheet.getAnimationForAll(engine, 300);
         this._rightAnim.rotation = Math.PI / 8;
@@ -169,7 +170,7 @@ var Ship = (function (_super) {
         this._circle.anchor.setTo(.4, .5);
         this._square = squareSheild.getAnimationForAll(engine, 50);
         this._square.loop = true;
-        this._square.anchor.setTo(.3, .5);
+        this._square.anchor.setTo(.5, .5);
         this._triangle = triangleSheild.getAnimationForAll(engine, 50);
         this._triangle.loop = true;
         this._triangle.anchor.setTo(.5, .7);
