@@ -86,7 +86,8 @@ var Resources = {
     On: new ex.Sound('./snd/on.wav'),
     No: new ex.Sound('./snd/no.wav'),
     PlanetBg: new ex.Texture('./img/planet-bg.png'),
-    FrontBg: new ex.Texture('./img/front-bg.png')
+    FrontBg: new ex.Texture('./img/front-bg.png'),
+    Torch: new ex.Texture('./img/torch.png')
 };
 var Config = {
     width: 960,
@@ -670,6 +671,33 @@ var Frontground = (function (_super) {
     };
     return Frontground;
 }(ex.Actor));
+var Torch = (function (_super) {
+    __extends(Torch, _super);
+    function Torch(x, y) {
+        _super.call(this, x, y, 53, 72);
+    }
+    Torch.prototype.onInitialize = function () {
+        var ss = new ex.SpriteSheet(Resources.Torch, 4, 1, 53, 72);
+        var anim = ss.getAnimationForAll(game, 100);
+        anim.loop = true;
+        this.addDrawing('default', anim);
+        this.setDrawing('default');
+    };
+    Torch.place = function (game) {
+        var windows = [575, 1128, 1688, 2250, 2802, 3365, 3923, 4478];
+        var o = 135;
+        var y = 580;
+        for (var i = 0; i < windows.length; i++) {
+            var l = windows[i] - o;
+            var r = windows[i] + o;
+            var tl = new Torch(l, y);
+            var tr = new Torch(r, y);
+            game.add(tl);
+            game.add(tr);
+        }
+    };
+    return Torch;
+}(ex.Actor));
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="gamestate.ts" />
 /// <reference path="analytics.ts" />
@@ -680,6 +708,7 @@ var Frontground = (function (_super) {
 /// <reference path="badguyfactory.ts" />
 /// <reference path="starfield.ts" />
 /// <reference path="background.ts" />
+/// <reference path="torch.ts" />
 var game = new ex.Engine({
     canvasElementId: "game",
     width: Config.width,
@@ -739,6 +768,7 @@ game.start(loader).then(function () {
     game.add(sf);
     game.add(bg);
     game.add(statBox);
+    Torch.place(game);
     GameState.init(game);
     game.add(fbg);
 });
