@@ -47,8 +47,19 @@ class HUDStat extends ex.UIActor {
    }
    
    postdraw(evt: ex.PostDrawEvent) : void {
-      this.font.draw(evt.ctx, "THINGY", 0, 0, {
-        fontSize: 16});
+      this.font.draw(evt.ctx, "THINGY", 100, 100, {
+        fontSize: 100,
+        letterSpacing: 1.
+      });
+      
+       this.font.draw(evt.ctx, "THINGY", 0, 0, {
+               color: this.color.clone(),
+               baseAlign: ex.BaseAlign.Bottom,
+               textAlign: ex.TextAlign.Center,
+               fontSize: 100,
+               letterSpacing: 1,
+               opacity: 1.0
+            });
    }
    
    
