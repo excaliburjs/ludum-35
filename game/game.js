@@ -734,6 +734,49 @@ var Torch = (function (_super) {
     };
     return Torch;
 }(ex.Actor));
+var Options = {
+    music: true,
+    sound: true
+};
+var Settings = (function () {
+    function Settings() {
+    }
+    return Settings;
+}());
+var SoundManager = (function () {
+    function SoundManager() {
+    }
+    SoundManager.start = function () {
+        // set all sound effect volumes
+        if (Options.sound) {
+            SoundManager.setSoundEffectLevels(1);
+        }
+        else {
+            SoundManager.setSoundEffectLevels(0);
+        }
+        // set music volume
+        if (Options.music) {
+        }
+        else {
+        }
+    };
+    SoundManager.setSoundEffectLevels = function (volume) {
+        _.forIn(Resources, function (resource) {
+            if (resource instanceof ex.Sound) {
+                resource.setVolume(volume);
+            }
+        });
+    };
+    SoundManager.stop = function () {
+        _.forIn(Resources, function (resource) {
+            if (resource instanceof ex.Sound) {
+                resource.setVolume(0);
+                resource.stop();
+            }
+        });
+    };
+    return SoundManager;
+}());
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="gamestate.ts" />
 /// <reference path="analytics.ts" />
@@ -745,6 +788,8 @@ var Torch = (function (_super) {
 /// <reference path="starfield.ts" />
 /// <reference path="background.ts" />
 /// <reference path="torch.ts" />
+/// <reference path="settings.ts" />
+/// <reference path="soundmanager.ts" />
 var game = new ex.Engine({
     canvasElementId: "game",
     width: Config.width,

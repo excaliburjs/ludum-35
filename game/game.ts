@@ -9,6 +9,8 @@
 /// <reference path="starfield.ts" />
 /// <reference path="background.ts" />
 /// <reference path="torch.ts" />
+/// <reference path="settings.ts" />
+/// <reference path="soundmanager.ts" />
 
 var game = new ex.Engine({
    canvasElementId: "game",
