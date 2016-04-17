@@ -22,7 +22,7 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
    
    constructor(x, y, width, height){
       super(x, y, width, height);
-      
+      this.collisionType = ex.CollisionType.Passive;
       this.color = ex.Color.Red.clone();           
       this.scale.setTo(2,2);
       this.anchor.setTo(.5, .5);

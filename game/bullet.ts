@@ -32,7 +32,7 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
    state: BulletState;
    _collision(collision: ex.CollisionEvent) {
       if(this.visible){
-         if(this.owner !== collision.other && typeof this.owner !== typeof collision.other){
+         if(this.owner.constructor !== collision.other.constructor) {
             Resources.Explode.play();
             collision.other.kill();
             GameState.state.bullets.despawn(this);
