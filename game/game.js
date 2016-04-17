@@ -722,11 +722,18 @@ var Torch = (function (_super) {
         _super.call(this, x, y, 53, 72);
     }
     Torch.prototype.onInitialize = function () {
-        var ss = new ex.SpriteSheet(Resources.Torch, 4, 1, 53, 72);
-        var anim = ss.getAnimationForAll(game, 100);
-        anim.loop = true;
+        var anim = Torch.getAnimation();
         this.addDrawing('default', anim);
         this.setDrawing('default');
+    };
+    Torch.getAnimation = function () {
+        if (!Torch._anim) {
+            var ss = new ex.SpriteSheet(Resources.Torch, 4, 1, 53, 72);
+            var anim = ss.getAnimationForAll(game, 100);
+            anim.loop = true;
+            Torch._anim = anim;
+        }
+        return Torch._anim;
     };
     Torch.place = function (game) {
         var windows = [575, 1128, 1688, 2250, 2802, 3365, 3923, 4478];
