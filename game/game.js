@@ -153,13 +153,14 @@ var Ship = (function (_super) {
         this.addDrawing('default', anim);
         this._circle = circleSheild.getAnimationForAll(engine, 50);
         this._circle.loop = true;
-        this._circle.anchor.setTo(.5, .5);
+        this._circle.anchor.setTo(.4, .5);
         this._square = squareSheild.getAnimationForAll(engine, 50);
         this._square.loop = true;
-        this._square.anchor.setTo(.5, .5);
+        this._square.anchor.setTo(.3, .5);
         this._triangle = triangleSheild.getAnimationForAll(engine, 50);
         this._triangle.loop = true;
-        this._triangle.anchor.setTo(.5, .5);
+        this._triangle.anchor.setTo(.5, .7);
+        this._triangle.rotation = Math.PI / 2;
         ship.on('preupdate', this.preupdate);
         ship.on('predraw', this.predraw);
         engine.input.pointers.primary.on('down', this._pointerDown);
@@ -219,6 +220,15 @@ var Ship = (function (_super) {
         if (this.y < gameBounds.top) {
             this.y = gameBounds.top;
             this.dy = 0;
+        }
+        if (engine.input.keyboard.wasPressed(ex.Input.Keys.A)) {
+            this.state.shieldType = Shape.Shape1;
+        }
+        else if (engine.input.keyboard.wasPressed(ex.Input.Keys.S)) {
+            this.state.shieldType = Shape.Shape2;
+        }
+        else if (engine.input.keyboard.wasPressed(ex.Input.Keys.D)) {
+            this.state.shieldType = Shape.Shape3;
         }
     };
     Ship.prototype.predraw = function (evt) {
@@ -599,7 +609,7 @@ var game = new ex.Engine({
 game.backgroundColor = ex.Color.Black.clone();
 game.setAntialiasing(false);
 game.input.keyboard.on('down', function (evt) {
-    if (evt.key === ex.Input.Keys.D) {
+    if (evt.key === ex.Input.Keys.Semicolon) {
         game.isDebug = !game.isDebug;
     }
 });
