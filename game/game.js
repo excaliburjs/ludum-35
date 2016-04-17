@@ -144,16 +144,22 @@ var Ship = (function (_super) {
     }
     Ship.prototype.onInitialize = function (engine) {
         var _this = this;
-        var shipSheet = new ex.SpriteSheet(Resources.WitchSpriteSheet, 2, 1, 48, 48);
+        var witchSheet = new ex.SpriteSheet(Resources.WitchSpriteSheet, 2, 1, 48, 48);
         var squareSheild = new ex.SpriteSheet(Resources.SquareShieldSheet, 5, 1, 48, 48);
         var circleSheild = new ex.SpriteSheet(Resources.CircleShieldSheet, 5, 1, 48, 48);
         var triangleSheild = new ex.SpriteSheet(Resources.TriangleShieldSheet, 5, 1, 48, 48);
         var ship = this;
-        var anim = shipSheet.getAnimationForAll(engine, 300);
-        anim.rotation = Math.PI / 8;
-        anim.loop = true;
-        anim.anchor.setTo(.5, .5);
-        this.addDrawing('default', anim);
+        this._rightAnim = witchSheet.getAnimationForAll(engine, 300);
+        this._rightAnim.rotation = Math.PI / 8;
+        this._rightAnim.loop = true;
+        this._rightAnim.anchor.setTo(.5, .5);
+        this.addDrawing('right', this._rightAnim);
+        this._leftAnim = witchSheet.getAnimationForAll(engine, 300);
+        this._leftAnim.rotation = -Math.PI / 8;
+        this._leftAnim.flipVertical = true;
+        this._leftAnim.loop = true;
+        this._leftAnim.anchor.setTo(.1, .1);
+        this.addDrawing('left', this._leftAnim);
         this._circle = circleSheild.getAnimationForAll(engine, 50);
         this._circle.loop = true;
         this._circle.anchor.setTo(.4, .5);
@@ -204,6 +210,12 @@ var Ship = (function (_super) {
         var oppVel = new ex.Vector(this.dx, this.dy).scale(-1).scale(Config.spaceFriction);
         this.dx += oppVel.x;
         this.dy += oppVel.y;
+        if (this.dx > 0) {
+            this.setDrawing('right');
+        }
+        else {
+            this.setDrawing('left');
+        }
         this.state.weapon.update(evt.delta);
     };
     Ship.prototype.update = function (engine, delta) {
@@ -378,7 +390,7 @@ var GameState = (function () {
     // set any defaults
     GameState.init = function (game) {
         GameState.state = {
-            ship: new Ship(100, 100, 100, 100),
+            ship: new Ship(100, 100, 48, 48),
             bullets: new Pool(500, function () {
                 var b = new Bullet();
                 game.add(b);

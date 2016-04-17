@@ -14,7 +14,7 @@ class GameState {
       // set any defaults
       static init(game: ex.Engine) {
          GameState.state = {
-            ship: new Ship(100, 100, 100, 100),
+            ship: new Ship(100, 100, 48, 48),
             bullets: new Pool<Bullet, BulletState>(500, () => {
                   var b = new Bullet();
                   game.add(b);
