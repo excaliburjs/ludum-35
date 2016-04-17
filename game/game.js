@@ -42,18 +42,20 @@ var StraightShooter = (function (_super) {
             x: this.source.x,
             y: this.source.y,
             speed: this.speed,
-            shape: Shape.PlayerBullet
+            shape: Shape.PlayerBullet,
+            scale: 2
         });
     };
     return StraightShooter;
 }(WeaponBase));
 var ShapeShooter = (function (_super) {
     __extends(ShapeShooter, _super);
-    function ShapeShooter(source, speed, damage) {
+    function ShapeShooter(source, speed, damage, badguyType) {
         _super.call(this, 1500, source);
         this.source = source;
         this.speed = speed;
         this.damage = damage;
+        this.badguyType = badguyType;
     }
     ShapeShooter.prototype.shoot = function () {
         // spawn bullet traveling in direction actor is facing
@@ -64,7 +66,8 @@ var ShapeShooter = (function (_super) {
             x: this.source.x,
             y: this.source.y,
             speed: this.speed,
-            shape: Shape.Shape1
+            shape: this.badguyType,
+            scale: .5
         });
     };
     return ShapeShooter;
@@ -289,7 +292,6 @@ var Bullet = (function (_super) {
         this.collisionType = ex.CollisionType.Passive;
         this.reset();
         this.rx = Config.bullets.rotation;
-        this.scale.setTo(.5, .5);
         this.on('exitviewport', function () { return GameState.state.bullets.despawn(_this); });
         this.on('collision', this._collision);
         this.on('postdraw', this.postdraw);
@@ -331,6 +333,7 @@ var Bullet = (function (_super) {
                 owner: null,
                 x: 0,
                 y: 0,
+                scale: .5,
                 d: new ex.Vector(0, 0),
                 damage: Config.bullets.damage,
                 speed: Config.bullets.speed,
@@ -342,6 +345,7 @@ var Bullet = (function (_super) {
             this.state = state;
             this.x = state.x;
             this.y = state.y;
+            this.scale = new ex.Vector(state.scale, state.scale);
             this.owner = state.owner;
             var normalized = this.state.d.normalize();
             this.dx = normalized.x * this.state.speed;
@@ -361,7 +365,6 @@ var Bullet = (function (_super) {
         }
         if (this.state.shape === Shape.PlayerBullet) {
             this._playerBulletAnim.draw(evt.ctx, 0, 0);
-            this.scale.setTo(2, 2);
         }
     };
     return Bullet;
@@ -519,14 +522,14 @@ var Badguy = (function (_super) {
     function Badguy(x, y, width, height, badguytype) {
         var _this = this;
         _super.call(this, x, y, width, height);
-        //this.collisionType = ex.CollisionType.Active;
-        this.collisionType = ex.CollisionType.Passive;
-        var BadguyTypes = [
-            Resources.TriangleBadguySheet,
+        this.badguytype = badguytype;
+        this.BadguyTypes = [
             Resources.SquareBadguySheet,
-            Resources.CircleBadguySheet
+            Resources.CircleBadguySheet,
+            Resources.TriangleBadguySheet,
         ];
-        var ActiveType = BadguyTypes[badguytype];
+        this.collisionType = ex.CollisionType.Passive;
+        var ActiveType = this.BadguyTypes[badguytype];
         var BadGuySheet = new ex.SpriteSheet(ActiveType, 2, 1, 32, 32);
         this.scale.setTo(2, 2);
         //this.anchor.setTo(.1, .1);
@@ -542,7 +545,7 @@ var Badguy = (function (_super) {
             badguy.on('update', _this._update);
             badguy.on('collision', _this._collision);
         };
-        this.reset(this.state);
+        this.reset();
     }
     Badguy.prototype._preupdate = function (evt) {
         if (this.dx >= 0) {
@@ -597,8 +600,8 @@ var Badguy = (function (_super) {
                 d: new ex.Vector(0, 0),
                 speed: Config.badguy.speed,
                 size: Config.badguy.size,
-                shape: Shape.Shape1,
-                weapon: new StraightShooter(this, Config.bullets.speed, Config.bullets.damage)
+                shape: this.badguytype,
+                weapon: new ShapeShooter(this, Config.bullets.speed, Config.bullets.damage, this.badguytype)
             };
         }
         else {
