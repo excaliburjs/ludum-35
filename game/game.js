@@ -303,22 +303,6 @@ var Bullet = (function (_super) {
         this.on('exitviewport', function () { return _this.kill(); }); // GameState.state.bullets.despawn(this));
         this.on('collision', this._collision);
         this.on('postdraw', this.postdraw);
-        var triangleBulletSheet = new ex.SpriteSheet(Resources.TriangleBullet, 3, 1, 32, 32);
-        var circleBulletSheet = new ex.SpriteSheet(Resources.CircleBullet, 3, 1, 32, 32);
-        var squareBulletSheet = new ex.SpriteSheet(Resources.SquareBullet, 3, 1, 32, 32);
-        var playerBulletSheet = new ex.SpriteSheet(Resources.PlayerBullet, 6, 1, 32, 32);
-        this._triangleBulletAnim = triangleBulletSheet.getAnimationForAll(game, 100);
-        this._triangleBulletAnim.anchor.setTo(.5, .5);
-        this._triangleBulletAnim.loop = true;
-        this._circleBulletAnim = circleBulletSheet.getAnimationForAll(game, 100);
-        this._circleBulletAnim.anchor.setTo(.5, .5);
-        this._circleBulletAnim.loop = true;
-        this._squareBulletAnim = squareBulletSheet.getAnimationForAll(game, 100);
-        this._squareBulletAnim.anchor.setTo(.5, .5);
-        this._squareBulletAnim.loop = true;
-        this._playerBulletAnim = playerBulletSheet.getAnimationForAll(game, 100);
-        this._playerBulletAnim.anchor.setTo(.5, .5);
-        this._playerBulletAnim.loop = true;
     }
     Bullet.prototype._collision = function (collision) {
         if (this.visible) {
@@ -363,16 +347,16 @@ var Bullet = (function (_super) {
     };
     Bullet.prototype.postdraw = function (evt) {
         if (this.state.shape === Shape.Shape1) {
-            this._squareBulletAnim.draw(evt.ctx, 0, 0);
+            GlobalAnimations.SquareBullet.draw(evt.ctx, 0, 0);
         }
         if (this.state.shape === Shape.Shape2) {
-            this._circleBulletAnim.draw(evt.ctx, 0, 0);
+            GlobalAnimations.CircleBullet.draw(evt.ctx, 0, 0);
         }
         if (this.state.shape === Shape.Shape3) {
-            this._triangleBulletAnim.draw(evt.ctx, 0, 0);
+            GlobalAnimations.TriangleBullet.draw(evt.ctx, 0, 0);
         }
         if (this.state.shape === Shape.PlayerBullet) {
-            this._playerBulletAnim.draw(evt.ctx, 0, 0);
+            GlobalAnimations.PlayerBullet.draw(evt.ctx, 0, 0);
         }
     };
     return Bullet;
@@ -840,6 +824,31 @@ game.input.keyboard.on('down', function (evt) {
         game.isDebug = !game.isDebug;
     }
 });
+// global sprites 
+var GlobalSprites = {
+    triangleBulletSheet: new ex.SpriteSheet(Resources.TriangleBullet, 3, 1, 32, 32),
+    circleBulletSheet: new ex.SpriteSheet(Resources.CircleBullet, 3, 1, 32, 32),
+    squareBulletSheet: new ex.SpriteSheet(Resources.SquareBullet, 3, 1, 32, 32),
+    playerBulletSheet: new ex.SpriteSheet(Resources.PlayerBullet, 6, 1, 32, 32)
+};
+var _triangleBulletAnim = GlobalSprites.triangleBulletSheet.getAnimationForAll(game, 100);
+_triangleBulletAnim.anchor.setTo(.5, .5);
+_triangleBulletAnim.loop = true;
+var _circleBulletAnim = GlobalSprites.circleBulletSheet.getAnimationForAll(game, 100);
+_circleBulletAnim.anchor.setTo(.5, .5);
+_circleBulletAnim.loop = true;
+var _squareBulletAnim = GlobalSprites.squareBulletSheet.getAnimationForAll(game, 100);
+_squareBulletAnim.anchor.setTo(.5, .5);
+_squareBulletAnim.loop = true;
+var _playerBulletAnim = GlobalSprites.playerBulletSheet.getAnimationForAll(game, 100);
+_playerBulletAnim.anchor.setTo(.5, .5);
+_playerBulletAnim.loop = true;
+var GlobalAnimations = {
+    TriangleBullet: _triangleBulletAnim,
+    CircleBullet: _circleBulletAnim,
+    SquareBullet: _squareBulletAnim,
+    PlayerBullet: _playerBulletAnim
+};
 // create loader
 var loader = new ex.Loader();
 for (var res in Resources) {
