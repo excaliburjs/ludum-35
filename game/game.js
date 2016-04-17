@@ -57,6 +57,7 @@ var Resources = {
     CircleBullet: new ex.Texture('./img/bullets/blueBullet.png'),
     SquareBullet: new ex.Texture('./img/bullets/greenBullet.png'),
     TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png'),
+    DigitalFontSheet: new ex.Texture("/fonts/DigitalFont.bmp"),
     Explode: new ex.Sound('./snd/explode1.wav')
 };
 var Config = {
@@ -298,10 +299,12 @@ var Analytics = (function () {
 }());
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="stateful.ts" />
+/// <reference path="resources.ts" />
 var Stat = (function () {
     function Stat(name, defaultValue) {
         this.name = name;
         this.defaultValue = defaultValue;
+        this.reset();
         this.state.value = defaultValue;
     }
     Stat.prototype.reset = function (state) {
@@ -323,12 +326,18 @@ var HUDStat = (function (_super) {
         _super.call(this, x, y, width, height);
         this.stat = stat;
     }
-    HUDStat.prototype.onInitialize = function () {
+    HUDStat.prototype.onInitialize = function (engine) {
+        _super.prototype.onInitialize.call(this, engine);
         var hudStat = this;
-        hudStat = this.stat.state.value;
-        hudsStat.on('postdraw', postdraw);
+        this.font = new ex.SpriteFont(Resources.DigitalFontSheet, " !\"#$%&'{}*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_", false, 8, 8, 32, 32);
+        this.font.sprites.forEach(function (item) {
+            item.fill(ex.Color.Red);
+        });
+        hudStat.on('postdraw', this.postdraw);
     };
-    HUDStat.prototype.postdraw = function () {
+    HUDStat.prototype.postdraw = function (evt) {
+        this.font.draw(evt.ctx, "THINGY", 0, 0, {
+            fontSize: 16 });
     };
     return HUDStat;
 }(ex.UIActor));
@@ -544,7 +553,9 @@ game.on('update', function (evt) {
 });
 game.start(loader).then(function () {
     var sf = new Starfield();
+    var statBox = new HUDStat(new Stat("test", "derp"), 0, 0, 150, 50);
     game.add(sf);
+    game.add(statBox);
     GameState.init(game);
 });
 //# sourceMappingURL=game.js.map

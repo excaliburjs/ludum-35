@@ -73,6 +73,8 @@ game.on('update', (evt: ex.UpdateEvent) => {
 
 game.start(loader).then(() => {
 	var sf = new Starfield();
+	var statBox = new HUDStat(new Stat("test", "derp"), 0, 0, 150, 50);
 	game.add(sf);
+	game.add(statBox);
 	GameState.init(game);
 });

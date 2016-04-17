@@ -1,5 +1,7 @@
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="stateful.ts" />
+/// <reference path="resources.ts" />
+
 
 
 // keep game stats here, score, powerup level, etc
@@ -9,10 +11,12 @@ interface StatState {
 }
 
 class Stat implements Stateful<StatState>{
+   public state: StatState;
    constructor(private name: string, private defaultValue : string|number) {
+      this.reset();
       this.state.value = defaultValue;
    }   
-   public state: StatState;
+
    public reset(state?: StatState) : this {
       if (!state) {
          this.state = {
@@ -26,18 +30,25 @@ class Stat implements Stateful<StatState>{
 }
 
 class HUDStat extends ex.UIActor {
-   constructor (public stat: Stat,x: number, y: number, width: number, height: number){
-   super(x, y, width, height)
+   constructor (public stat: Stat, x: number, y: number, width: number, height: number){
+   super(x, y, width, height);  
+
    }
-   
-   onInitialize() : void {
-     var hudStat = this;
-     hudStat = this.stat.state.value;
-     hudsStat.on('postdraw', postdraw); 
-   }
-   
-   postdraw() : void {
+    private font : ex.SpriteFont;
       
+   onInitialize(engine: ex.Engine) : void {
+     super.onInitialize(engine);
+     var hudStat = this;
+     this.font = new ex.SpriteFont(Resources.DigitalFontSheet, " !\"#$%&'{}*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_", false, 8, 8, 32, 32);
+     this.font.sprites.forEach(function(item){
+       item.fill(ex.Color.Red);
+     })
+     hudStat.on('postdraw', this.postdraw); 
+   }
+   
+   postdraw(evt: ex.PostDrawEvent) : void {
+      this.font.draw(evt.ctx, "THINGY", 0, 0, {
+        fontSize: 16});
    }
    
    
