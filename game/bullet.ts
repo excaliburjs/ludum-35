@@ -28,7 +28,7 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
       this.reset();
       this.rx = Config.bullets.rotation;
 
-      this.on('exitviewport', () => GameState.state.bullets.despawn(this));
+      this.on('exitviewport', () => this.kill());// GameState.state.bullets.despawn(this));
       this.on('collision', this._collision);
       this.on('postdraw', this.postdraw);
       
@@ -63,7 +63,8 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
             collision.other.kill();
             var currKills = parseInt(GameState.getGameStat("KILLS").toString()) + 1;
             GameState.setGameStat("KILLS", currKills);
-            GameState.state.bullets.despawn(this);
+            this.kill();
+            //GameState.state.bullets.despawn(this);
          }
       }
    }

@@ -50,14 +50,15 @@ class GameState {
                       
          GameState.state = {
             ship: new Ship(100, 100, 48, 48),
-            bullets: new Pool<Bullet, BulletState>(500, () => {
+            bullets: null,
+            /*bullets: new Pool<Bullet, BulletState>(500, () => {
                   var b = new Bullet();
                   //game.add(b);
                   return b;
-            }),
+            }),*/
             stats: [new Stat("KILLS", 0)]
          };
-         GameState.state.bullets.fill();
+         //GameState.state.bullets.fill();
          
          game.add(GameState.state.ship);
       }

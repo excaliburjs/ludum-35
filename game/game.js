@@ -34,8 +34,8 @@ var StraightShooter = (function (_super) {
         this.damage = damage;
     }
     StraightShooter.prototype.shoot = function () {
-        // spawn bullet traveling in direction actor is facing
-        GameState.state.bullets.spawn({
+        var newBullet = new Bullet();
+        newBullet.reset({
             owner: this.source,
             d: ex.Vector.fromAngle(this.source.rotation),
             damage: this.damage,
@@ -45,6 +45,7 @@ var StraightShooter = (function (_super) {
             shape: Shape.PlayerBullet,
             scale: 2
         });
+        game.add(newBullet);
     };
     return StraightShooter;
 }(WeaponBase));
@@ -58,8 +59,9 @@ var ShapeShooter = (function (_super) {
         this.badguyType = badguyType;
     }
     ShapeShooter.prototype.shoot = function () {
+        var newBullet = new Bullet();
         // spawn bullet traveling in direction actor is facing
-        GameState.state.bullets.spawn({
+        newBullet.reset({
             owner: this.source,
             d: ex.Vector.fromAngle(this.source.rotation),
             damage: this.damage,
@@ -69,6 +71,7 @@ var ShapeShooter = (function (_super) {
             shape: this.badguyType,
             scale: .5
         });
+        game.add(newBullet);
     };
     return ShapeShooter;
 }(WeaponBase));
@@ -297,7 +300,7 @@ var Bullet = (function (_super) {
         this.collisionType = ex.CollisionType.Passive;
         this.reset();
         this.rx = Config.bullets.rotation;
-        this.on('exitviewport', function () { return GameState.state.bullets.despawn(_this); });
+        this.on('exitviewport', function () { return _this.kill(); }); // GameState.state.bullets.despawn(this));
         this.on('collision', this._collision);
         this.on('postdraw', this.postdraw);
         var triangleBulletSheet = new ex.SpriteSheet(Resources.TriangleBullet, 3, 1, 32, 32);
@@ -325,7 +328,7 @@ var Bullet = (function (_super) {
                 collision.other.kill();
                 var currKills = parseInt(GameState.getGameStat("KILLS").toString()) + 1;
                 GameState.setGameStat("KILLS", currKills);
-                GameState.state.bullets.despawn(this);
+                this.kill();
             }
         }
     };
@@ -501,14 +504,15 @@ var GameState = (function () {
     GameState.init = function (game) {
         GameState.state = {
             ship: new Ship(100, 100, 48, 48),
-            bullets: new Pool(500, function () {
-                var b = new Bullet();
-                //game.add(b);
-                return b;
-            }),
+            bullets: null,
+            /*bullets: new Pool<Bullet, BulletState>(500, () => {
+                  var b = new Bullet();
+                  //game.add(b);
+                  return b;
+            }),*/
             stats: [new Stat("KILLS", 0)]
         };
-        GameState.state.bullets.fill();
+        //GameState.state.bullets.fill();
         game.add(GameState.state.ship);
     };
     return GameState;
