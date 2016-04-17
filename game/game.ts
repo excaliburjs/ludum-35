@@ -28,6 +28,38 @@ game.input.keyboard.on('down', (evt: ex.Input.KeyEvent) => {
    }
 });
 
+// global sprites 
+
+var GlobalSprites = {
+   triangleBulletSheet: new ex.SpriteSheet(Resources.TriangleBullet, 3, 1, 32, 32),
+   circleBulletSheet: new ex.SpriteSheet(Resources.CircleBullet, 3, 1, 32, 32),
+   squareBulletSheet: new ex.SpriteSheet(Resources.SquareBullet, 3, 1, 32, 32),
+   playerBulletSheet: new ex.SpriteSheet(Resources.PlayerBullet, 6, 1, 32, 32)
+}
+
+var _triangleBulletAnim = GlobalSprites.triangleBulletSheet.getAnimationForAll(game, 100);
+_triangleBulletAnim.anchor.setTo(.5, .5);
+_triangleBulletAnim.loop = true;
+
+var _circleBulletAnim = GlobalSprites.circleBulletSheet.getAnimationForAll(game, 100);
+_circleBulletAnim.anchor.setTo(.5, .5);
+_circleBulletAnim.loop = true;
+
+var _squareBulletAnim = GlobalSprites.squareBulletSheet.getAnimationForAll(game, 100);
+_squareBulletAnim.anchor.setTo(.5, .5);
+_squareBulletAnim.loop = true;
+
+var _playerBulletAnim = GlobalSprites.playerBulletSheet.getAnimationForAll(game, 100);
+_playerBulletAnim.anchor.setTo(.5, .5);
+_playerBulletAnim.loop = true;
+
+var GlobalAnimations = {
+	TriangleBullet: _triangleBulletAnim,
+	CircleBullet: _circleBulletAnim,
+	SquareBullet: _squareBulletAnim,
+	PlayerBullet: _playerBulletAnim
+}
+
 // create loader
 var loader = new ex.Loader();
 for(var res in Resources){

@@ -56,20 +56,32 @@ class GameState {
          
          GameState.state = {
             ship: new Ship(Config.PlayerSpawn.x, Config.PlayerSpawn.y, 48, 48),
-            bullets: new Pool<Bullet, BulletState>(500, () => {
-                  var b = new Bullet();
-                  //game.add(b);
-                  return b;
-            }),
+            bullets: null,
             stats: [new Stat("KILLS", 0)],
             stage: 0
          };
+         //GameState.state.bullets.fill();
          
-         GameState.state.bullets.fill();                 
-                  
          game.add(GameState.state.ship);
          
          // start the waves
          badGuyFactory.nextWave();
       }
+      
+      static reset() {
+            //TODO
+            this._resetPlayer();
+            this._resetStats();
+      }
+      
+      private static _resetPlayer() {
+            GameState.state.ship.dx = 0;
+            GameState.state.ship.dy = 0;
+            //TODO
+      }
+      
+      private static _resetStats() {
+            this.setGameStat('KILLS', 0);
+      }
+   
 }

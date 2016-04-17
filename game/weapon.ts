@@ -30,8 +30,8 @@ class StraightShooter extends WeaponBase {
    
    shoot() {
       
-      // spawn bullet traveling in direction actor is facing
-      GameState.state.bullets.spawn({
+      var newBullet = new Bullet();
+      newBullet.reset({
          owner: this.source,
          d: ex.Vector.fromAngle(this.source.rotation),
          damage: this.damage,
@@ -41,6 +41,7 @@ class StraightShooter extends WeaponBase {
          shape: Shape.PlayerBullet,
          scale: 2
       });
+      game.add(newBullet);
    }
    
 }
@@ -53,8 +54,10 @@ class ShapeShooter extends WeaponBase {
    
    shoot() {
       
+      var newBullet = new Bullet();
+      
       // spawn bullet traveling in direction actor is facing
-      GameState.state.bullets.spawn({
+      newBullet.reset({
          owner: this.source,
          d: ex.Vector.fromAngle(this.source.rotation),
          damage: this.damage,
@@ -64,6 +67,8 @@ class ShapeShooter extends WeaponBase {
          shape: this.badguyType,
          scale: .5
       });
+      
+      game.add(newBullet);
    }
    
 }
