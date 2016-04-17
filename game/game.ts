@@ -7,6 +7,7 @@
 /// <reference path="ship.ts" />
 /// <reference path="badguyfactory.ts" />
 /// <reference path="starfield.ts" />
+/// <reference path="background.ts" />
 
 
 var game = new ex.Engine({
@@ -72,6 +73,15 @@ game.on('update', (evt: ex.UpdateEvent) => {
 
 game.start(loader).then(() => {
 	var sf = new Starfield();
+	var statBox = new HUDStat(new Stat("test", "derp"), 100, 100, 150, 50);
+	var spriteFont = new ex.SpriteFont(Resources.DigitalFontSheet, " !\"#$%&'{}*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_", false, 8, 8, 32, 32);
+	
+	var statLabel = new ex.Label("TEST PLOX", 100, 100, null, spriteFont);
+	statLabel.fontSize = 40;
+	statLabel.letterSpacing = -20;
+	//statLabel.color = ex.Color.Red.clone();
+	statBox.add(statLabel);
 	game.add(sf);
+	game.add(statBox);
 	GameState.init(game);
 });

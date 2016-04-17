@@ -2,7 +2,7 @@
 /// <reference path="stateful.ts" />
 /// <reference path="gamestate.ts" />
 
-class Pool<T extends Stateful<U>, U> {
+class Pool<T extends Stateful<U> & Poolable, U> {
    
    private _pool: ex.Util.Collection<T>;
    private _free: ex.Util.Collection<number>;
@@ -15,7 +15,7 @@ class Pool<T extends Stateful<U>, U> {
    fill(count = this._pool.internalSize()) {
       for(let i = 0; i < count; i++) {         
          let o = this.factory();
-         o.id = i;
+         o.poolId = i;
          this._pool.push(o);
          this._free.push(i);
       }
@@ -32,9 +32,9 @@ class Pool<T extends Stateful<U>, U> {
       this._pool.elementAt(i).reset(state);
    }
    
-   despawn(obj: Stateful<BulletState>) {
+   despawn(obj: Stateful<BulletState> & Poolable) {
       if (!obj) return;
       obj.reset();
-      this._free.push(obj.id);
+      this._free.push(obj.poolId);
    }     
 }

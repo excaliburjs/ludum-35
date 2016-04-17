@@ -32,6 +32,7 @@ class StraightShooter extends WeaponBase {
       
       // spawn bullet traveling in direction actor is facing
       GameState.state.bullets.spawn({
+         owner: this.source,
          d: ex.Vector.fromAngle(this.source.rotation),
          damage: this.damage,
          x: this.source.x,

@@ -9,7 +9,7 @@ var Config = {
    spaceFriction: .01,
    
    // Baddies
-   SpawnInterval: 1500, //ms
+   SpawnInterval: 5500, //ms
    MinEnemiesPerSpawn: 1,  
    MaxEnemiesPerSpawn: 5,
    

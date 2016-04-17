@@ -1,5 +1,7 @@
+interface Poolable {
+   poolId: number;
+}
 interface Stateful<T> {
-   id: number;
    state: T;
    reset(state?: T): this;
 }
