@@ -1,9 +1,9 @@
 var Resources = {
    ShipSpriteSheet: new ex.Texture('./img/ship.png'),
    WitchSpriteSheet: new ex.Texture('./img/witch.png'),
-   CircleShieldSheet: new ex.Texture('./img/circlesheild.png'),
-   SquareShieldSheet: new ex.Texture('./img/squaresheild.png'),
-   TriangleShieldSheet: new ex.Texture('./img/trianglesheild.png'),
+   CircleShieldSheet: new ex.Texture('./img/circlesheildbig.png'),
+   SquareShieldSheet: new ex.Texture('./img/squaresheildbig.png'),
+   TriangleShieldSheet: new ex.Texture('./img/trianglesheildbig.png'),
    PlayerBullet: new ex.Texture('./img/playerbullet.png'),
    CircleBadguySheet: new ex.Texture('./img/circlebadguyexplodes.png'),
    TriangleBadguySheet: new ex.Texture('./img/trianglebadguyexplodes.png'),

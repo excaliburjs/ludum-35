@@ -25,7 +25,7 @@ class WeaponBase implements Weapon {
 class StraightShooter extends WeaponBase {
       
    constructor(protected source: ex.Actor, public speed: number, public damage: number) { 
-      super(500, source);
+      super(Config.StraightShooterFrequency, source);
    }
    
    shoot() {
