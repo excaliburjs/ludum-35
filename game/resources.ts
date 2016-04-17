@@ -16,5 +16,6 @@ var Resources = {
    On: new ex.Sound('./snd/on.wav'),
    No: new ex.Sound('./snd/no.wav'),
    PlanetBg: new ex.Texture('./img/planet-bg.png'),
-   FrontBg: new ex.Texture('./img/front-bg.png')
+   FrontBg: new ex.Texture('./img/front-bg.png'),
+   Torch: new ex.Texture('./img/torch.png')
 };
