@@ -11,7 +11,7 @@ var Resources = {
    CircleBullet: new ex.Texture('./img/bullets/blueBullet.png'),
    SquareBullet: new ex.Texture('./img/bullets/greenBullet.png'),
    TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png'),
-   DiabloFontSheet: new ex.Texture("./fonts/DiabloFont.bmp"),
+   DiabloFontSheet: new ex.Texture("./fonts/DiabloFont.png"),
    Explode: new ex.Sound('./snd/explode1.wav'),
    On: new ex.Sound('./snd/on.wav'),
    No: new ex.Sound('./snd/no.wav'),

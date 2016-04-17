@@ -81,7 +81,7 @@ var Resources = {
     CircleBullet: new ex.Texture('./img/bullets/blueBullet.png'),
     SquareBullet: new ex.Texture('./img/bullets/greenBullet.png'),
     TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png'),
-    DiabloFontSheet: new ex.Texture("./fonts/DiabloFont.bmp"),
+    DiabloFontSheet: new ex.Texture("./fonts/DiabloFont.png"),
     Explode: new ex.Sound('./snd/explode1.wav'),
     On: new ex.Sound('./snd/on.wav'),
     No: new ex.Sound('./snd/no.wav'),
@@ -154,17 +154,17 @@ var Ship = (function (_super) {
         var circleSheild = new ex.SpriteSheet(Resources.CircleShieldSheet, 5, 1, 96, 96);
         var triangleSheild = new ex.SpriteSheet(Resources.TriangleShieldSheet, 5, 1, 96, 96);
         var ship = this;
-        this._rightAnim = witchSheet.getAnimationForAll(engine, 300);
-        this._rightAnim.rotation = Math.PI / 8;
-        this._rightAnim.loop = true;
-        this._rightAnim.anchor.setTo(.5, .5);
-        this.addDrawing('right', this._rightAnim);
         this._leftAnim = witchSheet.getAnimationForAll(engine, 300);
         this._leftAnim.rotation = -Math.PI / 8;
         this._leftAnim.flipVertical = true;
         this._leftAnim.loop = true;
         this._leftAnim.anchor.setTo(.1, .1);
         this.addDrawing('left', this._leftAnim);
+        this._rightAnim = witchSheet.getAnimationForAll(engine, 300);
+        this._rightAnim.rotation = Math.PI / 8;
+        this._rightAnim.loop = true;
+        this._rightAnim.anchor.setTo(.5, .5);
+        this.addDrawing('right', this._rightAnim);
         this._circle = circleSheild.getAnimationForAll(engine, 50);
         this._circle.loop = true;
         this._circle.anchor.setTo(.4, .5);
@@ -217,7 +217,7 @@ var Ship = (function (_super) {
         var oppVel = new ex.Vector(this.dx, this.dy).scale(-1).scale(Config.spaceFriction);
         this.dx += oppVel.x;
         this.dy += oppVel.y;
-        if (this.dx > 0) {
+        if (this.dx >= 0) {
             this.setDrawing('right');
         }
         else {
@@ -431,6 +431,7 @@ var HUDStat = (function (_super) {
         this.statLabel = new ex.Label(displayText, 0, 0, null, this.font);
         this.statLabel.fontSize = 60;
         this.statLabel.letterSpacing = -44;
+        this.statLabel.color = ex.Color.Magenta.clone();
         this.add(this.statLabel);
         hudStat.on('postdraw', this.postdraw);
     };
