@@ -201,6 +201,7 @@ var Bullet = (function (_super) {
             console.log(this.owner);
             Resources.Explode.play();
             collision.other.kill();
+            GameState.state.bullets.despawn(this);
         }
     };
     Bullet.prototype.reset = function (state) {

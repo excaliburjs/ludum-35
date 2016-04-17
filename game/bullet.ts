@@ -14,7 +14,6 @@ interface BulletState {
 class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
    
    poolId: number;
-  
    public owner: ex.Actor = null;
    constructor() {
       super(0, 0, 3, 3, ex.Color.Red);
@@ -30,6 +29,7 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
          console.log(this.owner);
          Resources.Explode.play();
          collision.other.kill();
+         GameState.state.bullets.despawn(this);
       }
    }
    reset(state?: BulletState) {
