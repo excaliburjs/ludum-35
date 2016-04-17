@@ -172,7 +172,9 @@ var Ship = (function (_super) {
         this._triangle.rotation = Math.PI / 2;
         ship.on('preupdate', this.preupdate);
         ship.on('predraw', this.predraw);
-        engine.input.pointers.primary.on('down', this._pointerDown);
+        engine.input.pointers.primary.on('down', function (evt) {
+            _this._pointerDown(evt);
+        });
         engine.input.pointers.primary.on('move', function (evt) {
             if (_this._mouseDown) {
                 _this._pointerDown(evt);
@@ -200,7 +202,7 @@ var Ship = (function (_super) {
         var dx = click.x - GameState.state.ship.x;
         var dy = click.y - GameState.state.ship.y;
         if (!gameBounds.contains(new ex.Point(this.x, this.y))) {
-            return;
+            return false;
         }
         GameState.state.ship.dx = dx * Config.shipSpeedScale;
         GameState.state.ship.dy = dy * Config.shipSpeedScale;
