@@ -534,7 +534,6 @@ var Badguy = (function (_super) {
         this.onInitialize = function (engine) {
             var badguy = _this;
             var anim = BadGuySheet.getAnimationForAll(engine, 150);
-            //var anim = BadGuySheet.getAnimationBetween(engine, 1, 2, 150);
             anim.loop = true;
             anim.anchor.setTo(.3, .3);
             _this.addDrawing('default', anim);
@@ -543,7 +542,7 @@ var Badguy = (function (_super) {
             badguy.on('update', _this._update);
             badguy.on('collision', _this._collision);
         };
-        this.weapon = new StraightShooter(this, Config.bullets.speed, Config.bullets.damage);
+        this.reset(this.state);
     }
     Badguy.prototype._preupdate = function (evt) {
         if (this.dx >= 0) {
@@ -558,6 +557,7 @@ var Badguy = (function (_super) {
         else {
             this.dy = Config.badguy.speed * -1;
         }
+        this.state.weapon.update(evt.delta);
     };
     Badguy.prototype._update = function (evt) {
         var hitborder = false;
