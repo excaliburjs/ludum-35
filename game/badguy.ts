@@ -9,12 +9,14 @@ interface BadguyState {
    speed: number;
    size: number;
    shape: Shape;
-   
+   weapon: Weapon;
 }
 
 class Badguy extends ex.Actor implements Stateful<BadguyState> {
    id: number;
    
+   //todo remove when pooling is implemented
+   public weapon: Weapon; 
    constructor(x, y, width, height, badguytype) {
       super(x, y, width, height);
       this.collisionType = ex.CollisionType.Active;
@@ -46,9 +48,10 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
          badguy.on('preupdate', (evt: ex.PreUpdateEvent) => {
             badguy.dx = Config.badguy.speed;
             badguy.dy = Config.badguy.speed;
-            
+            this.preupdate(evt);
          });
       }
+      this.weapon = new StraightShooter(this, Config.bullets.speed, Config.bullets.damage)
    }
 
    state: BadguyState;
@@ -62,7 +65,8 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
             d: new ex.Vector(0, 0),
             speed: Config.badguy.speed,
             size: Config.badguy.size,
-            shape: Shape.Shape1
+            shape: Shape.Shape1,
+            weapon: new StraightShooter(this, Config.bullets.speed, Config.bullets.damage)
          }
          
       } else {
@@ -70,6 +74,10 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       }
       
       return this;
+   }
+   
+   preupdate(evt: ex.PreUpdateEvent){
+     this.weapon.update(evt.delta);
    }
 
 }

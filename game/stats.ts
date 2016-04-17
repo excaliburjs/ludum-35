@@ -42,25 +42,6 @@ class HUDStat extends ex.UIActor {
      this.font = new ex.SpriteFont(Resources.DigitalFontSheet, " !\"#$%&'{}*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_", false, 8, 8, 32, 32);
      this.font.sprites.forEach(function(item){
        item.fill(ex.Color.Red);
-     })
-     hudStat.on('postdraw', this.postdraw); 
+     }); 
    }
-   
-   postdraw(evt: ex.PostDrawEvent) : void {
-      this.font.draw(evt.ctx, "THINGY", 100, 100, {
-        fontSize: 100,
-        letterSpacing: 1.
-      });
-      
-       this.font.draw(evt.ctx, "THINGY", 0, 0, {
-               color: this.color.clone(),
-               baseAlign: ex.BaseAlign.Bottom,
-               textAlign: ex.TextAlign.Center,
-               fontSize: 100,
-               letterSpacing: 1,
-               opacity: 1.0
-            });
-   }
-   
-   
 }

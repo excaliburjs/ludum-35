@@ -28,8 +28,9 @@ var Config = {
       
    // Bullet config
    bullets: {
-      speed: 200, // px/s
-      damage: 1
+      speed: 500, // px/s
+      damage: 1,
+      rotation: Math.PI 
    },
    
    badguy: {
