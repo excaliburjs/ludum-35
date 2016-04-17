@@ -13,6 +13,8 @@ var Resources = {
    TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png'),
    DigitalFontSheet: new ex.Texture("./fonts/DigitalFont.bmp"),
    Explode: new ex.Sound('./snd/explode1.wav'),
+   On: new ex.Sound('./snd/on.wav'),
+   No: new ex.Sound('./snd/no.wav'),
    PlanetBg: new ex.Texture('./img/planet-bg.png'),
    FrontBg: new ex.Texture('./img/front-bg.png')
 };

@@ -20,7 +20,7 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
    private _leftAnim: ex.Animation;
    
    private _mouseDown: boolean = false;
-   private _currentTime: number;
+   private _currentTime: number = 0;
    
    public poolId: number;
    public state: ShipState;
@@ -144,11 +144,11 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
        }
        this._currentTime += delta;
        if(engine.input.keyboard.wasPressed(ex.Input.Keys.A)){
-           this.state.shieldType = Shape.Shape1;
+           this._switchShield(Shape.Shape1);
        } else if (engine.input.keyboard.wasPressed(ex.Input.Keys.S)){
-           this.state.shieldType = Shape.Shape2;
+           this._switchShield(Shape.Shape2);
        } else if (engine.input.keyboard.wasPressed(ex.Input.Keys.D)){
-           this.state.shieldType = Shape.Shape3;
+           this._switchShield(Shape.Shape3);
        }
        
    }
@@ -158,10 +158,11 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
        if(this._currentTime > Config.ShieldCoolDownTime){
           this._currentTime = 0;
           this.state.shieldType = shape;
+          Resources.On.play();
           // play bling sound
        }else{
           // play nah-uh sound
-             
+          //Resources.No.play();
        }
    }
    
