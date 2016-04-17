@@ -83,6 +83,8 @@ var Resources = {
     TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png'),
     DigitalFontSheet: new ex.Texture("./fonts/DigitalFont.bmp"),
     Explode: new ex.Sound('./snd/explode1.wav'),
+    On: new ex.Sound('./snd/on.wav'),
+    No: new ex.Sound('./snd/no.wav'),
     PlanetBg: new ex.Texture('./img/planet-bg.png'),
     FrontBg: new ex.Texture('./img/front-bg.png')
 };
@@ -135,6 +137,7 @@ var Ship = (function (_super) {
     function Ship(x, y, width, height) {
         _super.call(this, x, y, width, height);
         this._mouseDown = false;
+        this._currentTime = 0;
         this.collisionType = ex.CollisionType.Passive;
         this.color = ex.Color.Red.clone();
         this.scale.setTo(2, 2);
@@ -240,19 +243,20 @@ var Ship = (function (_super) {
         }
         this._currentTime += delta;
         if (engine.input.keyboard.wasPressed(ex.Input.Keys.A)) {
-            this.state.shieldType = Shape.Shape1;
+            this._switchShield(Shape.Shape1);
         }
         else if (engine.input.keyboard.wasPressed(ex.Input.Keys.S)) {
-            this.state.shieldType = Shape.Shape2;
+            this._switchShield(Shape.Shape2);
         }
         else if (engine.input.keyboard.wasPressed(ex.Input.Keys.D)) {
-            this.state.shieldType = Shape.Shape3;
+            this._switchShield(Shape.Shape3);
         }
     };
     Ship.prototype._switchShield = function (shape) {
         if (this._currentTime > Config.ShieldCoolDownTime) {
             this._currentTime = 0;
             this.state.shieldType = shape;
+            Resources.On.play();
         }
         else {
         }
