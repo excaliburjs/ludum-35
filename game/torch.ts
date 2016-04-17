@@ -5,11 +5,20 @@ class Torch extends ex.Actor {
    }
    
    onInitialize() {
-      var ss = new ex.SpriteSheet(Resources.Torch, 4, 1, 53, 72);
-      var anim = ss.getAnimationForAll(game, 100);
-      anim.loop = true;
+      var anim = Torch.getAnimation();
       this.addDrawing('default', anim);
       this.setDrawing('default');
+   }
+   
+   private static _anim: ex.Animation;
+   static getAnimation() {
+      if (!Torch._anim) {
+         var ss = new ex.SpriteSheet(Resources.Torch, 4, 1, 53, 72);
+         var anim = ss.getAnimationForAll(game, 100);
+         anim.loop = true;
+         Torch._anim = anim;
+      }
+      return Torch._anim;
    }
    
    static place(game: ex.Engine) {
