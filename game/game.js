@@ -336,8 +336,18 @@ var HUDStat = (function (_super) {
         hudStat.on('postdraw', this.postdraw);
     };
     HUDStat.prototype.postdraw = function (evt) {
+        this.font.draw(evt.ctx, "THINGY", 100, 100, {
+            fontSize: 100,
+            letterSpacing: 1.
+        });
         this.font.draw(evt.ctx, "THINGY", 0, 0, {
-            fontSize: 16 });
+            color: this.color.clone(),
+            baseAlign: ex.BaseAlign.Bottom,
+            textAlign: ex.TextAlign.Center,
+            fontSize: 100,
+            letterSpacing: 1,
+            opacity: 1.0
+        });
     };
     return HUDStat;
 }(ex.UIActor));
@@ -553,7 +563,13 @@ game.on('update', function (evt) {
 });
 game.start(loader).then(function () {
     var sf = new Starfield();
-    var statBox = new HUDStat(new Stat("test", "derp"), 0, 0, 150, 50);
+    var statBox = new HUDStat(new Stat("test", "derp"), 100, 100, 150, 50);
+    var spriteFont = new ex.SpriteFont(Resources.DigitalFontSheet, " !\"#$%&'{}*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_", false, 8, 8, 32, 32);
+    var statLabel = new ex.Label("TEST PLOX", 100, 100, null, spriteFont);
+    statLabel.fontSize = 40;
+    statLabel.letterSpacing = -20;
+    //statLabel.color = ex.Color.Red.clone();
+    statBox.add(statLabel);
     game.add(sf);
     game.add(statBox);
     GameState.init(game);
