@@ -498,6 +498,19 @@ var GameState = (function () {
         //GameState.state.bullets.fill();
         game.add(GameState.state.ship);
     };
+    GameState.reset = function () {
+        //TODO
+        this._resetPlayer();
+        this._resetStats();
+    };
+    GameState._resetPlayer = function () {
+        GameState.state.ship.dx = 0;
+        GameState.state.ship.dy = 0;
+        //TODO
+    };
+    GameState._resetStats = function () {
+        this.setGameStat('KILLS', 0);
+    };
     return GameState;
 }());
 // wire into app insights to send events to our anlytics provider, trackEvent
