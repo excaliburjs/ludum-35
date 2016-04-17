@@ -17,6 +17,7 @@ class Frontground extends ex.Actor {
    }
    
    onInitialize() {
+      this.setZIndex(3);
       this.addDrawing(Resources.FrontBg);
    }
    
