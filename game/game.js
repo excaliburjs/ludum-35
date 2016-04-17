@@ -537,23 +537,21 @@ var Badguy = (function (_super) {
         var _this = this;
         _super.call(this, x, y, 32, 32);
         this.badguytype = badguytype;
-        this.BadguyTypes = [
-            Resources.SquareBadguySheet,
-            Resources.CircleBadguySheet,
-            Resources.TriangleBadguySheet,
-        ];
         this.collisionType = ex.CollisionType.Passive;
-        var ActiveType = this.BadguyTypes[badguytype];
-        var BadGuySheet = new ex.SpriteSheet(ActiveType, 2, 1, 32, 32);
         this.scale.setTo(2, 2);
         //this.anchor.setTo(.1, .1);
         this.setCenterDrawing(true);
         this.onInitialize = function (engine) {
             var badguy = _this;
-            var anim = BadGuySheet.getAnimationForAll(engine, 150);
-            anim.loop = true;
-            anim.anchor.setTo(.3, .3);
-            _this.addDrawing('default', anim);
+            if (_this.badguytype == Shape.Shape1) {
+                _this.addDrawing('default', GlobalAnimations.SquareBaddie);
+            }
+            else if (_this.badguytype == Shape.Shape2) {
+                _this.addDrawing('default', GlobalAnimations.CircleBaddie);
+            }
+            else if (_this.badguytype === Shape.Shape3) {
+                _this.addDrawing('default', GlobalAnimations.TriangleBaddie);
+            }
             //initialize badguy
             badguy.on('preupdate', _this._preupdate);
             badguy.on('update', _this._update);
@@ -978,7 +976,10 @@ var GlobalSprites = {
     triangleBulletSheet: new ex.SpriteSheet(Resources.TriangleBullet, 3, 1, 32, 32),
     circleBulletSheet: new ex.SpriteSheet(Resources.CircleBullet, 3, 1, 32, 32),
     squareBulletSheet: new ex.SpriteSheet(Resources.SquareBullet, 3, 1, 32, 32),
-    playerBulletSheet: new ex.SpriteSheet(Resources.PlayerBullet, 6, 1, 32, 32)
+    playerBulletSheet: new ex.SpriteSheet(Resources.PlayerBullet, 6, 1, 32, 32),
+    TriangleBadGuySheet: new ex.SpriteSheet(Resources.TriangleBadguySheet, 2, 1, 32, 32),
+    CircleBadGuySheet: new ex.SpriteSheet(Resources.CircleBadguySheet, 2, 1, 32, 32),
+    SquareBadGuySheet: new ex.SpriteSheet(Resources.TriangleBadguySheet, 2, 1, 32, 32)
 };
 var _triangleBulletAnim = GlobalSprites.triangleBulletSheet.getAnimationForAll(game, 100);
 _triangleBulletAnim.anchor.setTo(.5, .5);
@@ -992,11 +993,23 @@ _squareBulletAnim.loop = true;
 var _playerBulletAnim = GlobalSprites.playerBulletSheet.getAnimationForAll(game, 100);
 _playerBulletAnim.anchor.setTo(.5, .5);
 _playerBulletAnim.loop = true;
+var _triangleBaddie = GlobalSprites.TriangleBadGuySheet.getAnimationForAll(game, 150);
+_triangleBaddie.loop = true;
+_triangleBaddie.anchor.setTo(.3, .3);
+var _squareBaddie = GlobalSprites.SquareBadGuySheet.getAnimationForAll(game, 150);
+_squareBaddie.loop = true;
+_squareBaddie.anchor.setTo(.3, .3);
+var _circleBaddie = GlobalSprites.CircleBadGuySheet.getAnimationForAll(game, 150);
+_circleBaddie.loop = true;
+_circleBaddie.anchor.setTo(.3, .3);
 var GlobalAnimations = {
     TriangleBullet: _triangleBulletAnim,
     CircleBullet: _circleBulletAnim,
     SquareBullet: _squareBulletAnim,
-    PlayerBullet: _playerBulletAnim
+    PlayerBullet: _playerBulletAnim,
+    TriangleBaddie: _triangleBaddie,
+    SquareBaddie: _squareBaddie,
+    CircleBaddie: _circleBaddie
 };
 // create loader
 var loader = new ex.Loader();
