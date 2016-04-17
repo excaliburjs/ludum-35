@@ -16,10 +16,12 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
    id: number;
    
    //todo remove when pooling is implemented
-   public weapon: Weapon; 
+   //public weapon: Weapon; 
+   public state: BadguyState;
    constructor(x, y, width, height, badguytype) {
       super(x, y, width, height);
-      this.collisionType = ex.CollisionType.Active;
+      //this.collisionType = ex.CollisionType.Active;
+      this.collisionType = ex.CollisionType.Passive;
       var BadguyTypes = [
            Resources.TriangleBadguySheet
          , Resources.SquareBadguySheet
@@ -37,8 +39,6 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       this.onInitialize = (engine: ex.Engine) => {
          var badguy = this;
          var anim = BadGuySheet.getAnimationForAll(engine, 150);
-         //var anim = BadGuySheet.getAnimationBetween(engine, 1, 2, 150);
-         
          
          anim.loop = true;
          anim.anchor.setTo(.3, .3);
@@ -49,7 +49,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
          badguy.on('update', this._update);
          badguy.on('collision', this._collision);
       }
-      this.weapon = new StraightShooter(this, Config.bullets.speed, Config.bullets.damage)
+      this.reset(this.state);
    }
    _preupdate(evt: ex.PreUpdateEvent){
       
@@ -65,39 +65,42 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       } else {
         this.dy = Config.badguy.speed * -1;
       }
-      
+    this.state.weapon.update(evt.delta);
     }
     _update(evt: ex.UpdateEvent){
+      var hitborder = false;
+      
        if (this.x > gameBounds.right) {
            this.x = gameBounds.right;
            this.dx *= -1;
-           this.dy *= -1;
+           //this.dy *= -1;
+           hitborder = true;
        }
        if (this.x < gameBounds.left) {
            this.x = gameBounds.left;
            this.dx *= -1;
-           this.dy *= -1; 
+           //this.dy *= -1; 
+           hitborder = true;
       }
        if (this.y > gameBounds.bottom) {
            this.y = gameBounds.bottom;
            this.dy *= -1;
-           this.dx *= -1;
+           //this.dx *= -1;
+           hitborder = true;
        }
        if (this.y < gameBounds.top) {
            this.y = gameBounds.top;
            this.dy *= -1;
-           this.dx *= -1;
+           //this.dx *= -1;
+           hitborder = true;
        }
+      
     }
     _collision(collision: ex.CollisionEvent){
-      //var BadGuySheet = new ex.SpriteSheet(this.ActiveType, 5, 1, 32, 32);
-      
-      //var anim = BadGuySheet.getAnimationForAll(ex.Engine, 150);
+      //explode?
       
     }
-    
-   state: BadguyState;
-   
+       
    reset(state?: BadguyState) {
       if (!state) {
          
