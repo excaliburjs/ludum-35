@@ -30,6 +30,27 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
       this.on('exitviewport', () => GameState.state.bullets.despawn(this));
       this.on('collision', this._collision);
       this.on('postdraw', this.postdraw);
+      
+      var triangleBulletSheet = new ex.SpriteSheet(Resources.TriangleBullet, 3, 1, 32, 32);
+      var circleBulletSheet = new ex.SpriteSheet(Resources.CircleBullet, 3, 1, 32, 32);
+      var squareBulletSheet = new ex.SpriteSheet(Resources.SquareBullet, 3, 1, 32, 32);
+      var playerBulletSheet = new ex.SpriteSheet(Resources.PlayerBullet, 6, 1, 32, 32);
+
+      this._triangleBulletAnim = triangleBulletSheet.getAnimationForAll(game, 100);
+      this._triangleBulletAnim.anchor.setTo(.5, .5);
+      this._triangleBulletAnim.loop = true;
+
+      this._circleBulletAnim = circleBulletSheet.getAnimationForAll(game, 100);
+      this._circleBulletAnim.anchor.setTo(.5, .5);
+      this._circleBulletAnim.loop = true;
+
+      this._squareBulletAnim = squareBulletSheet.getAnimationForAll(game, 100);
+      this._squareBulletAnim.anchor.setTo(.5, .5);
+      this._squareBulletAnim.loop = true;
+
+      this._playerBulletAnim = playerBulletSheet.getAnimationForAll(game, 100);
+      this._playerBulletAnim.anchor.setTo(.5, .5);
+      this._playerBulletAnim.loop = true;
    }
    
    state: BulletState;
@@ -45,27 +66,6 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
       }
    }
    onInitialize(engine: ex.Engine){
-      var triangleBulletSheet = new ex.SpriteSheet(Resources.TriangleBullet, 3, 1, 32, 32);      
-      var circleBulletSheet = new ex.SpriteSheet(Resources.CircleBullet, 3, 1, 32, 32);
-      var squareBulletSheet = new ex.SpriteSheet(Resources.SquareBullet, 3, 1, 32, 32);
-      var playerBulletSheet = new ex.SpriteSheet(Resources.PlayerBullet, 6, 1, 32, 32);
-      
-      this._triangleBulletAnim = triangleBulletSheet.getAnimationForAll(engine, 100);
-      this._triangleBulletAnim.anchor.setTo(.5, .5);
-      this._triangleBulletAnim.loop = true;
-      
-      this._circleBulletAnim = circleBulletSheet.getAnimationForAll(engine, 100);
-      this._circleBulletAnim.anchor.setTo(.5, .5);
-      this._circleBulletAnim.loop = true;
-      
-      this._squareBulletAnim = squareBulletSheet.getAnimationForAll(engine, 100);
-      this._squareBulletAnim.anchor.setTo(.5, .5);
-      this._squareBulletAnim.loop = true;
-      
-      this._playerBulletAnim = playerBulletSheet.getAnimationForAll(engine, 100);
-      this._playerBulletAnim.anchor.setTo(.5, .5);
-      this._playerBulletAnim.loop = true;
-      
    }
    reset(state?: BulletState) {
       

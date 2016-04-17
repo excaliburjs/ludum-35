@@ -2,7 +2,7 @@
 /// <reference path="stateful.ts" />
 /// <reference path="gamestate.ts" />
 
-class Pool<T extends Stateful<U> & Poolable, U> {
+class Pool<T extends ex.Actor & Stateful<U> & Poolable, U> {
    
    private _pool: ex.Util.Collection<T>;
    private _free: ex.Util.Collection<number>;
@@ -28,13 +28,16 @@ class Pool<T extends Stateful<U> & Poolable, U> {
       if (i === undefined) {
           throw "Make poolSize bigger for factory: " + this.factory.toString();
       }
-            
-      this._pool.elementAt(i).reset(state);
+      var actor = this._pool.elementAt(i);
+      
+      actor.reset(state);
+      game.add(actor);
    }
    
-   despawn(obj: Stateful<BulletState> & Poolable) {
+   despawn(obj: T) {
       if (!obj) return;
       obj.reset();
       this._free.push(obj.poolId);
+      game.remove(obj);
    }     
 }
