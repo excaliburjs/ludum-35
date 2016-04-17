@@ -29,31 +29,60 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       var ActiveType = BadguyTypes[badguytype];
       
       var BadGuySheet = new ex.SpriteSheet(ActiveType, 2, 1, 32, 32);
-      //var CircleBadguySheet = new ex.SpriteSheet(Resources.CircleBadguySheet, 5, 1, 48, 48);
-      //var SquareBadguySheet = new ex.SpriteSheet(Resources.SquareBadguySheet, 5, 1, 48, 48);
-      //var TriangleBadguySheet = new ex.SpriteSheet(Resources.TriangleBadguySheet, 5, 1, 48, 48);
 
       this.scale.setTo(2,2);
       //this.anchor.setTo(.1, .1);
+      
       this.setCenterDrawing(true);
       this.onInitialize = (engine: ex.Engine) => {
          var badguy = this;
          var anim = BadGuySheet.getAnimationForAll(engine, 150);
+         //var anim = BadGuySheet.getAnimationBetween(engine, 1, 2, 150);
+         
          
          anim.loop = true;
          anim.anchor.setTo(.3, .3);
          this.addDrawing('default', anim);
          
          //initialize badguy
-         badguy.on('preupdate', (evt: ex.PreUpdateEvent) => {
-            badguy.dx = Config.badguy.speed;
-            badguy.dy = Config.badguy.speed;
-            this.preupdate(evt);
-         });
+         badguy.on('preupdate', this.preupdate);
       }
       this.weapon = new StraightShooter(this, Config.bullets.speed, Config.bullets.damage)
    }
+   preupdate(evt: ex.PreUpdateEvent){
+      
+      //var multiplier = Math.random();
+      
+      //if (multiplier !== 1){
+      //  multiplier = -1;
+      //}
+      
+      
+      
+      if (this.x < 0) {
+        this.dx = Config.badguy.speed;
+      } else {
+        if (this.x > Config.width){
+          this.dx = Config.badguy.speed * -1;
+        } else {
+        var dy = this.y;// * multiplier;
+        this.dx = dy * .5;
+        }
+      }
+      
+      if (this.y < 0) {
+        this.dy = Config.badguy.speed;
+      } else {
+        if (this.y > Config.height){
+          this.dy = Config.badguy.speed * -1;
+        } else {
+          var dx = this.x;// * multiplier;
+          this.dy = dx * .5;
+        }
+      }
 
+      this.weapon.update(evt.delta);
+   }
    state: BadguyState;
    
    reset(state?: BadguyState) {
@@ -75,9 +104,4 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       
       return this;
    }
-   
-   preupdate(evt: ex.PreUpdateEvent){
-     this.weapon.update(evt.delta);
-   }
-
 }

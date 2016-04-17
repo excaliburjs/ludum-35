@@ -1,6 +1,9 @@
 var Config = {
    width: 960,
    height: 640,
+   
+   MapWidth: 5000,
+   MapHeight: 960,
       
    // Camera
    CameraElasticity: .08,
@@ -34,7 +37,7 @@ var Config = {
    },
    
    badguy: {
-      speed: 1,
+      speed: 25,
       size: 1 //multiplier from original?
    }
    
