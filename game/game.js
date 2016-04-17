@@ -58,11 +58,14 @@ var Resources = {
     SquareBullet: new ex.Texture('./img/bullets/greenBullet.png'),
     TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png'),
     DigitalFontSheet: new ex.Texture("./fonts/DigitalFont.bmp"),
-    Explode: new ex.Sound('./snd/explode1.wav')
+    Explode: new ex.Sound('./snd/explode1.wav'),
+    PlanetBg: new ex.Texture('./img/planet-bg.png')
 };
 var Config = {
     width: 960,
     height: 640,
+    MapWidth: 5000,
+    MapHeight: 960,
     // Camera
     CameraElasticity: .08,
     CameraFriction: .41,
@@ -161,6 +164,9 @@ var Ship = (function (_super) {
         GameState.state.ship._mouseDown = true;
         var dx = click.x - GameState.state.ship.x;
         var dy = click.y - GameState.state.ship.y;
+        if (!gameBounds.contains(new ex.Point(this.x, this.y))) {
+            return;
+        }
         GameState.state.ship.dx = dx * Config.shipSpeedScale;
         GameState.state.ship.dy = dy * Config.shipSpeedScale;
         GameState.state.ship.rotation = (new ex.Vector(dx, dy)).toAngle();
@@ -170,6 +176,25 @@ var Ship = (function (_super) {
         this.dx += oppVel.x;
         this.dy += oppVel.y;
         this.state.weapon.update(evt.delta);
+    };
+    Ship.prototype.update = function (engine, delta) {
+        _super.prototype.update.call(this, engine, delta);
+        if (this.x > gameBounds.right) {
+            this.x = gameBounds.right;
+            this.dx = 0;
+        }
+        if (this.x < gameBounds.left) {
+            this.x = gameBounds.left;
+            this.dx = 0;
+        }
+        if (this.y > gameBounds.bottom) {
+            this.y = gameBounds.bottom;
+            this.dy = 0;
+        }
+        if (this.y < gameBounds.top) {
+            this.y = gameBounds.top;
+            this.dy = 0;
+        }
     };
     Ship.prototype.predraw = function (evt) {
         if (this.state.shieldType === Shape.Shape1) {
@@ -510,18 +535,14 @@ var Starfield = (function (_super) {
 var Background = (function (_super) {
     __extends(Background, _super);
     function Background() {
-        _super.call(this, 0, 0, 50, 50);
-        this.color = ex.Color.Red;
+        _super.call(this, 0, 0, 5000, 960);
+        this.anchor.setTo(0, 0);
     }
-    Background.prototype.update = function (engine, delta) {
-        _super.prototype.update.call(this, engine, delta);
-        var pdx = -GameState.state.ship.dx;
-        var pdy = -GameState.state.ship.dy;
-        this.dx = pdx * 0.01;
-        this.dy = pdy * 0.01;
+    Background.prototype.onInitialize = function () {
+        this.addDrawing(Resources.PlanetBg);
     };
     return Background;
-}(ex.UIActor));
+}(ex.Actor));
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="gamestate.ts" />
 /// <reference path="analytics.ts" />
@@ -566,6 +587,9 @@ function updateCamera(evt) {
     cameraVel = cameraVel.plus(friction);
     // Update position by velocity deltas
     focus = focus.plus(cameraVel);
+    // clamp focus to game bounds
+    focus.x = ex.Util.clamp(focus.x, game.width / 2, gameBounds.right - (game.width / 2));
+    focus.y = ex.Util.clamp(focus.y, game.height / 2, gameBounds.bottom - (game.height / 2));
     // Set new position on camera
     game.currentScene.camera.setFocus(focus.x, focus.y);
 }
@@ -579,10 +603,13 @@ game.on('update', function (evt) {
     updateCamera(evt);
     updateDispatchers(evt);
 });
+var gameBounds = new ex.BoundingBox(0, 0, Config.MapWidth, Config.MapHeight);
 game.start(loader).then(function () {
     var sf = new Starfield();
     var statBox = new HUDStat(new Stat("KILLS", "0"), 10, 50, 150, 50);
+    var bg = new Background();
     game.add(sf);
+    game.add(bg);
     game.add(statBox);
     GameState.init(game);
 });
