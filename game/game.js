@@ -132,6 +132,7 @@ var Ship = (function (_super) {
     function Ship(x, y, width, height) {
         _super.call(this, x, y, width, height);
         this._mouseDown = false;
+        this.collisionType = ex.CollisionType.Passive;
         this.color = ex.Color.Red.clone();
         this.scale.setTo(2, 2);
         this.anchor.setTo(.5, .5);
@@ -251,7 +252,7 @@ var Bullet = (function (_super) {
     }
     Bullet.prototype._collision = function (collision) {
         if (this.visible) {
-            if (this.owner !== collision.other && typeof this.owner !== typeof collision.other) {
+            if (this.owner.constructor !== collision.other.constructor) {
                 Resources.Explode.play();
                 collision.other.kill();
                 GameState.state.bullets.despawn(this);
