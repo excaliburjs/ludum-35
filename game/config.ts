@@ -1,12 +1,16 @@
 var Config = {
    width: 960,
    height: 640,
+   
+   MapWidth: 5000,
+   MapHeight: 960,
       
    // Camera
    CameraElasticity: .08,
 	CameraFriction: .41,
    shipSpeedScale: 2,
    spaceFriction: .01,
+   ShieldCoolDownTime: 1000,
    
    // Baddies
    SpawnInterval: 5500, //ms
@@ -28,12 +32,13 @@ var Config = {
       
    // Bullet config
    bullets: {
-      speed: 200, // px/s
-      damage: 1
+      speed: 500, // px/s
+      damage: 1,
+      rotation: Math.PI 
    },
    
    badguy: {
-      speed: 1,
+      speed: 200,
       size: 1 //multiplier from original?
    }
    

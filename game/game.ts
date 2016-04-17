@@ -8,7 +8,7 @@
 /// <reference path="badguyfactory.ts" />
 /// <reference path="starfield.ts" />
 /// <reference path="background.ts" />
-
+/// <reference path="torch.ts" />
 
 var game = new ex.Engine({
    canvasElementId: "game",
@@ -19,7 +19,7 @@ var game = new ex.Engine({
 game.backgroundColor = ex.Color.Black.clone();
 game.setAntialiasing(false);
 game.input.keyboard.on('down', (evt: ex.Input.KeyEvent) => {
-   if(evt.key === ex.Input.Keys.D){
+   if(evt.key === ex.Input.Keys.Semicolon){
       game.isDebug = !game.isDebug;
    }
 });
@@ -54,6 +54,10 @@ function updateCamera(evt: ex.UpdateEvent){
 	// Update position by velocity deltas
 	focus = focus.plus(cameraVel);
 	
+	// clamp focus to game bounds
+	focus.x = ex.Util.clamp(focus.x, game.width / 2, gameBounds.right - (game.width / 2));
+	focus.y = ex.Util.clamp(focus.y, game.height / 2, gameBounds.bottom - (game.height / 2));
+	
 	// Set new position on camera
 	game.currentScene.camera.setFocus(focus.x, focus.y);
 }
@@ -71,10 +75,18 @@ game.on('update', (evt: ex.UpdateEvent) => {
 	
 });
 
+var gameBounds = new ex.BoundingBox(0, 0, Config.MapWidth, Config.MapHeight);
 game.start(loader).then(() => {
 	var sf = new Starfield();
-	var statBox = new HUDStat(new Stat("test", "derp"), 0, 0, 150, 50);
+	var bg = new Background();
+	var fbg = new Frontground();	
 	game.add(sf);
-	game.add(statBox);
+	game.add(bg);	
+	Torch.place(game);
 	GameState.init(game);
+	var killIdx = GameState.getStatIdx("KILLS");
+	
+	var killHUDUI = new HUDStat(GameState.state.stats[killIdx], 10, 60, 150, 50);
+	game.add(killHUDUI);
+	
 });

@@ -15,7 +15,11 @@ class Stat implements Stateful<StatState>{
    constructor(private name: string, private defaultValue : string|number) {
       this.reset();
       this.state.value = defaultValue;
+
    }   
+      public getStatName(): string {
+        return this.name;
+      }
 
    public reset(state?: StatState) : this {
       if (!state) {
@@ -35,21 +39,21 @@ class HUDStat extends ex.UIActor {
 
    }
     private font : ex.SpriteFont;
+    private statLabel: ex.Label;
       
    onInitialize(engine: ex.Engine) : void {
      super.onInitialize(engine);
      var hudStat = this;
-     this.font = new ex.SpriteFont(Resources.DigitalFontSheet, " !\"#$%&'{}*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_", false, 8, 8, 32, 32);
-     this.font.sprites.forEach(function(item){
-       item.fill(ex.Color.Red);
-     })
+     this.font = new ex.SpriteFont(Resources.DiabloFontSheet, " !\"#$%&'{}*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_", false, 8, 8, 32, 32);
+     var displayText = this.stat.getStatName() + ":" + this.stat.state.value;
+     this.statLabel = new ex.Label(displayText, 0, 0, null, this.font);
+     this.statLabel.fontSize = 60;
+     this.statLabel.letterSpacing = -44;
+     this.add(this.statLabel);
      hudStat.on('postdraw', this.postdraw); 
    }
    
    postdraw(evt: ex.PostDrawEvent) : void {
-      this.font.draw(evt.ctx, "THINGY", 0, 0, {
-        fontSize: 16});
+     this.statLabel.text = this.stat.getStatName() + ":" + this.stat.state.value;
    }
-   
-   
 }

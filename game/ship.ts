@@ -15,14 +15,19 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
    private _circle: ex.Animation;
    private _triangle: ex.Animation;
    private _square: ex.Animation;
+   
+   private _rightAnim: ex.Animation;
+   private _leftAnim: ex.Animation;
+   
    private _mouseDown: boolean = false;
+   private _currentTime: number = 0;
    
    public poolId: number;
    public state: ShipState;
    
    constructor(x, y, width, height){
       super(x, y, width, height);
-      
+      this.collisionType = ex.CollisionType.Passive;
       this.color = ex.Color.Red.clone();           
       this.scale.setTo(2,2);
       this.anchor.setTo(.5, .5);
@@ -31,31 +36,42 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
    }
    
    onInitialize(engine: ex.Engine) {
-      var shipSheet = new ex.SpriteSheet(Resources.ShipSpriteSheet, 3, 1, 32, 42);
+      var witchSheet = new ex.SpriteSheet(Resources.WitchSpriteSheet, 2, 1, 48, 48);
       var squareSheild = new ex.SpriteSheet(Resources.SquareShieldSheet, 5, 1, 48, 48);      
       var circleSheild = new ex.SpriteSheet(Resources.CircleShieldSheet, 5, 1, 48, 48);
       var triangleSheild = new ex.SpriteSheet(Resources.TriangleShieldSheet, 5, 1, 48, 48);
       var ship = this;
-      var anim = shipSheet.getAnimationForAll(engine, 150);
-      anim.rotation = Math.PI/2;
-      anim.loop = true;
-      anim.anchor.setTo(.5, .5);
-      this.addDrawing('default', anim);
+      this._rightAnim = witchSheet.getAnimationForAll(engine, 300);
+      this._rightAnim.rotation = Math.PI/8;
+      this._rightAnim.loop = true;
+      this._rightAnim.anchor.setTo(.5, .5);
+      this.addDrawing('right', this._rightAnim);
+      
+      this._leftAnim = witchSheet.getAnimationForAll(engine, 300);
+      this._leftAnim.rotation = -Math.PI/8;
+      this._leftAnim.flipVertical = true;
+      this._leftAnim.loop = true;
+      this._leftAnim.anchor.setTo(.1, .1);
+      this.addDrawing('left', this._leftAnim);
+      
       
       this._circle = circleSheild.getAnimationForAll(engine, 50);
       this._circle.loop = true;
-      this._circle.anchor.setTo(.5, .5);
+      this._circle.anchor.setTo(.4, .5);
       this._square = squareSheild.getAnimationForAll(engine, 50);
       this._square.loop = true;
-      this._square.anchor.setTo(.5, .5);
+      this._square.anchor.setTo(.3, .5);
       this._triangle = triangleSheild.getAnimationForAll(engine, 50);
       this._triangle.loop = true;
-      this._triangle.anchor.setTo(.5, .5);           
+      this._triangle.anchor.setTo(.5, .7);
+      this._triangle.rotation = Math.PI/2;           
       
       ship.on('preupdate', this.preupdate);            
       ship.on('predraw', this.predraw);
       
-      engine.input.pointers.primary.on('down', this._pointerDown);
+      engine.input.pointers.primary.on('down', (evt: ex.Input.PointerEvent) => {
+        this._pointerDown(evt);   
+      });
       engine.input.pointers.primary.on('move', (evt: ex.Input.PointerEvent) => {
          if(this._mouseDown){
             this._pointerDown(evt);
@@ -83,6 +99,10 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       var dx = click.x - GameState.state.ship.x;
       var dy = click.y - GameState.state.ship.y;
       
+      if (!gameBounds.contains(new ex.Point(this.x, this.y))) {
+          return false;
+      }
+      
       GameState.state.ship.dx = dx * Config.shipSpeedScale;
       GameState.state.ship.dy = dy * Config.shipSpeedScale;
       
@@ -94,7 +114,56 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       this.dx += oppVel.x;
       this.dy += oppVel.y;
       
+      if(this.dx > 0){
+          this.setDrawing('right');
+      }else{
+          this.setDrawing('left');
+      }
+      
       this.state.weapon.update(evt.delta);
+   }
+   
+   update(engine: ex.Engine, delta: number) {
+       super.update(engine, delta);
+       
+       if (this.x > gameBounds.right) {
+           this.x = gameBounds.right;
+           this.dx = 0;
+       }
+       if (this.x < gameBounds.left) {
+           this.x = gameBounds.left;
+           this.dx = 0;
+       }
+       if (this.y > gameBounds.bottom) {
+           this.y = gameBounds.bottom;
+           this.dy = 0;
+       }
+       if (this.y < gameBounds.top) {
+           this.y = gameBounds.top;
+           this.dy = 0;
+       }
+       this._currentTime += delta;
+       if(engine.input.keyboard.wasPressed(ex.Input.Keys.A)){
+           this._switchShield(Shape.Shape1);
+       } else if (engine.input.keyboard.wasPressed(ex.Input.Keys.S)){
+           this._switchShield(Shape.Shape2);
+       } else if (engine.input.keyboard.wasPressed(ex.Input.Keys.D)){
+           this._switchShield(Shape.Shape3);
+       }
+       
+   }
+   
+   private _switchShield(shape: Shape){
+       
+       if(this._currentTime > Config.ShieldCoolDownTime){
+          this._currentTime = 0;
+          this.state.shieldType = shape;
+          Resources.On.play();
+          // play bling sound
+       }else{
+          // play nah-uh sound
+          //Resources.No.play();
+       }
    }
    
    predraw(evt: ex.PreDrawEvent) {

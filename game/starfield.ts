@@ -4,7 +4,7 @@ interface Star {
    o: number;
 }
 
-class Starfield extends ex.UIActor {
+class Starfield extends ex.Actor {
    
    private _stars: Star[] = [];
    private _fadeTimer: ex.Timer;
@@ -12,12 +12,13 @@ class Starfield extends ex.UIActor {
 
    constructor() {
       super(0, 0, 0, 0);
+      this.anchor.setTo(0, 0);
    }
 
    onInitialize(engine: ex.Engine) {
       super.onInitialize(engine);
-      this.setWidth(game.getWidth());
-      this.setHeight(game.getHeight());
+      this.setWidth(gameBounds.getWidth());
+      this.setHeight(gameBounds.getHeight());
 
       // generate stars
       for (var i = 0; i < Config.StarfieldSize; i++) {

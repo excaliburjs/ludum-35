@@ -1,15 +1,21 @@
 var Resources = {
    ShipSpriteSheet: new ex.Texture('./img/ship.png'),
+   WitchSpriteSheet: new ex.Texture('./img/witch.png'),
    CircleShieldSheet: new ex.Texture('./img/circlesheild.png'),
    SquareShieldSheet: new ex.Texture('./img/squaresheild.png'),
    TriangleShieldSheet: new ex.Texture('./img/trianglesheild.png'),
    PlayerBullet: new ex.Texture('./img/playerbullet.png'),
-   CircleBadguySheet: new ex.Texture('./img/circlebadguy.png'),
-   TriangleBadguySheet: new ex.Texture('./img/trianglebadguy.png'),
-   SquareBadguySheet: new ex.Texture('./img/squarebadguy.png'),
+   CircleBadguySheet: new ex.Texture('./img/circlebadguyexplodes.png'),
+   TriangleBadguySheet: new ex.Texture('./img/trianglebadguyexplodes.png'),
+   SquareBadguySheet: new ex.Texture('./img/squarebadguyexplodes.png'),
    CircleBullet: new ex.Texture('./img/bullets/blueBullet.png'),
    SquareBullet: new ex.Texture('./img/bullets/greenBullet.png'),
    TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png'),
-   DigitalFontSheet: new ex.Texture("/fonts/DigitalFont.bmp"),
-   Explode: new ex.Sound('./snd/explode1.wav')
+   DiabloFontSheet: new ex.Texture("./fonts/DiabloFont.bmp"),
+   Explode: new ex.Sound('./snd/explode1.wav'),
+   On: new ex.Sound('./snd/on.wav'),
+   No: new ex.Sound('./snd/no.wav'),
+   PlanetBg: new ex.Texture('./img/planet-bg.png'),
+   FrontBg: new ex.Texture('./img/front-bg.png'),
+   Torch: new ex.Texture('./img/torch.png')
 };
