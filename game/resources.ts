@@ -9,5 +9,7 @@ var Resources = {
    SquareBadguySheet: new ex.Texture('./img/squarebadguy.png'),
    CircleBullet: new ex.Texture('./img/bullets/blueBullet.png'),
    SquareBullet: new ex.Texture('./img/bullets/greenBullet.png'),
-   TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png')
+   TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png'),
+   
+   Explode: new ex.Sound('./snd/explode1.wav')
 };
