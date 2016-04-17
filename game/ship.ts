@@ -37,9 +37,9 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
    
    onInitialize(engine: ex.Engine) {
       var witchSheet = new ex.SpriteSheet(Resources.WitchSpriteSheet, 2, 1, 48, 48);
-      var squareSheild = new ex.SpriteSheet(Resources.SquareShieldSheet, 5, 1, 48, 48);      
-      var circleSheild = new ex.SpriteSheet(Resources.CircleShieldSheet, 5, 1, 48, 48);
-      var triangleSheild = new ex.SpriteSheet(Resources.TriangleShieldSheet, 5, 1, 48, 48);
+      var squareSheild = new ex.SpriteSheet(Resources.SquareShieldSheet, 5, 1, 96, 96);      
+      var circleSheild = new ex.SpriteSheet(Resources.CircleShieldSheet, 5, 1, 96, 96);
+      var triangleSheild = new ex.SpriteSheet(Resources.TriangleShieldSheet, 5, 1, 96, 96);
       var ship = this;
       this._rightAnim = witchSheet.getAnimationForAll(engine, 300);
       this._rightAnim.rotation = Math.PI/8;
@@ -60,7 +60,7 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       this._circle.anchor.setTo(.4, .5);
       this._square = squareSheild.getAnimationForAll(engine, 50);
       this._square.loop = true;
-      this._square.anchor.setTo(.3, .5);
+      this._square.anchor.setTo(.5, .5);
       this._triangle = triangleSheild.getAnimationForAll(engine, 50);
       this._triangle.loop = true;
       this._triangle.anchor.setTo(.5, .7);
