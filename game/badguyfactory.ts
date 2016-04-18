@@ -54,8 +54,12 @@ class BadGuyFactory {
          }
       }
       
+      if (portalsToClose.length > 0) {
+            this.closePortals(portalsToClose);
+      }
+      
       for (let p of portalsToClose) {
-         this.closePortal(p);
+      //    this.closePortal(p);
          switch(p.state.type) {
             case Shape.Shape1:
                GameState.state.ship.state.squarePool = 0;
@@ -184,28 +188,50 @@ class BadGuyFactory {
       }
    }
    
-   closePortal(p: Portal) {
-      var idx = this._openPortals.indexOf(p);
-      this._openPortals.splice(idx, 1);
+//    closePortal(p: Portal) {
+//       var idx = this._openPortals.indexOf(p);
+//       this._openPortals.splice(idx, 1);
       
-      pause();
+//       pause();
       
+//       var o = new ex.Actor(GameState.state.ship.x, GameState.state.ship.y, 1, 1, ex.Color.Transparent);
+//       game.add(o);
+      
+//       cameraDestActor = o;
+      
+//       // move to portal
+//       o.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {
+//             //p.setDrawing('death');
+//             p.delay(2000).callMethod(() => {
+//                   // move to player
+//                   o.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => {
+//                         cameraDestActor = GameState.state.ship;
+//                         resume();                        
+//                   });//.die();
+                  
+//             }).die();
+//       });
+//    }
+   
+   closePortals(portals: Portal[]) {
+      console.log('closing portals');
       var o = new ex.Actor(GameState.state.ship.x, GameState.state.ship.y, 1, 1, ex.Color.Transparent);
       game.add(o);
-      
       cameraDestActor = o;
-      
-      // move to portal
-      o.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {
-            //p.setDrawing('death');
-            p.delay(2000).callMethod(() => {
-                  o.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => {
-                        cameraDestActor = GameState.state.ship;
-                        resume();                        
-                  }).die();
-                  
-            }).die();
-      });
+         
+      for (let p of portals) {
+            let idx = this._openPortals.indexOf(p);
+            this._openPortals.splice(idx, 1);
+
+            pause();
+            
+            o.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).delay(2000);
+      }
+      o.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => { 
+            cameraDestActor = GameState.state.ship;
+            resume();
+      }).die();
+         
    }
    
    getWave(): Wave {
