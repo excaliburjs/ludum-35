@@ -95,8 +95,11 @@ var Resources = {
     SquareBullet: new ex.Texture('./img/bullets/greenBullet.png'),
     TriangleBullet: new ex.Texture('./img/bullets/yellowBullet.png'),
     CirclePortal: new ex.Texture('./img/blueportal.png'),
+    CirclePortalClose: new ex.Texture('./img/blueportal2.png'),
     SquarePortal: new ex.Texture('./img/greenportal.png'),
+    SquarePortalClose: new ex.Texture('./img/greenportal2.png'),
     TrianglePortal: new ex.Texture('./img/yellowportal.png'),
+    TrianglePortalClose: new ex.Texture('./img/yellowportal2.png'),
     DiabloFontSheet: new ex.Texture("./fonts/DiabloFont.png"),
     Explode: new ex.Sound('./snd/explode1.wav'),
     On: new ex.Sound('./snd/on.wav'),
@@ -828,12 +831,15 @@ var Portal = (function (_super) {
         switch (this.state.type) {
             case Shape.Shape1:
                 tx = Resources.SquarePortal;
+                this._closetexture = Resources.SquarePortalClose;
                 break;
             case Shape.Shape2:
                 tx = Resources.CirclePortal;
+                this._closetexture = Resources.CirclePortalClose;
                 break;
             case Shape.Shape3:
                 tx = Resources.TrianglePortal;
+                this._closetexture = Resources.TrianglePortalClose;
                 break;
         }
         var ss = new ex.SpriteSheet(tx, 5, 1, 48, 48);
@@ -841,6 +847,13 @@ var Portal = (function (_super) {
         anim.loop = true;
         this.addDrawing('default', anim);
         this.setDrawing('default');
+    };
+    Portal.prototype.portalclose = function () {
+        var spritesheet = new ex.SpriteSheet(this._closetexture, 13, 1, 48, 48);
+        var anim = spritesheet.getAnimationForAll(game, 125);
+        anim.loop = false;
+        this.addDrawing('close', anim);
+        this.setDrawing('close');
     };
     return Portal;
 }(ex.Actor));
@@ -982,7 +995,7 @@ var BadGuyFactory = (function () {
         else if (stage === 2) {
             this._waveInfo = {
                 portals: [{
-                        location: new ex.Point(2500, 420),
+                        location: new ex.Point(2000, 420),
                         rate: 2000,
                         rateTimer: 0,
                         baddies: [],
@@ -1065,6 +1078,8 @@ var BadGuyFactory = (function () {
             // console.log('closing portal')
             var idx = this._openPortals.indexOf(p);
             this._openPortals.splice(idx, 1);
+            p.portalclose();
+            p.delay(2000).die();
             orc.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(function () { console.log('close portal'); }).delay(2000);
         }
         orc.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(function () {
