@@ -52,6 +52,64 @@ var StraightShooter = (function (_super) {
     };
     return StraightShooter;
 }(WeaponBase));
+var CircleShooter = (function (_super) {
+    __extends(CircleShooter, _super);
+    function CircleShooter(source, speed, damage, badguyType) {
+        _super.call(this, 200, source);
+        this.source = source;
+        this.speed = speed;
+        this.damage = damage;
+        this.badguyType = badguyType;
+        this._angle = 0;
+    }
+    CircleShooter.prototype.shoot = function () {
+        this._angle += Math.PI / 8;
+        var newBullet = new Bullet();
+        // spawn bullet traveling in direction actor is facing
+        newBullet.reset({
+            owner: this.source,
+            d: ex.Vector.fromAngle(this._angle),
+            damage: this.damage,
+            x: this.source.x,
+            y: this.source.y,
+            speed: this.speed,
+            shape: this.badguyType,
+            scale: .5
+        });
+        game.add(newBullet);
+    };
+    return CircleShooter;
+}(WeaponBase));
+var TriangleShooter = (function (_super) {
+    __extends(TriangleShooter, _super);
+    function TriangleShooter(source, speed, damage, badguyType) {
+        _super.call(this, Config.BadguyShooterFrequency, source);
+        this.source = source;
+        this.speed = speed;
+        this.damage = damage;
+        this.badguyType = badguyType;
+        this._angle = 0;
+    }
+    TriangleShooter.prototype.shoot = function () {
+        for (var i = 0; i < 3; i++) {
+            this._angle += 2 * Math.PI / 3;
+            var newBullet = new Bullet();
+            // spawn bullet traveling in direction actor is facing
+            newBullet.reset({
+                owner: this.source,
+                d: ex.Vector.fromAngle(this._angle),
+                damage: this.damage,
+                x: this.source.x,
+                y: this.source.y,
+                speed: this.speed,
+                shape: this.badguyType,
+                scale: .5
+            });
+            game.add(newBullet);
+        }
+    };
+    return TriangleShooter;
+}(WeaponBase));
 var ShapeShooter = (function (_super) {
     __extends(ShapeShooter, _super);
     function ShapeShooter(source, speed, damage, badguyType) {
@@ -829,6 +887,16 @@ var Badguy = (function (_super) {
     };
     Badguy.prototype.reset = function (state) {
         if (!state) {
+            var weapon;
+            if (this.badguytype === Shape.Shape2) {
+                weapon = new CircleShooter(this, Config.badguy.bulletSpeed, Config.bullets.damage, this.badguytype);
+            }
+            else if (this.badguytype === Shape.Shape3) {
+                weapon = new TriangleShooter(this, Config.badguy.bulletSpeed, Config.bullets.damage, this.badguytype);
+            }
+            else {
+                weapon = new ShapeShooter(this, Config.badguy.bulletSpeed, Config.bullets.damage, this.badguytype);
+            }
             this.state = {
                 x: 0,
                 y: 0,
@@ -836,7 +904,7 @@ var Badguy = (function (_super) {
                 speed: Config.badguy.speed,
                 size: Config.badguy.size,
                 shape: this.badguytype,
-                weapon: new ShapeShooter(this, Config.badguy.bulletSpeed, Config.bullets.damage, this.badguytype)
+                weapon: weapon
             };
         }
         else {

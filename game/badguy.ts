@@ -150,6 +150,16 @@ class Badguy extends ex.Actor implements Stateful<BadguyState>, Pausable {
        
    reset(state?: BadguyState) {
       if (!state) {
+        
+        var weapon;
+        if(this.badguytype === Shape.Shape2){
+          weapon = new CircleShooter(this, Config.badguy.bulletSpeed, Config.bullets.damage, this.badguytype);
+        }else if(this.badguytype === Shape.Shape3){
+          weapon = new TriangleShooter(this, Config.badguy.bulletSpeed, Config.bullets.damage, this.badguytype);
+        }else{
+          weapon = new ShapeShooter(this, Config.badguy.bulletSpeed, Config.bullets.damage, this.badguytype)
+        }
+        
          
          this.state = {
             x: 0,
@@ -158,7 +168,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState>, Pausable {
             speed: Config.badguy.speed,
             size: Config.badguy.size,
             shape: this.badguytype,
-            weapon: new ShapeShooter(this, Config.badguy.bulletSpeed, Config.bullets.damage, this.badguytype)
+            weapon: weapon
          }
       } else {
          this.state = state;
