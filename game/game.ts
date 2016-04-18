@@ -245,5 +245,7 @@ game.start(loader).then(() => {
 	var healthStat = new HealthStat(65 + Config.width - HealthStat.width, 5);
 	
 	game.add(healthStat);
+	Resources.BkgrdTrack.setLoop(true);
+	Resources.BkgrdTrack.play();
 	
 });
