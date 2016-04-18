@@ -53,7 +53,7 @@ class Portal extends ex.Actor {
          game.currentScene.children.forEach((a)=>{
             if(a instanceof Badguy || a instanceof Bullet){
                   if((<Badguy>a).state.shape === this.state.type || (<Bullet>a).state.shape === this.state.type){
-                        a.kill();
+                        //a.kill();
                   }
             }   
          });
