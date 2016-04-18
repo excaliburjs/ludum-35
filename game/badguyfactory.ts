@@ -113,6 +113,10 @@ class BadGuyFactory implements Pausable {
       }                
    }
    
+   isPortalTypeOpen(type: Shape) {
+     return _.any(this._openPortals, p => p.state.type === type);
+   }
+   
    spawnBaddie(portal: PortalSpawn) {
       var baddie = new Badguy(portal.location.x, portal.location.y, portal.type);
       // baddie.on('kill', () => {

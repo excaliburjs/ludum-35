@@ -26,6 +26,7 @@ footer { color: #666; }
   padding: 3em;
   background-color: rgba(0, 0, 0, 0.8);
   color: white;
+  max-width: 450px;
 }
 #score {
   font-size: 2em;
