@@ -48,7 +48,7 @@ class HUDStat extends ex.UIActor {
      var displayText = this.stat.getStatName() + ":" + this.stat.state.value;
      this.statLabel = new ex.Label(displayText, 0, 0, null, this.font);
      this.statLabel.fontSize = 60;
-     this.statLabel.letterSpacing = -44;
+     this.statLabel.letterSpacing = -38;
      this.statLabel.color = ex.Color.Magenta.clone();
      this.add(this.statLabel);
      hudStat.on('postdraw', this.postdraw); 

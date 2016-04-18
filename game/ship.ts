@@ -5,6 +5,8 @@
 /// <reference path="config.ts" />
 /// <reference path="stateful.ts" />
 /// <reference path="gamestate.ts" />
+/// <reference path="game.ts" />
+
 
 interface ShipState {
    shieldType: Shape;
@@ -39,6 +41,7 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
    }
    
    onInitialize(engine: ex.Engine) {
+      this.setZIndex(2);
       var witchSheet = new ex.SpriteSheet(Resources.WitchSpriteSheet, 2, 1, 48, 48);
       var squareSheild = new ex.SpriteSheet(Resources.SquareShieldSheet, 5, 1, 96, 96);      
       var circleSheild = new ex.SpriteSheet(Resources.CircleShieldSheet, 5, 1, 96, 96);

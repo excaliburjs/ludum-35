@@ -23,6 +23,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
    
    constructor(x, y, private badguytype: Shape) {
       super(x, y, 32, 32);
+      
       this.collisionType = ex.CollisionType.Passive;
       
       this.scale.setTo(2,2);
@@ -31,7 +32,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       this.setCenterDrawing(true);
       this.onInitialize = (engine: ex.Engine) => {
          var badguy = this;
-         
+         this.setZIndex(2);
          if(this.badguytype == Shape.Shape1){
            this.addDrawing('default', GlobalAnimations.SquareBaddie);
          }else if (this.badguytype == Shape.Shape2){
