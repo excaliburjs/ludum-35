@@ -59,11 +59,17 @@ var ShapeShooter = (function (_super) {
         this.badguyType = badguyType;
     }
     ShapeShooter.prototype.shoot = function () {
+        var player = GameState.state.ship;
+        var target = new ex.Vector(player.x, player.y);
+        var randomAngle = ex.Util.randomInRange(0, Math.PI * 2);
+        var missFactor = new ex.Vector(Config.badguy.missRadius * Math.cos(randomAngle), Config.badguy.missRadius * Math.sin(randomAngle));
+        target = target.add(missFactor);
+        var direction = target.minus(new ex.Vector(this.source.x, this.source.y));
         var newBullet = new Bullet();
         // spawn bullet traveling in direction actor is facing
         newBullet.reset({
             owner: this.source,
-            d: ex.Vector.fromAngle(this.source.rotation),
+            d: direction,
             damage: this.damage,
             x: this.source.x,
             y: this.source.y,
@@ -137,6 +143,7 @@ var Config = {
     },
     badguy: {
         speed: 200,
+        missRadius: 200,
         size: 1 //multiplier from original?
     }
 };
