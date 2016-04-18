@@ -9,6 +9,7 @@ var Shape;
     Shape[Shape["Shape2"] = 1] = "Shape2";
     Shape[Shape["Shape3"] = 2] = "Shape3";
     Shape[Shape["PlayerBullet"] = 3] = "PlayerBullet";
+    Shape[Shape["None"] = 4] = "None";
 })(Shape || (Shape = {}));
 var WeaponBase = (function () {
     function WeaponBase(interval, source) {
@@ -232,7 +233,7 @@ var Ship = (function (_super) {
     Ship.prototype.reset = function (state) {
         if (!state) {
             this.state = {
-                shieldType: Shape.Shape1,
+                shieldType: Shape.None,
                 weapon: new StraightShooter(this, Config.bullets.speed, Config.bullets.damage),
                 squarePool: 0,
                 circlePool: 0,
