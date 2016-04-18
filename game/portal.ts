@@ -2,7 +2,7 @@ class Portal extends ex.Actor {
    private _closetexture: ex.Texture;
    
    constructor(public state: PortalSpawn) {
-      super(state.location.x, state.location.y);          
+      super(state.location.x, state.location.y, 48, 48);          
       
    }
    
