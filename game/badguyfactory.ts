@@ -141,7 +141,7 @@ class BadGuyFactory implements Pausable {
          // place portal in center
          this._waveInfo = {
             portals: [{
-               location: new ex.Point(2500, 420),
+               location: new ex.Point(2525, 400),
                rate: 2000,
                rateTimer: 0,
                baddies: [],
@@ -154,21 +154,52 @@ class BadGuyFactory implements Pausable {
       } else if (stage === 2) {
             this._waveInfo = {
             portals: [{
-               location: new ex.Point(2000, 420),
+               location: new ex.Point(1900, 420),
+               rate: 2000,
+               rateTimer: 0,
+               baddies: [],
+               maxSimultaneous: 3,
+               type: Shape.Shape2,
+               closeAmount: 5
+            }, 
+            {
+               location: new ex.Point(3150, 420),
                rate: 2000,
                rateTimer: 0,
                baddies: [],
                maxSimultaneous: 3,
                type: Shape.Shape1,
                closeAmount: 5
-            }, 
+            }]
+         };
+         portalsClosed.then(() => {this.spawnPortals()});
+      } else if (stage === 3) { 
+            this._waveInfo = {
+            portals: [ {
+               location: new ex.Point(1900, 420),
+               rate: 2000,
+               rateTimer: 0,
+               baddies: [],
+               maxSimultaneous: 3,
+               type: Shape.Shape1,
+               closeAmount: 5
+            },
             {
-               location: new ex.Point(3000, 420),
+               location: new ex.Point(3150, 420),
                rate: 2000,
                rateTimer: 0,
                baddies: [],
                maxSimultaneous: 3,
                type: Shape.Shape2,
+               closeAmount: 5
+            }, 
+            {
+               location: new ex.Point(2525, 400),
+               rate: 2000,
+               rateTimer: 0,
+               baddies: [],
+               maxSimultaneous: 3,
+               type: Shape.Shape3,
                closeAmount: 5
             }]
          };

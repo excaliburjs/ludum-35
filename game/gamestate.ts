@@ -85,7 +85,7 @@ class GameState {
             GameState.state.ship.rotation = 0;
             // GameState.state.ship.reset();
             //TODO calling reset() breaks player input, something related to creating a new Weapon
-            GameState.state.ship.state.shieldType = Shape.Shape1;
+            GameState.state.ship.state.shieldType = Shape.None;
             GameState.state.ship.state.squarePool = 0;
             GameState.state.ship.state.circlePool = 0;
             GameState.state.ship.state.trianglePool = 0;

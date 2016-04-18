@@ -28,11 +28,10 @@ class StraightShooter extends WeaponBase {
       super(Config.StraightShooterFrequency, source);
    }
    
-   private _prev = 0;
    shoot() {
+      if (!Config.playerCanShoot) return;
       
-      ex.Logger.getInstance().debug("Shot straight shooter bullet", (new Date().getTime() - this._prev));
-      this._prev = new Date().getTime();
+    
       var newBullet = new Bullet();
       newBullet.reset({
          owner: this.source,
@@ -45,6 +44,65 @@ class StraightShooter extends WeaponBase {
          scale: 2
       });
       game.add(newBullet);
+   }
+   
+}
+
+class CircleShooter extends WeaponBase {
+      
+   private _angle: number = 0;
+   constructor(protected source: ex.Actor, public speed: number, public damage: number, public badguyType: Shape) { 
+      super(200, source);
+   }
+   
+   
+   shoot() {
+      
+      this._angle += Math.PI/8;
+      var newBullet = new Bullet();
+         // spawn bullet traveling in direction actor is facing
+         newBullet.reset({
+            owner: this.source,
+            d: ex.Vector.fromAngle(this._angle),
+            damage: this.damage,
+            x: this.source.x,
+            y: this.source.y,
+            speed: this.speed,
+            shape: this.badguyType,
+            scale: .5
+         });
+      game.add(newBullet);
+   }
+   
+}
+
+class TriangleShooter extends WeaponBase {
+      
+   private _angle: number = 0;
+   constructor(protected source: ex.Actor, public speed: number, public damage: number, public badguyType: Shape) { 
+      super(Config.BadguyShooterFrequency, source);
+   }
+   
+   
+   shoot() {
+      
+      for(var i = 0; i <3; i++){
+         this._angle += 2*Math.PI/3;
+         var newBullet = new Bullet();
+         // spawn bullet traveling in direction actor is facing
+         newBullet.reset({
+            owner: this.source,
+            d: ex.Vector.fromAngle(this._angle),
+            damage: this.damage,
+            x: this.source.x,
+            y: this.source.y,
+            speed: this.speed,
+            shape: this.badguyType,
+            scale: .5
+         });
+      
+         game.add(newBullet);
+      }
    }
    
 }

@@ -53,10 +53,11 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable, Pausab
                         player.state.trianglePool += 1;
                          break;
                  }
-                 
+                 Resources.Absorb.play();
                  this.kill();
                  return;
              }else{
+                 Resources.Hit.play();
                  if(player.state.isVulnerable){
                     var currHealth = player.state.health -= 1;
                     player.state.isVulnerable = false;
@@ -83,8 +84,7 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable, Pausab
                     badguy = <Badguy>collision.other;
                     badguy.explode();
                     badguy.delay(150).die();
-                }
-                Resources.Explode.play();
+                }                
                 this.kill();
          }
       }

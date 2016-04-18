@@ -122,13 +122,22 @@ class Badguy extends ex.Actor implements Stateful<BadguyState>, Pausable {
       this.dx = newVel.x;
       this.dy = newVel.y;
     }
+    
     _collision(collision: ex.CollisionEvent){
-      //explode? - do in bullet
-      //this.explode();
+
+      if (collision.other instanceof Ship) {
+        if (GameState.state.ship.state.shieldType === this.badguytype && Config.playerKillsBadguysOnCollision) {          
+          this.explode();
+          this.delay(150).die();
+        }
+      }
     }
    
     explode(){
+      if (this._isexploding) return;
+      
       this._isexploding = true;
+      Resources.Explode.play();
       //this.dx = 0;
       //this.dy = 0;
       if(this.badguytype == Shape.Shape1){
@@ -144,6 +153,16 @@ class Badguy extends ex.Actor implements Stateful<BadguyState>, Pausable {
        
    reset(state?: BadguyState) {
       if (!state) {
+        
+        var weapon;
+        if(this.badguytype === Shape.Shape2){
+          weapon = new CircleShooter(this, Config.badguy.bulletSpeed, Config.bullets.damage, this.badguytype);
+        }else if(this.badguytype === Shape.Shape3){
+          weapon = new TriangleShooter(this, Config.badguy.bulletSpeed, Config.bullets.damage, this.badguytype);
+        }else{
+          weapon = new ShapeShooter(this, Config.badguy.bulletSpeed, Config.bullets.damage, this.badguytype)
+        }
+        
          
          this.state = {
             x: 0,
@@ -152,7 +171,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState>, Pausable {
             speed: Config.badguy.speed,
             size: Config.badguy.size,
             shape: this.badguytype,
-            weapon: new ShapeShooter(this, Config.badguy.bulletSpeed, Config.bullets.damage, this.badguytype)
+            weapon: weapon
          }
       } else {
          this.state = state;

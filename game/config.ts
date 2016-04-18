@@ -5,6 +5,8 @@ var Config = {
    MapWidth: 5000,
    MapHeight: 960,
    
+   HUDStatVisible: false,
+   
    // Ship
    PlayerSpawn: new ex.Point(2500, 800),
       
@@ -20,6 +22,8 @@ var Config = {
    playerMinVelocity: -500,
    playerMaxVelocity: 500,
    playerHealth: 5,
+   playerCanShoot: false,
+   playerKillsBadguysOnCollision: true,
    
    // Baddies
    PortalSpawnWaitTime: 3000, //ms
