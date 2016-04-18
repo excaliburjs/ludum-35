@@ -36,6 +36,22 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
            if(collision.other instanceof Ship){
              var player = <Ship>collision.other;
              if(player.state.shieldType === this.state.shape){
+                 switch(this.state.shape){
+                     case(Shape.Shape1):{
+                        player.state.trianglePool++;
+                        break; 
+                     }
+                     case(Shape.Shape2):{
+                        player.state.circlePool++;
+                        break; 
+                     }
+                     case(Shape.Shape3):{
+                         player.state.squarePool++;
+                         break;
+                     }
+                 }
+                 
+                 this.kill();
                  return;
              }else{
                 if (collision.other instanceof Badguy){

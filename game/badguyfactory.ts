@@ -49,12 +49,13 @@ class BadGuyFactory {
          }
          if (poolAmount >= p.state.closeAmount) {
             // close portal
+            //poolAmount = 0;
             portalsToClose.push(p);
          }
       }
       
       for (let p of portalsToClose) {
-         this.closePortal(p);
+         this.closePortal(p); 
       }
       
       if (this._openPortals.length === 0) {
