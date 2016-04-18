@@ -147,7 +147,10 @@ var Config = {
         bulletSpeed: 300,
         missRadius: 200,
         size: 1 //multiplier from original?
-    }
+    },
+    colorShape1: ex.Color.fromHex('#3f8310'),
+    colorShape2: ex.Color.fromHex('#1b77b7'),
+    colorShape3: ex.Color.fromHex('#b79f1b')
 };
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="shape.ts" />
@@ -484,6 +487,75 @@ var HUDStat = (function (_super) {
         this.statLabel.text = this.stat.getStatName() + ":" + this.stat.state.value;
     };
     return HUDStat;
+}(ex.UIActor));
+var PortalStat = (function (_super) {
+    __extends(PortalStat, _super);
+    function PortalStat(x, y, type) {
+        _super.call(this, x, y, PortalStat.width, PortalStat.height);
+        this.type = type;
+    }
+    PortalStat.prototype.onInitialize = function (engine) {
+        _super.prototype.onInitialize.call(this, engine);
+        switch (this.type) {
+            case Shape.Shape1:
+                this._color = Config.colorShape1;
+                this._sprite = new ex.SpriteSheet(Resources.SquareBullet, 3, 1, 32, 32).getSprite(1);
+                break;
+            case Shape.Shape2:
+                this._color = Config.colorShape2;
+                this._sprite = new ex.SpriteSheet(Resources.CircleBullet, 3, 1, 32, 32).getSprite(1);
+                break;
+            case Shape.Shape3:
+                this._color = Config.colorShape3;
+                this._sprite = new ex.SpriteSheet(Resources.TriangleBullet, 3, 1, 32, 32).getSprite(1);
+                break;
+        }
+        this._sprite.scale.setTo(0.75, 0.75);
+    };
+    PortalStat.prototype.update = function (engine, delta) {
+        var _this = this;
+        _super.prototype.update.call(this, engine, delta);
+        // find all portals of this type     
+        var wave = badGuyFactory.getWave();
+        var totalCloseNeeded = _.chain(wave.portals).filter(function (p) { return p.type === _this.type; }).sum(function (p) { return p.closeAmount; });
+        var currentAmount = 0;
+        if (totalCloseNeeded <= 0) {
+            // portal is not in wave, hide stat
+            this.visible = false;
+        }
+        else {
+            this.visible = true;
+        }
+        switch (this.type) {
+            case Shape.Shape1:
+                currentAmount = GameState.state.ship.state.squarePool;
+                break;
+            case Shape.Shape2:
+                currentAmount = GameState.state.ship.state.circlePool;
+                break;
+            case Shape.Shape3:
+                currentAmount = GameState.state.ship.state.trianglePool;
+                break;
+        }
+        this._filledPerc = Math.floor(currentAmount / totalCloseNeeded);
+    };
+    PortalStat.prototype.draw = function (ctx, delta) {
+        _super.prototype.draw.call(this, ctx, delta);
+        if (!this.visible)
+            return;
+        // background
+        ctx.fillStyle = ex.Color.fromRGB(this._color.r, this._color.g, this._color.b, 0.3).toString();
+        ctx.fillRect(this.x, this.y, PortalStat.width, PortalStat.height);
+        ctx.strokeStyle = this._color.toString();
+        ctx.strokeRect(this.x, this.y, PortalStat.width, PortalStat.height);
+        // fill in
+        ctx.fillStyle = this._color.toString();
+        ctx.fillRect(this.x, this.y, PortalStat.width * this._filledPerc, PortalStat.height);
+        this._sprite.draw(ctx, this.x - 16, this.y - (this.getHeight() / 2) + 3);
+    };
+    PortalStat.width = 100;
+    PortalStat.height = 15;
+    return PortalStat;
 }(ex.UIActor));
 /// <reference path="./ship.ts" />
 /// <reference path="bullet.ts" />
@@ -853,6 +925,9 @@ var BadGuyFactory = (function () {
         this._openPortals.splice(idx, 1);
         game.remove(p);
     };
+    BadGuyFactory.prototype.getWave = function () {
+        return this._waveInfo;
+    };
     return BadGuyFactory;
 }());
 var Starfield = (function (_super) {
@@ -1172,5 +1247,14 @@ game.start(loader).then(function () {
     var killIdx = GameState.getStatIdx("KILLS");
     var killHUDUI = new HUDStat(GameState.state.stats[killIdx], 10, 60, 150, 50);
     game.add(killHUDUI);
+    // portal stats
+    var statPadding = 30;
+    var statSpacing = 50;
+    var squareStat = new PortalStat(statPadding, Config.height - 30, Shape.Shape1);
+    var circleStat = new PortalStat(statPadding + (PortalStat.width + statSpacing), Config.height - 30, Shape.Shape2);
+    var triangleStat = new PortalStat(statPadding + (PortalStat.width * 2 + statSpacing * 2), Config.height - 30, Shape.Shape3);
+    game.add(squareStat);
+    game.add(circleStat);
+    game.add(triangleStat);
 });
 //# sourceMappingURL=game.js.map
