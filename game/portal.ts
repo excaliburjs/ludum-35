@@ -25,19 +25,34 @@ class Portal extends ex.Actor {
             this._closetexture = Resources.TrianglePortalClose;
             break;
       }
+
+      //define drawing for a portal that stays open
       var ss = new ex.SpriteSheet(tx, 5, 1, 48, 48);
-      var anim = ss.getAnimationForAll(game, 125);
-      anim.loop=true;
+      var isopenanim = ss.getAnimationForAll(game, 125);
+      isopenanim.loop=true;
+      this.addDrawing('default', isopenanim);
       
-      this.addDrawing('default', anim);
-      this.setDrawing('default');
+      //define close portal drawing
+      var spritesheet = new ex.SpriteSheet(this._closetexture, 13, 1, 48, 48);
+      var closeanim = spritesheet.getAnimationForAll(game, 125);  
+      this.addDrawing('close', closeanim);
+         
+      //define opening portal drawing
+      var spritesheet = new ex.SpriteSheet(this._closetexture, 13, 1, 48, 48);
+      spritesheet.sprites = spritesheet.sprites.reverse();
+      var openanim = spritesheet.getAnimationForAll(game, 125);  
+      this.addDrawing('open', openanim);
+            
+      this.portalopen();
+      this.delay(1400).callMethod(() => { this.setDrawing('default'); });
+      
    }
    
    portalclose() {
-         var spritesheet = new ex.SpriteSheet(this._closetexture, 13, 1, 48, 48);
-         var anim = spritesheet.getAnimationForAll(game, 125);
-         anim.loop = false;
-         this.addDrawing('close', anim);
          this.setDrawing('close');
+   }
+   
+   portalopen() {
+         this.setDrawing('open');
    }
 }
