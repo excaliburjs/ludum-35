@@ -155,4 +155,8 @@ class BadGuyFactory {
       this._openPortals.splice(idx, 1);
       game.remove(p);
    }
+   
+   getWave(): Wave {
+      return this._waveInfo;
+   }
 }
