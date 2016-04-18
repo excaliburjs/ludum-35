@@ -5,6 +5,8 @@ var Config = {
    MapWidth: 5000,
    MapHeight: 960,
    
+   HUDStatVisible: false,
+   
    // Ship
    PlayerSpawn: new ex.Point(2500, 800),
       
