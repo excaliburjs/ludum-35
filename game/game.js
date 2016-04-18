@@ -843,7 +843,7 @@ var Badguy = (function (_super) {
 var Portal = (function (_super) {
     __extends(Portal, _super);
     function Portal(state) {
-        _super.call(this, state.location.x, state.location.y);
+        _super.call(this, state.location.x, state.location.y, 48, 48);
         this.state = state;
     }
     Portal.prototype.onInitialize = function () {
