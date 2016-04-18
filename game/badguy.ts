@@ -50,7 +50,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
    }
    _preupdate(evt: ex.PreUpdateEvent){
       
-    
+      /*
       if (this.dx >= 0){
         this.dx = Config.badguy.speed;
       } else {
@@ -62,7 +62,10 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       } else {
         this.dy = Config.badguy.speed * -1;
       }
-    this.state.weapon.update(evt.delta);
+      
+      
+      */
+      this.state.weapon.update(evt.delta);
     }
     _update(evt: ex.UpdateEvent){
       var hitborder = false;
@@ -91,7 +94,20 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
            //this.dx *= -1;
            hitborder = true;
        }
+       
+      var player = GameState.state.ship;
+      var target = new ex.Vector(player.x, player.y);
+      var randomAngle = ex.Util.randomInRange(0, Math.PI*2);
+      var missFactor = new ex.Vector(Config.badguy.missRadius * Math.cos(randomAngle), Config.badguy.missRadius * Math.sin(randomAngle));
+      target = target.add(missFactor);
       
+      var direction = target.minus(new ex.Vector(this.x, this.y));
+      
+      var steering = direction.normalize().scale(5);
+      var currentSpeed = new ex.Vector(this.dx, this.dy);
+      var newVel = steering.add(currentSpeed).normalize().scale(Config.badguy.speed);
+      this.dx = newVel.x;
+      this.dy = newVel.y;
     }
     _collision(collision: ex.CollisionEvent){
       //explode?

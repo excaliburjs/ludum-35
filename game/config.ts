@@ -36,6 +36,7 @@ var Config = {
    StarfieldMeteorSpeed: 320,
       
    StraightShooterFrequency: 500,
+   BadguyShooterFrequency: 800,
    // Bullet config
    bullets: {
       speed: 500, // px/s
@@ -45,6 +46,7 @@ var Config = {
    
    badguy: {
       speed: 200,
+      missRadius: 200,
       size: 1 //multiplier from original?
    }
    
