@@ -551,7 +551,7 @@ var PortalStat = (function (_super) {
                 currentAmount = GameState.state.ship.state.trianglePool;
                 break;
         }
-        this._filledPerc = currentAmount / totalCloseNeeded;
+        this._filledPerc = Math.min(1, currentAmount / totalCloseNeeded);
     };
     PortalStat.prototype.draw = function (ctx, delta) {
         _super.prototype.draw.call(this, ctx, delta);
