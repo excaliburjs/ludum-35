@@ -156,6 +156,8 @@ var Config = {
         speed: 170,
         bulletSpeed: 300,
         missRadius: 200,
+        bulletSteer: 2,
+        moveSteer: 70,
         size: 1 //multiplier from original?
     },
     colorShape1: ex.Color.fromHex('#3f8310'),
@@ -427,7 +429,7 @@ var Bullet = (function (_super) {
         if (GameState.state.ship.state.shieldType === this.state.shape) {
             var target = new ex.Vector(GameState.state.ship.x, GameState.state.ship.y);
             var direction = target.minus(new ex.Vector(this.x, this.y));
-            var steering = direction.normalize().scale(5);
+            var steering = direction.normalize().scale(Config.badguy.bulletSteer);
             var currentSpeed = new ex.Vector(this.dx, this.dy);
             var newVel = steering.add(currentSpeed).normalize().scale(Config.badguy.bulletSpeed);
             this.dx = newVel.x;
@@ -793,7 +795,7 @@ var Badguy = (function (_super) {
         var missFactor = new ex.Vector(Config.badguy.missRadius * Math.cos(randomAngle), Config.badguy.missRadius * Math.sin(randomAngle));
         target = target.add(missFactor);
         var direction = target.minus(new ex.Vector(this.x, this.y));
-        var steering = direction.normalize().scale(5);
+        var steering = direction.normalize().scale(Config.badguy.moveSteer);
         var currentSpeed = new ex.Vector(this.dx, this.dy);
         var newVel = steering.add(currentSpeed).normalize().scale(Config.badguy.speed);
         this.dx = newVel.x;

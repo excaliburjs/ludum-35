@@ -43,14 +43,18 @@ var Config = {
    bullets: {
       speed: 500, // px/s
       damage: 1,
-      rotation: Math.PI / 3 
+      rotation: Math.PI / 3
+      
    },
    
    badguy: {
       speed: 170,
       bulletSpeed: 300,
       missRadius: 200,
+      bulletSteer: 2,
+      moveSteer: 70,
       size: 1 //multiplier from original?
+      
    },
    
    colorShape1: ex.Color.fromHex('#3f8310'),

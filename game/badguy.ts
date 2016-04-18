@@ -116,7 +116,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState>, Pausable {
       
       var direction = target.minus(new ex.Vector(this.x, this.y));
       
-      var steering = direction.normalize().scale(5);
+      var steering = direction.normalize().scale(Config.badguy.moveSteer);
       var currentSpeed = new ex.Vector(this.dx, this.dy);
       var newVel = steering.add(currentSpeed).normalize().scale(Config.badguy.speed);
       this.dx = newVel.x;
