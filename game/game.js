@@ -1228,19 +1228,7 @@ var HealthStat = (function (_super) {
         this._activeHeart = new ex.SpriteSheet(Resources.Heart, 2, 1, 32, 32).getSprite(0);
         this._emptyHeart = new ex.SpriteSheet(Resources.Heart, 2, 1, 32, 32).getSprite(1);
     }
-    //private _color: ex.Color;
-    //private _sprite: ex.Sprite;
-    //private _filledHearts: number;
-    HealthStat.prototype.onInitialize = function (engine) {
-        _super.prototype.onInitialize.call(this, engine);
-        //this._sprite = new ex.SpriteSheet(Resources.Heart, 2, 1, 32, 32).getSprite(1);
-        //this._sprite = Resources.Heart.asSprite();
-    };
-    HealthStat.prototype.update = function (engine, delta) {
-        _super.prototype.update.call(this, engine, delta);
-    };
-    HealthStat.prototype.draw = function (ctx, delta) {
-        _super.prototype.draw.call(this, ctx, delta);
+    HealthStat.prototype.draw = function (ctx) {
         var heartsleft = GameState.state.ship.state.health;
         var totalhearts = Config.playerHealth;
         for (var i = 0; i < heartsleft; i++) {
@@ -1447,10 +1435,11 @@ game.start(loader).then(function () {
     var squareStat = new PortalStat(statPadding, Config.height - 30, Shape.Shape1);
     var circleStat = new PortalStat(statPadding + (PortalStat.width + statSpacing), Config.height - 30, Shape.Shape2);
     var triangleStat = new PortalStat(statPadding + (PortalStat.width * 2 + statSpacing * 2), Config.height - 30, Shape.Shape3);
-    var healthStat = new HealthStat(statPadding + Config.width - HealthStat.width - 30, 30);
     game.add(squareStat);
     game.add(circleStat);
     game.add(triangleStat);
+    //health statbar
+    var healthStat = new HealthStat(65 + Config.width - HealthStat.width, 5);
     game.add(healthStat);
 });
 //# sourceMappingURL=game.js.map
