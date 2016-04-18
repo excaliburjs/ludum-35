@@ -14,6 +14,7 @@ class EndScreen {
    }
    
    public win(){
+      pause();
       this._score.innerText = `Score: ${GameState.getGameStat("KILLS")}`;
       this._el.classList.remove("hidden");
    }
@@ -26,6 +27,7 @@ class EndScreen {
       // todo game restart  
       GameState.reset();
       this._el.classList.add("hidden");
+      resume();
    }   
    
 }

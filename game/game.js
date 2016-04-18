@@ -1266,6 +1266,7 @@ var EndScreen = (function () {
         this._restart.onclick = this.restart.bind(this);
     }
     EndScreen.prototype.win = function () {
+        pause();
         this._score.innerText = "Score: " + GameState.getGameStat("KILLS");
         this._el.classList.remove("hidden");
     };
@@ -1276,6 +1277,7 @@ var EndScreen = (function () {
         // todo game restart  
         GameState.reset();
         this._el.classList.add("hidden");
+        resume();
     };
     return EndScreen;
 }());
