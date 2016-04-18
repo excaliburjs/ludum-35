@@ -45,7 +45,8 @@ var Config = {
    },
    
    badguy: {
-      speed: 200,
+      speed: 170,
+      bulletSpeed: 300,
       missRadius: 200,
       size: 1 //multiplier from original?
    }
