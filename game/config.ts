@@ -6,7 +6,7 @@ var Config = {
    MapHeight: 960,
    
    // Ship
-   PlayerSpawn: new ex.Point(2500, 700),
+   PlayerSpawn: new ex.Point(2500, 800),
       
    // Camera
    CameraElasticity: .08,
@@ -45,7 +45,8 @@ var Config = {
    },
    
    badguy: {
-      speed: 200,
+      speed: 170,
+      bulletSpeed: 300,
       missRadius: 200,
       size: 1 //multiplier from original?
    }
