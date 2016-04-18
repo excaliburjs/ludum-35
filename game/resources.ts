@@ -23,11 +23,13 @@ var Resources = {
    BkgrdTrack: new ex.Sound('./snd/backingTrack.wav'),
    On: new ex.Sound('./snd/on.wav'),
    No: new ex.Sound('./snd/no.wav'),
+   Nope: new ex.Sound('./snd/nope.wav'),
    Absorb: new ex.Sound('./snd/absorb.wav'),
    PortalOpen: new ex.Sound('./snd/portalOpen.wav'),
    PortalClose: new ex.Sound('./snd/portalClose.wav'),
    PlanetBg: new ex.Texture('./img/planet-bg.png'),
    FrontBg: new ex.Texture('./img/front-bg.png'),
    Torch: new ex.Texture('./img/torch.png'),
-   Heart: new ex.Texture('./img/Heart.png')
+   Heart: new ex.Texture('./img/Heart.png'),
+   Vignette: new ex.Texture('./img/vignette.png')
 };

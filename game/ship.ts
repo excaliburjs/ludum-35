@@ -190,7 +190,7 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable, Pausable {
           // play bling sound
        }else{
           // play nah-uh sound
-          //Resources.No.play();
+          Resources.Nope.play();
        }
    }
    
