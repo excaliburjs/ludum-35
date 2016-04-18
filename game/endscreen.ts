@@ -41,9 +41,10 @@ class EndScreen {
    private _gameOver() {
       pause();
       GameState.state.gameEnd = Date.now();
-      this._time = (GameState.state.gameEnd - GameState.state.gameStart)/1000;
-      this._minutes = this._time/60;
-      this._seconds = this._time - this._minutes;
+      this._time = (GameState.state.gameEnd - GameState.state.gameStart);
+      this._minutes = Math.floor(this._time / 1000 / 60);
+      this._seconds = Math.floor((this._time / 1000) - (60 * this._minutes));            
+      
       // remove all bullets
       var bulletsToRemove = _.filter(game.currentScene.children, c => c instanceof Bullet);
       _.each(bulletsToRemove, b => game.remove(b));
