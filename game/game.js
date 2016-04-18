@@ -733,7 +733,9 @@ var GameState = (function () {
             ship: new Ship(Config.PlayerSpawn.x, Config.PlayerSpawn.y, 48, 48),
             bullets: null,
             stats: [new Stat("KILLS", 0)],
-            stage: 1
+            stage: 1,
+            gameStart: Date.now(),
+            gameEnd: Date.now()
         };
         //GameState.state.bullets.fill();
         cameraDestActor = GameState.state.ship;
@@ -746,6 +748,7 @@ var GameState = (function () {
         this._resetStats();
         this.state.stage = 1;
         badGuyFactory.nextWave();
+        this.state.gameStart = Date.now();
     };
     GameState._resetPlayer = function () {
         GameState.state.ship.dx = 0;
@@ -1428,14 +1431,14 @@ var EndScreen = (function () {
     }
     EndScreen.prototype.win = function () {
         this._gameOver();
-        this._score.innerText = "Score: " + GameState.getGameStat("KILLS");
+        this._score.innerText = "Time: " + this._minutes.toFixed(0) + "m " + this._seconds.toFixed(0) + "s";
         this._show();
         removeClass(this._el, "lose");
         addClass(this._el, "win");
     };
     EndScreen.prototype.lose = function () {
         this._gameOver();
-        this._score.innerText = "Score: " + GameState.getGameStat("KILLS");
+        this._score.innerText = "Time: " + this._minutes.toFixed(0) + "m " + this._seconds.toFixed(0) + "s";
         this._show();
         removeClass(this._el, "win");
         addClass(this._el, "lose");
@@ -1447,6 +1450,10 @@ var EndScreen = (function () {
     };
     EndScreen.prototype._gameOver = function () {
         pause();
+        GameState.state.gameEnd = Date.now();
+        this._time = (GameState.state.gameEnd - GameState.state.gameStart) / 1000;
+        this._minutes = this._time / 60;
+        this._seconds = this._time - this._minutes;
         // remove all bullets
         var bulletsToRemove = _.filter(game.currentScene.children, function (c) { return c instanceof Bullet; });
         _.each(bulletsToRemove, function (b) { return game.remove(b); });
