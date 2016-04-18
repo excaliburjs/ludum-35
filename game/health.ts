@@ -10,7 +10,8 @@ class HealthStat extends ex.UIActor {
    static height = 15;
    
    constructor(x: number, y: number) {
-      super(x, y, HealthStat.width, HealthStat.height); 
+      super(x, y, HealthStat.width, HealthStat.height);
+      this.anchor.setTo(0, 0); 
    }
    
    draw(ctx: CanvasRenderingContext2D) {
