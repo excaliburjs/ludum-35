@@ -651,8 +651,8 @@ var PortalStat = (function (_super) {
         var _this = this;
         _super.prototype.update.call(this, engine, delta);
         // find all portals of this type     
-        var wave = badGuyFactory.getWave();
-        var totalCloseNeeded = _.chain(wave.portals).filter(function (p) { return p.type === _this.type; }).sum(function (p) { return p.closeAmount; });
+        var portals = badGuyFactory.getOpenPortals();
+        var totalCloseNeeded = _.chain(portals).filter(function (p) { return p.type === _this.type; }).sum(function (p) { return p.closeAmount; });
         var currentAmount = 0;
         if (totalCloseNeeded <= 0) {
             // portal is not in wave, hide stat
@@ -1250,6 +1250,11 @@ var BadGuyFactory = (function () {
     };
     BadGuyFactory.prototype.getWave = function () {
         return this._waveInfo;
+    };
+    BadGuyFactory.prototype.getOpenPortals = function () {
+        if (this._openPortals.length === 0)
+            return [];
+        return _.pluck(this._openPortals, 'state');
     };
     return BadGuyFactory;
 }());
