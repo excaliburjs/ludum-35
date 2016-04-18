@@ -142,13 +142,15 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable, Pausable {
           this.setDrawing('left');
       }
       
-      this.state.weapon.update(evt.delta);
+      
    }
    
    update(engine: ex.Engine, delta: number) {
        if (this.paused) return;
        
        super.update(engine, delta);
+       
+       this.state.weapon.update(delta);
        
        if (this.x > gameBounds.right) {
            this.x = gameBounds.right;
