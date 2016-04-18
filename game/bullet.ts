@@ -66,7 +66,7 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
                     var badguy: Badguy;
                     badguy = <Badguy>collision.other;
                     badguy.explode();
-                    badguy.delay(600).die();
+                    badguy.delay(500).die();
                 }else{
                  collision.other.kill();                   
                 }

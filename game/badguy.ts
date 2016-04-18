@@ -70,9 +70,9 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       this.state.weapon.update(evt.delta);
     }
     _update(evt: ex.UpdateEvent){
-      if (this._isexploding){
-        return false;
-      }
+      //if (this._isexploding){
+      //  return false;
+      //}
       var hitborder = false;
       
        if (this.x > gameBounds.right) {
@@ -121,8 +121,8 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
    
     explode(){
       this._isexploding = true;
-      this.dx = 0;
-      this.dy = 0;
+      //this.dx = 0;
+      //this.dy = 0;
       if(this.badguytype == Shape.Shape1){
         //GlobalAnimations.SquareBaddieExplosion.play(this.x, this.y);
         this.addDrawing('explosion', GlobalAnimations.SquareBaddieExplosion);
