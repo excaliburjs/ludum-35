@@ -964,7 +964,7 @@ var BadGuyFactory = (function () {
         this._openPortals.length = 0;
         var stage = GameState.state.stage += 1;
         // set spawn locations
-        if (stage === 100) {
+        if (stage === 1) {
             // place portal in center
             this._waveInfo = {
                 portals: [{
@@ -979,7 +979,7 @@ var BadGuyFactory = (function () {
             };
             this.spawnPortals();
         }
-        else if (stage === 1) {
+        else if (stage === 2) {
             this._waveInfo = {
                 portals: [{
                         location: new ex.Point(2500, 420),

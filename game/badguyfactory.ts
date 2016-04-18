@@ -142,7 +142,7 @@ class BadGuyFactory implements Pausable {
       var stage = GameState.state.stage += 1;
       
       // set spawn locations
-      if (stage === 100) { //TODO set back to 1
+      if (stage === 1) {
          // place portal in center
          this._waveInfo = {
             portals: [{
@@ -156,7 +156,7 @@ class BadGuyFactory implements Pausable {
             }]
          };
          this.spawnPortals();
-      } else if (stage === 1) { //TODO set back to 2
+      } else if (stage === 2) {
             this._waveInfo = {
             portals: [{
                location: new ex.Point(2500, 420),
