@@ -176,13 +176,15 @@ class BadGuyFactory implements Pausable {
          };
       //    this.orc.callMethod(() => {this.spawnPortals()});
          this.spawnPortals();
+      } else if (stage === 3) {
+            
       } else {
          // win!
          endscreen.win();
       }
    }
    
-   spawnPortals(delay?: number) {
+   spawnPortals() {
       this.paused = true;
       this.helperOrc.x = GameState.state.ship.x;
       this.helperOrc.y = GameState.state.ship.y;
@@ -195,12 +197,12 @@ class BadGuyFactory implements Pausable {
          
          let p = new Portal(portal);
       //    game.add(p);
-         this.helperOrc.delay(delay? delay : 100).callMethod(() => {console.log('adding portal')}).callMethod(() => {game.add(p)}); //TODO use delay? param
+         this.helperOrc.callMethod(() => {/*console.log('adding portal')*/}).callMethod(() => {game.add(p)}); //TODO use delay? param
          this._openPortals.push(p);
          //p.portalopen();
          //p.delay(2000);
          
-         this.helperOrc.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {console.log('spawn portal')}).delay(2000);
+         this.helperOrc.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {/*console.log('spawn portal')*/}).delay(2000);
       //    console.log(o.actionQueue);
       }
       

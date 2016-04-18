@@ -1029,12 +1029,14 @@ var BadGuyFactory = (function () {
             //    this.orc.callMethod(() => {this.spawnPortals()});
             this.spawnPortals();
         }
+        else if (stage === 3) {
+        }
         else {
             // win!
             endscreen.win();
         }
     };
-    BadGuyFactory.prototype.spawnPortals = function (delay) {
+    BadGuyFactory.prototype.spawnPortals = function () {
         var _this = this;
         this.paused = true;
         this.helperOrc.x = GameState.state.ship.x;
@@ -1045,11 +1047,11 @@ var BadGuyFactory = (function () {
             // console.log('adding portal')
             var p = new Portal(portal);
             //    game.add(p);
-            this_1.helperOrc.delay(delay ? delay : 100).callMethod(function () { console.log('adding portal'); }).callMethod(function () { game.add(p); }); //TODO use delay? param
+            this_1.helperOrc.callMethod(function () { }).callMethod(function () { game.add(p); }); //TODO use delay? param
             this_1._openPortals.push(p);
             //p.portalopen();
             //p.delay(2000);
-            this_1.helperOrc.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(function () { console.log('spawn portal'); }).delay(2000);
+            this_1.helperOrc.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(function () { }).delay(2000);
         };
         var this_1 = this;
         for (var _i = 0, _a = this._waveInfo.portals; _i < _a.length; _i++) {
