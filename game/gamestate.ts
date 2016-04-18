@@ -95,6 +95,7 @@ class GameState {
             GameState.state.ship.state.circlePool = 0;
             GameState.state.ship.state.trianglePool = 0;
             GameState.state.ship.state.health = Config.playerHealth;
+            GameState.state.ship.state.isVulnerable = true;
             
             // add player if they were removed
             if (game.currentScene.children.indexOf(GameState.state.ship) < 0) {
