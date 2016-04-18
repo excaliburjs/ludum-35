@@ -176,6 +176,7 @@ var Config = {
     height: 640,
     MapWidth: 5000,
     MapHeight: 960,
+    HUDStatVisible: false,
     // Ship
     PlayerSpawn: new ex.Point(2500, 800),
     // Camera
@@ -583,6 +584,7 @@ var HUDStat = (function (_super) {
     function HUDStat(stat, x, y, width, height) {
         _super.call(this, x, y, width, height);
         this.stat = stat;
+        this.visible = Config.HUDStatVisible;
     }
     HUDStat.prototype.onInitialize = function (engine) {
         _super.prototype.onInitialize.call(this, engine);
