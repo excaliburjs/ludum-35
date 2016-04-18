@@ -59,8 +59,8 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable, Pausab
                  this.kill();
                  return;
              }else{
-                 Resources.Hit.play();
                  if(player.state.isVulnerable){
+                    Resources.Hit.play();
                     var currHealth = player.state.health -= 1;
                     player.state.isVulnerable = false;
                     player.blink(50,50, 15).callMethod(function(){
