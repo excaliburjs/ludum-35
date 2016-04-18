@@ -41,7 +41,7 @@ var StraightShooter = (function (_super) {
             damage: this.damage,
             x: this.source.x,
             y: this.source.y,
-            speed: this.speed,
+            speed: this.speed + Config.playerMaxVelocity,
             shape: Shape.PlayerBullet,
             scale: 2
         });
@@ -143,7 +143,8 @@ var Config = {
         rotation: Math.PI
     },
     badguy: {
-        speed: 200,
+        speed: 170,
+        bulletSpeed: 300,
         missRadius: 200,
         size: 1 //multiplier from original?
     }
@@ -661,7 +662,7 @@ var Badguy = (function (_super) {
                 speed: Config.badguy.speed,
                 size: Config.badguy.size,
                 shape: this.badguytype,
-                weapon: new ShapeShooter(this, Config.bullets.speed, Config.bullets.damage, this.badguytype)
+                weapon: new ShapeShooter(this, Config.badguy.bulletSpeed, Config.bullets.damage, this.badguytype)
             };
         }
         else {
