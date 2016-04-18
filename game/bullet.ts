@@ -57,12 +57,20 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable, Pausab
                  this.kill();
                  return;
              }else{
-                 var currHealth = player.state.health -= 1;
-                 if(currHealth <= 0){
-                     collision.other.kill();
-                     GameState.state.ship.dx = 0;
-                     GameState.state.ship.dy = 0;
-                     endscreen.lose();
+                 if(player.state.isVulnerable){
+                    var currHealth = player.state.health -= 1;
+                    player.state.isVulnerable = false;
+                    player.blink(50,50, 15).callMethod(function(){
+                       player.state.isVulnerable = true; 
+                    });
+                    if(currHealth <= 0){
+                        collision.other.kill();
+                        GameState.state.ship.dx = 0;
+                        GameState.state.ship.dy = 0;
+                        endscreen.lose();
+                    }
+                 }else{
+                     return; //player is invulnerable, takes no damage and bullets phase through them
                  }
              }  
            }
