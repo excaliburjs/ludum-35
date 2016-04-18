@@ -197,4 +197,13 @@ game.start(loader).then(() => {
 	var killHUDUI = new HUDStat(GameState.state.stats[killIdx], 10, 60, 150, 50);
 	game.add(killHUDUI);
 	
+	// portal stats
+	const statPadding = 30;
+	const statSpacing = 50;
+	var squareStat = new PortalStat(statPadding, Config.height - 30, Shape.Shape1);
+	var circleStat = new PortalStat(statPadding + (PortalStat.width + statSpacing), Config.height - 30, Shape.Shape2);
+	var triangleStat = new PortalStat(statPadding + (PortalStat.width * 2 + statSpacing * 2), Config.height - 30, Shape.Shape3);
+	game.add(squareStat);
+	game.add(circleStat);
+	game.add(triangleStat);
 });
