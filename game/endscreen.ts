@@ -14,16 +14,18 @@ class EndScreen {
    }
    
    public win(){
-      pause();
+      this._gameOver();      
       this._score.innerText = `Score: ${GameState.getGameStat("KILLS")}`;
       this._show();
+      removeClass(this._el, "lose");
       addClass(this._el, "win");
    }
    
    public lose(){
-      pause();
+      this._gameOver();
       this._score.innerText = `Score: ${GameState.getGameStat("KILLS")}`;
       this._show();
+      removeClass(this._el, "win");
       addClass(this._el, "lose");
    }
    
@@ -32,6 +34,13 @@ class EndScreen {
       this._hide();
       resume();
    }   
+   
+   private _gameOver() {
+      pause();
+      // remove all bullets
+      var bulletsToRemove = _.filter(game.currentScene.children, c => c instanceof Bullet);
+      _.each(bulletsToRemove, b => game.remove(b));
+   }
    
    private _hide() {
       addClass(this._el, "hidden");

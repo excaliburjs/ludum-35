@@ -25,7 +25,6 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable, Pausab
       this.reset();
       this.rx = Config.bullets.rotation;
 
-      this.on('exitviewport', () => this.kill());
       this.on('collision', this._collision);
       this.on('postdraw', this.postdraw);      
    }
@@ -125,11 +124,15 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable, Pausab
             var target = new ex.Vector(GameState.state.ship.x, GameState.state.ship.y);
             var direction = target.minus(new ex.Vector(this.x, this.y));
       
-            var steering = direction.normalize().scale(5);
+            var steering = direction.normalize().scale(Config.badguy.bulletSteer);
             var currentSpeed = new ex.Vector(this.dx, this.dy);
             var newVel = steering.add(currentSpeed).normalize().scale(Config.badguy.bulletSpeed);
             this.dx = newVel.x;
             this.dy = newVel.y;
+       }
+       
+       if (!gameBounds.contains(new ex.Point(this.x, this.y))) {
+           this.kill();
        }
    }
    
