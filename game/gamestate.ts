@@ -78,7 +78,17 @@ class GameState {
       private static _resetPlayer() {
             GameState.state.ship.dx = 0;
             GameState.state.ship.dy = 0;
-            //TODO
+            GameState.state.ship.x = Config.PlayerSpawn.x;
+            GameState.state.ship.y = Config.PlayerSpawn.y;
+            GameState.state.ship.rotation = 0;
+            // GameState.state.ship.reset();
+            //TODO calling reset() breaks player input, something related to creating a new Weapon
+            GameState.state.ship.state.shieldType = Shape.Shape1;
+            GameState.state.ship.state.squarePool = 0;
+            GameState.state.ship.state.circlePool = 0;
+            GameState.state.ship.state.trianglePool = 0;
+            
+            game.add(GameState.state.ship);
       }
       
       private static _resetStats() {
