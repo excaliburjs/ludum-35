@@ -224,6 +224,9 @@ game.start(loader).then(() => {
 	GameState.init();
 	game.add(fbg);
 	
+	var vignette = new ex.UIActor(0, 0, game.width, game.height);
+	vignette.addDrawing(Resources.Vignette);
+	game.add(vignette);
 	var killIdx = GameState.getStatIdx("KILLS");
 	
 	var killHUDUI = new HUDStat(GameState.state.stats[killIdx], 10, 60, 150, 50);
