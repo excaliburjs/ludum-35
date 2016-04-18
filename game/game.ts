@@ -236,11 +236,14 @@ game.start(loader).then(() => {
 	var circleStat = new PortalStat(statPadding + (PortalStat.width + statSpacing), Config.height - 30, Shape.Shape2);
 	var triangleStat = new PortalStat(statPadding + (PortalStat.width * 2 + statSpacing * 2), Config.height - 30, Shape.Shape3);
 	
-	var healthStat = new HealthStat(statPadding + Config.width - HealthStat.width - 30, 30);
-	
-	
 	game.add(squareStat);
 	game.add(circleStat);
 	game.add(triangleStat);
+	
+	
+	//health statbar
+	var healthStat = new HealthStat(65 + Config.width - HealthStat.width, 5);
+	
 	game.add(healthStat);
+	
 });
