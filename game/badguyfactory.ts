@@ -67,13 +67,15 @@ class BadGuyFactory implements Pausable {
             promise = this.closePortals(portalsToClose);
       }
             
-      if (this._openPortals.length === 0) {
-         this.nextWave(promise);
-         return;
-      }
+      
       
       // after portal spawns, spawn enemies
       if (!this.paused) {
+            if (this._openPortals.length === 0) {
+                  this.nextWave(promise);
+                  return;
+            }
+            
             if (this._portalSpawnWaitTimer <= 0) {
             
             // for open portals, spawn baddies
@@ -111,20 +113,11 @@ class BadGuyFactory implements Pausable {
    
    spawnBaddie(portal: PortalSpawn) {
       var baddie = new Badguy(portal.location.x, portal.location.y, portal.type);
-      // baddie.on('kill', () => {
-      //    var idx = portal.baddies.indexOf(baddie);
-      //    portal.baddies.splice(idx, 1);         
-      // });
       game.add(baddie);
       portal.baddies.push(baddie);
    }     
    
    nextWave(promise?: ex.Promise<any>) {
-      // if (!promise) {
-      //       if (GameState.state.stage !== 1) {
-      //             return;
-      //       }
-      // }
       let portalsClosed = promise || ex.Promise.wrap();
       this._waveStarted = true;
       
@@ -200,12 +193,12 @@ class BadGuyFactory implements Pausable {
          
          let p = new Portal(portal);
       //    game.add(p);
-         this.helperOrc.callMethod(() => {/*console.log('adding portal')*/}).callMethod(() => {game.add(p)}); //TODO use delay? param
+         this.helperOrc.callMethod(() => {game.add(p)}); //TODO use delay? param
          this._openPortals.push(p);
          //p.portalopen();
          //p.delay(2000);
          
-         this.helperOrc.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {/*console.log('spawn portal')*/}).delay(2000);
+         this.helperOrc.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).delay(2000);
       //    console.log(o.actionQueue);
       }
       

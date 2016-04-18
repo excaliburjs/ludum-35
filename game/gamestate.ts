@@ -73,7 +73,7 @@ class GameState {
       static reset() {
             this._resetPlayer();
             this._resetStats();
-            this.state.stage = 0;
+            this.state.stage = 1;
             badGuyFactory.nextWave();
       }
       
