@@ -327,12 +327,23 @@ var Bullet = (function (_super) {
         if (this.visible) {
             if (this.owner.constructor !== collision.other.constructor && this.constructor !== collision.other.constructor) {
                 Resources.Explode.play();
-                if (collision.other instanceof Badguy) {
-                    var badguy;
-                    badguy = collision.other;
-                    badguy.explode();
+                if (collision.other instanceof Ship) {
+                    var player = collision.other;
+                    if (player.state.shieldType === this.state.shape) {
+                        return;
+                    }
+                    else {
+                        if (collision.other instanceof Badguy) {
+                            var badguy;
+                            badguy = collision.other;
+                            badguy.explode();
+                        }
+                        collision.other.kill();
+                    }
                 }
-                collision.other.kill();
+                else {
+                    collision.other.kill();
+                }
                 if (!(collision.other instanceof Ship)) {
                     var currKills = parseInt(GameState.getGameStat("KILLS").toString()) + 1;
                     GameState.setGameStat("KILLS", currKills);
