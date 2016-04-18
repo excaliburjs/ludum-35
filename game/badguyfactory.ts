@@ -274,4 +274,9 @@ class BadGuyFactory implements Pausable {
    getWave(): Wave {
       return this._waveInfo;
    }
+   
+   getOpenPortals(): PortalSpawn[] {
+      if (this._openPortals.length === 0) return [];
+      return _.pluck(this._openPortals, 'state');
+   }
 }
