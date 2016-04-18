@@ -168,6 +168,8 @@ var Resources = {
     On: new ex.Sound('./snd/on.wav'),
     No: new ex.Sound('./snd/no.wav'),
     Absorb: new ex.Sound('./snd/absorb.wav'),
+    PortalOpen: new ex.Sound('./snd/portalOpen.wav'),
+    PortalClose: new ex.Sound('./snd/portalClose.wav'),
     PlanetBg: new ex.Texture('./img/planet-bg.png'),
     FrontBg: new ex.Texture('./img/front-bg.png'),
     Torch: new ex.Texture('./img/torch.png'),
@@ -985,9 +987,11 @@ var Portal = (function (_super) {
                 }
             }
         });
+        Resources.PortalClose.play();
     };
     Portal.prototype.portalopen = function () {
         this.setDrawing('open');
+        Resources.PortalOpen.play();
     };
     return Portal;
 }(ex.Actor));

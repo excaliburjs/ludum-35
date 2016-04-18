@@ -56,10 +56,12 @@ class Portal extends ex.Actor {
                         a.kill();
                   }
             }   
-         });     
+         });
+         Resources.PortalClose.play();  
    }
    
    portalopen() {
          this.setDrawing('open');
+         Resources.PortalOpen.play();
    }
 }
