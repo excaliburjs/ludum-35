@@ -875,6 +875,17 @@ var BadGuyFactory = (function () {
         for (var _b = 0, portalsToClose_1 = portalsToClose; _b < portalsToClose_1.length; _b++) {
             var p = portalsToClose_1[_b];
             this.closePortal(p);
+            switch (p.state.type) {
+                case Shape.Shape1:
+                    GameState.state.ship.state.squarePool = 0;
+                    break;
+                case Shape.Shape2:
+                    GameState.state.ship.state.circlePool = 0;
+                    break;
+                case Shape.Shape3:
+                    GameState.state.ship.state.trianglePool = 0;
+                    break;
+            }
         }
         if (this._openPortals.length === 0) {
             this.nextWave();
@@ -949,6 +960,29 @@ var BadGuyFactory = (function () {
                         baddies: [],
                         maxSimultaneous: 3,
                         type: Shape.Shape1,
+                        closeAmount: 5
+                    }]
+            };
+            this.spawnPortals();
+        }
+        else if (stage === 2) {
+            this._waveInfo = {
+                portals: [{
+                        location: new ex.Point(2500, 420),
+                        rate: 2000,
+                        rateTimer: 0,
+                        baddies: [],
+                        maxSimultaneous: 3,
+                        type: Shape.Shape1,
+                        closeAmount: 5
+                    },
+                    {
+                        location: new ex.Point(3000, 420),
+                        rate: 2000,
+                        rateTimer: 0,
+                        baddies: [],
+                        maxSimultaneous: 3,
+                        type: Shape.Shape2,
                         closeAmount: 5
                     }]
             };
