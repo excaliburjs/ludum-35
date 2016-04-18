@@ -119,6 +119,18 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable, Pausab
        if (this.paused) return;
        super.update(engine, delta);
        
+       if(GameState.state.ship.state.shieldType === this.state.shape){
+           
+            var target = new ex.Vector(GameState.state.ship.x, GameState.state.ship.y);
+            var direction = target.minus(new ex.Vector(this.x, this.y));
+      
+            var steering = direction.normalize().scale(5);
+            var currentSpeed = new ex.Vector(this.dx, this.dy);
+            var newVel = steering.add(currentSpeed).normalize().scale(Config.badguy.bulletSpeed);
+            this.dx = newVel.x;
+            this.dy = newVel.y;
+       }
+       
        if (!gameBounds.contains(new ex.Point(this.x, this.y))) {
            this.kill();
        }
