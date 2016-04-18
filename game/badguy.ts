@@ -12,12 +12,14 @@ interface BadguyState {
    weapon: Weapon;
 }
 
-class Badguy extends ex.Actor implements Stateful<BadguyState> {
+class Badguy extends ex.Actor implements Stateful<BadguyState>, Pausable {
    id: number;
    
    //todo remove when pooling is implemented
    //public weapon: Weapon; 
    public state: BadguyState;
+   public paused: boolean = false;
+   
   private _isexploding: boolean=false;
   private BadGuySheet: ex.SpriteSheet;
    
@@ -49,7 +51,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       this.reset();
    }
    _preupdate(evt: ex.PreUpdateEvent){
-      if (this._isexploding){
+      if (this._isexploding || this.paused){
         return false;
       }
       /*
@@ -73,6 +75,8 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       //if (this._isexploding){
       //  return false;
       //}
+      if (this.paused) return;
+      
       var hitborder = false;
       
        if (this.x > gameBounds.right) {
