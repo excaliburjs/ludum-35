@@ -58,7 +58,7 @@ class GameState {
             ship: new Ship(Config.PlayerSpawn.x, Config.PlayerSpawn.y, 48, 48),
             bullets: null,
             stats: [new Stat("KILLS", 0)],
-            stage: 0
+            stage: 1
          };
          //GameState.state.bullets.fill();
          
