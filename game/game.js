@@ -362,7 +362,7 @@ var Bullet = (function (_super) {
                     var badguy;
                     badguy = collision.other;
                     badguy.explode();
-                    badguy.delay(600).die();
+                    badguy.delay(500).die();
                 }
                 Resources.Explode.play();
                 //collision.other.kill();
@@ -711,9 +711,9 @@ var Badguy = (function (_super) {
         this.state.weapon.update(evt.delta);
     };
     Badguy.prototype._update = function (evt) {
-        if (this._isexploding) {
-            return false;
-        }
+        //if (this._isexploding){
+        //  return false;
+        //}
         var hitborder = false;
         if (this.x > gameBounds.right) {
             this.x = gameBounds.right;
@@ -757,8 +757,8 @@ var Badguy = (function (_super) {
     };
     Badguy.prototype.explode = function () {
         this._isexploding = true;
-        this.dx = 0;
-        this.dy = 0;
+        //this.dx = 0;
+        //this.dy = 0;
         if (this.badguytype == Shape.Shape1) {
             //GlobalAnimations.SquareBaddieExplosion.play(this.x, this.y);
             this.addDrawing('explosion', GlobalAnimations.SquareBaddieExplosion);
