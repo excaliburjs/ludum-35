@@ -132,6 +132,7 @@ var Config = {
     playerMaxVelocity: 500,
     playerHealth: 5,
     playerCanShoot: false,
+    playerKillsBadguysOnCollision: true,
     // Baddies
     PortalSpawnWaitTime: 3000,
     poolSizeIncrement: 100,
@@ -803,8 +804,12 @@ var Badguy = (function (_super) {
         this.dy = newVel.y;
     };
     Badguy.prototype._collision = function (collision) {
-        //explode? - do in bullet
-        //this.explode();
+        if (collision.other instanceof Ship) {
+            if (GameState.state.ship.state.shieldType === this.badguytype && Config.playerKillsBadguysOnCollision) {
+                this.explode();
+                this.delay(150).die();
+            }
+        }
     };
     Badguy.prototype.explode = function () {
         this._isexploding = true;
