@@ -224,8 +224,7 @@ game.start(loader).then(() => {
 	var killIdx = GameState.getStatIdx("KILLS");
 	
 	var killHUDUI = new HUDStat(GameState.state.stats[killIdx], 10, 60, 150, 50);
-	game.add(killHUDUI);
-	game.add(endscreen);
+	game.add(killHUDUI);	
 	
 	// portal stats
 	const statPadding = 30;

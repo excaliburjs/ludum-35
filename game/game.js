@@ -955,6 +955,8 @@ var BadGuyFactory = (function () {
             this.spawnPortals();
         }
         else {
+            // win!
+            endscreen.win();
         }
     };
     BadGuyFactory.prototype.spawnPortals = function () {
@@ -1147,27 +1149,33 @@ var SoundManager = (function () {
     return SoundManager;
 }());
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
-var EndScreen = (function (_super) {
-    __extends(EndScreen, _super);
-    function EndScreen() {
-        _super.call(this, Config.width / 2 - 500 / 2, Config.height / 2 - 1000, 500, 300);
-        this.anchor.setTo(.5, .5);
+var EndScreen = (function () {
+    function EndScreen(endScreenId, restartId, scoreId) {
+        if (endScreenId === void 0) { endScreenId = "gameover"; }
+        if (restartId === void 0) { restartId = "restart"; }
+        if (scoreId === void 0) { scoreId = "score"; }
+        this.endScreenId = endScreenId;
+        this.restartId = restartId;
+        this.scoreId = scoreId;
+        this._el = document.getElementById(this.endScreenId);
+        this._score = document.getElementById(this.scoreId);
+        this._restart = document.getElementById(this.restartId);
+        this._restart.onclick = this.restart.bind(this);
     }
-    EndScreen.prototype.gameover = function () {
-        var _this = this;
-        this.moveTo(Config.width / 2 - this.getWidth() / 2, Config.height / 2 - this.getHeight() / 2, 300).delay(500).moveTo(Config.width / 2 - this.getWidth() / 2, 900, 300).asPromise().then(function () {
-            _this.y = Config.height / 2 - 1000;
-        });
+    EndScreen.prototype.win = function () {
+        this._score.innerText = "Score: " + GameState.getGameStat("KILLS");
+        this._el.classList.remove("hidden");
     };
-    EndScreen.prototype.retry = function () {
+    EndScreen.prototype.lose = function () {
+        // todo
     };
-    EndScreen.prototype.draw = function (ctx, delta) {
-        _super.prototype.draw.call(this, ctx, delta);
-        ctx.fillStyle = ex.Color.Azure.clone();
-        ctx.fillRect(this.x, this.y, this.getWidth(), this.getHeight());
+    EndScreen.prototype.restart = function () {
+        // todo game restart  
+        GameState.reset();
+        this._el.classList.add("hidden");
     };
     return EndScreen;
-}(ex.UIActor));
+}());
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="../lodash.d.ts" />
 /// <reference path="pausable.ts" />
@@ -1354,7 +1362,6 @@ game.start(loader).then(function () {
     var killIdx = GameState.getStatIdx("KILLS");
     var killHUDUI = new HUDStat(GameState.state.stats[killIdx], 10, 60, 150, 50);
     game.add(killHUDUI);
-    game.add(endscreen);
     // portal stats
     var statPadding = 30;
     var statSpacing = 50;
