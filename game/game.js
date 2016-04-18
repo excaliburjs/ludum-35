@@ -163,9 +163,11 @@ var Resources = {
     TrianglePortalClose: new ex.Texture('./img/yellowportal2.png'),
     DiabloFontSheet: new ex.Texture("./fonts/DiabloFont.png"),
     Explode: new ex.Sound('./snd/explode1.wav'),
+    Hit: new ex.Sound('./snd/explode2.wav'),
     BkgrdTrack: new ex.Sound('./snd/backingTrack.wav'),
     On: new ex.Sound('./snd/on.wav'),
     No: new ex.Sound('./snd/no.wav'),
+    Absorb: new ex.Sound('./snd/absorb.wav'),
     PlanetBg: new ex.Texture('./img/planet-bg.png'),
     FrontBg: new ex.Texture('./img/front-bg.png'),
     Torch: new ex.Texture('./img/torch.png'),
@@ -425,10 +427,12 @@ var Bullet = (function (_super) {
                                 player.state.trianglePool += 1;
                                 break;
                         }
+                        Resources.Absorb.play();
                         this.kill();
                         return;
                     }
                     else {
+                        Resources.Hit.play();
                         var currHealth = player.state.health -= 1;
                         if (currHealth <= 0) {
                             collision.other.kill();
@@ -448,7 +452,6 @@ var Bullet = (function (_super) {
                     badguy.explode();
                     badguy.delay(150).die();
                 }
-                Resources.Explode.play();
                 this.kill();
             }
         }
@@ -872,7 +875,10 @@ var Badguy = (function (_super) {
         }
     };
     Badguy.prototype.explode = function () {
+        if (this._isexploding)
+            return;
         this._isexploding = true;
+        Resources.Explode.play();
         //this.dx = 0;
         //this.dy = 0;
         if (this.badguytype == Shape.Shape1) {
