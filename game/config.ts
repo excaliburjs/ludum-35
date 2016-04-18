@@ -49,7 +49,9 @@ var Config = {
       bulletSpeed: 300,
       missRadius: 200,
       size: 1 //multiplier from original?
-   }
+   },
    
-   
+   colorShape1: ex.Color.fromHex('#3f8310'),
+   colorShape2: ex.Color.fromHex('#1b77b7'),
+   colorShape3: ex.Color.fromHex('#b79f1b')
 }
