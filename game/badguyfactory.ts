@@ -60,20 +60,20 @@ class BadGuyFactory implements Pausable {
             this.closePortals(portalsToClose);
       }
       
-      for (let p of portalsToClose) {
-      //    this.closePortal(p);
-         switch(p.state.type) {
-            case Shape.Shape1:
-               GameState.state.ship.state.squarePool = 0;
-               break;
-            case Shape.Shape2:
-               GameState.state.ship.state.circlePool = 0;
-               break;
-            case Shape.Shape3:
-               GameState.state.ship.state.trianglePool = 0;
-               break;
-         }
-      }
+      // for (let p of portalsToClose) {
+      // //    this.closePortal(p);
+      //    switch(p.state.type) {
+      //       case Shape.Shape1:
+      //          GameState.state.ship.state.squarePool = 0;
+      //          break;
+      //       case Shape.Shape2:
+      //          GameState.state.ship.state.circlePool = 0;
+      //          break;
+      //       case Shape.Shape3:
+      //          GameState.state.ship.state.trianglePool = 0;
+      //          break;
+      //    }
+      // }
       
       if (this._openPortals.length === 0) {
          this.nextWave();
@@ -184,7 +184,7 @@ class BadGuyFactory implements Pausable {
       }
    }
    
-   spawnPortals() {
+   spawnPortals(delay?: number) {
       this.paused = true;
       var o = new ex.Actor(GameState.state.ship.x, GameState.state.ship.y, 1, 1, ex.Color.Transparent);
       game.add(o);
@@ -197,7 +197,7 @@ class BadGuyFactory implements Pausable {
          
          let p = new Portal(portal);
          
-         game.add(p);
+         o.delay(delay ? delay : 1).callMethod(() => {game.add(p)});
          this._openPortals.push(p);
          //p.portalopen();
          //p.delay(2000);
@@ -212,58 +212,34 @@ class BadGuyFactory implements Pausable {
             this.paused = false;
       }).die();
    }
-
-//    spawnPortals() {
-//       for(let portal of this._waveInfo.portals) {
-//          let p = new Portal(portal);
-//          game.add(p);
-//          this._openPortals.push(p);
-//       }
-//    }
-   
-//    closePortal(p: Portal) {
-//       var idx = this._openPortals.indexOf(p);
-//       this._openPortals.splice(idx, 1);
-      
-//       pause();
-      
-//       var o = new ex.Actor(GameState.state.ship.x, GameState.state.ship.y, 1, 1, ex.Color.Transparent);
-//       game.add(o);
-      
-//       cameraDestActor = o;
-      
-//       // move to portal
-//       o.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {
-//             //p.setDrawing('death');
-//             p.delay(2000).callMethod(() => {
-//                   // move to player
-//                   o.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => {
-//                         cameraDestActor = GameState.state.ship;
-//                         resume();                        
-//                   });//.die();
-                  
-//             }).die();
-//       });
-//    }
    
    closePortals(portals: Portal[]) {
-      // this.paused = true;
       var orc = new ex.Actor(GameState.state.ship.x, GameState.state.ship.y, 1, 1, ex.Color.Transparent);
       game.add(orc);
       cameraDestActor = orc;
       pause();
       for (let p of portals) {
-            // console.log('closing portal')
             let idx = this._openPortals.indexOf(p);
             this._openPortals.splice(idx, 1);
             p.portalclose();
             p.delay(2000).die();
             orc.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {console.log('close portal')}).delay(2000);
+            
+            switch(p.state.type) {
+                  case Shape.Shape1:
+                        GameState.state.ship.state.squarePool = 0;
+                        break;
+                  case Shape.Shape2:
+                        GameState.state.ship.state.circlePool = 0;
+                        break;
+                  case Shape.Shape3:
+                        GameState.state.ship.state.trianglePool = 0;
+                        break;
+            }
       }
       orc.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => { 
             cameraDestActor = GameState.state.ship;
             resume();
-            // this.paused = false;
       }).die();
    }
    
