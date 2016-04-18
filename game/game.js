@@ -421,18 +421,19 @@ var Bullet = (function (_super) {
                 if (collision.other instanceof Ship) {
                     var player = collision.other;
                     // check if portal type is in current wave
-                    if (player.state.shieldType === this.state.shape &&
-                        badGuyFactory.isPortalTypeOpen(player.state.shieldType)) {
-                        switch (this.state.shape) {
-                            case (Shape.Shape1):
-                                player.state.squarePool += 1;
-                                break;
-                            case (Shape.Shape2):
-                                player.state.circlePool += 1;
-                                break;
-                            case (Shape.Shape3):
-                                player.state.trianglePool += 1;
-                                break;
+                    if (player.state.shieldType === this.state.shape) {
+                        if (badGuyFactory.isPortalTypeOpen(player.state.shieldType)) {
+                            switch (this.state.shape) {
+                                case (Shape.Shape1):
+                                    player.state.squarePool += 1;
+                                    break;
+                                case (Shape.Shape2):
+                                    player.state.circlePool += 1;
+                                    break;
+                                case (Shape.Shape3):
+                                    player.state.trianglePool += 1;
+                                    break;
+                            }
                         }
                         Resources.Absorb.play();
                         this.kill();
@@ -990,7 +991,6 @@ var Portal = (function (_super) {
         game.currentScene.children.forEach(function (a) {
             if (a instanceof Badguy || a instanceof Bullet) {
                 if (a.state.shape === _this.state.type || a.state.shape === _this.state.type) {
-                    a.kill();
                 }
             }
         });
@@ -1455,9 +1455,9 @@ var EndScreen = (function () {
     EndScreen.prototype._gameOver = function () {
         pause();
         GameState.state.gameEnd = Date.now();
-        this._time = (GameState.state.gameEnd - GameState.state.gameStart) / 1000;
-        this._minutes = this._time / 60;
-        this._seconds = this._time - this._minutes;
+        this._time = (GameState.state.gameEnd - GameState.state.gameStart);
+        this._minutes = Math.floor(this._time / 1000 / 60);
+        this._seconds = Math.floor((this._time / 1000) - (60 * this._minutes));
         // remove all bullets
         var bulletsToRemove = _.filter(game.currentScene.children, function (c) { return c instanceof Bullet; });
         _.each(bulletsToRemove, function (b) { return game.remove(b); });
