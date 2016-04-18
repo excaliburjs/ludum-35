@@ -121,7 +121,7 @@ class PortalStat extends ex.UIActor {
         break;
     }
     
-    this._filledPerc = currentAmount / totalCloseNeeded;
+    this._filledPerc = Math.min(1, currentAmount / totalCloseNeeded);
   }
   
   draw(ctx: CanvasRenderingContext2D, delta: number) {
