@@ -18,7 +18,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
    //todo remove when pooling is implemented
    //public weapon: Weapon; 
    public state: BadguyState;
-  
+  private _isexploding: boolean=false;
   private BadGuySheet: ex.SpriteSheet;
    
    constructor(x, y, private badguytype: Shape) {
@@ -49,7 +49,9 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       this.reset();
    }
    _preupdate(evt: ex.PreUpdateEvent){
-      
+      if (this._isexploding){
+        return false;
+      }
       /*
       if (this.dx >= 0){
         this.dx = Config.badguy.speed;
@@ -68,6 +70,9 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       this.state.weapon.update(evt.delta);
     }
     _update(evt: ex.UpdateEvent){
+      if (this._isexploding){
+        return false;
+      }
       var hitborder = false;
       
        if (this.x > gameBounds.right) {
@@ -111,18 +116,22 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
     }
     _collision(collision: ex.CollisionEvent){
       //explode? - do in bullet
-      
+      //this.explode();
     }
    
-   public explode(){
+    explode(){
+      this._isexploding = true;
+      this.dx = 0;
+      this.dy = 0;
       if(this.badguytype == Shape.Shape1){
+        //GlobalAnimations.SquareBaddieExplosion.play(this.x, this.y);
         this.addDrawing('explosion', GlobalAnimations.SquareBaddieExplosion);
       }else if (this.badguytype == Shape.Shape2){
-        this.addDrawing('explosion', GlobalAnimations.CircleBaddie);
+        this.addDrawing('explosion', GlobalAnimations.CircleBaddieExplosion);
       }else if (this.badguytype === Shape.Shape3){
-        this.addDrawing('explosion', GlobalAnimations.TriangleBaddie);
+        this.addDrawing('explosion', GlobalAnimations.TriangleBaddieExplosion);
       }
-     
+      this.setDrawing('explosion');
    }
        
    reset(state?: BadguyState) {

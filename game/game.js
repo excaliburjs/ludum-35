@@ -335,11 +335,6 @@ var Bullet = (function (_super) {
                         return;
                     }
                     else {
-                        if (collision.other instanceof Badguy) {
-                            var badguy;
-                            badguy = collision.other;
-                            badguy.explode();
-                        }
                     }
                 }
                 if (!(collision.other instanceof Ship)) {
@@ -350,8 +345,14 @@ var Bullet = (function (_super) {
                     GameState.state.ship.dx = 0;
                     GameState.state.ship.dy = 0;
                 }
+                if (collision.other instanceof Badguy) {
+                    var badguy;
+                    badguy = collision.other;
+                    badguy.explode();
+                    badguy.delay(600).die();
+                }
                 Resources.Explode.play();
-                collision.other.kill();
+                //collision.other.kill();
                 this.kill();
             }
         }
@@ -651,6 +652,7 @@ var Badguy = (function (_super) {
         var _this = this;
         _super.call(this, x, y, 32, 32);
         this.badguytype = badguytype;
+        this._isexploding = false;
         this.collisionType = ex.CollisionType.Passive;
         this.scale.setTo(2, 2);
         //this.anchor.setTo(.1, .1);
@@ -675,6 +677,9 @@ var Badguy = (function (_super) {
         this.reset();
     }
     Badguy.prototype._preupdate = function (evt) {
+        if (this._isexploding) {
+            return false;
+        }
         /*
         if (this.dx >= 0){
           this.dx = Config.badguy.speed;
@@ -693,6 +698,9 @@ var Badguy = (function (_super) {
         this.state.weapon.update(evt.delta);
     };
     Badguy.prototype._update = function (evt) {
+        if (this._isexploding) {
+            return false;
+        }
         var hitborder = false;
         if (this.x > gameBounds.right) {
             this.x = gameBounds.right;
@@ -732,17 +740,23 @@ var Badguy = (function (_super) {
     };
     Badguy.prototype._collision = function (collision) {
         //explode? - do in bullet
+        //this.explode();
     };
     Badguy.prototype.explode = function () {
+        this._isexploding = true;
+        this.dx = 0;
+        this.dy = 0;
         if (this.badguytype == Shape.Shape1) {
+            //GlobalAnimations.SquareBaddieExplosion.play(this.x, this.y);
             this.addDrawing('explosion', GlobalAnimations.SquareBaddieExplosion);
         }
         else if (this.badguytype == Shape.Shape2) {
-            this.addDrawing('explosion', GlobalAnimations.CircleBaddie);
+            this.addDrawing('explosion', GlobalAnimations.CircleBaddieExplosion);
         }
         else if (this.badguytype === Shape.Shape3) {
-            this.addDrawing('explosion', GlobalAnimations.TriangleBaddie);
+            this.addDrawing('explosion', GlobalAnimations.TriangleBaddieExplosion);
         }
+        this.setDrawing('explosion');
     };
     Badguy.prototype.reset = function (state) {
         if (!state) {
@@ -1150,13 +1164,13 @@ var _circleBaddie = GlobalSprites.CircleBadGuySheet.getAnimationForAll(game, 150
 _circleBaddie.loop = true;
 _circleBaddie.anchor.setTo(.3, .3);
 var _triangleBaddieExplosion = GlobalSprites.TriangleBadGuyExplosionSheet.getAnimationForAll(game, 150);
-_triangleBaddieExplosion.loop = true;
+_triangleBaddieExplosion.loop = false;
 _triangleBaddieExplosion.anchor.setTo(.3, .3);
 var _squareBaddieExplosion = GlobalSprites.SquareBadGuyExplosionSheet.getAnimationForAll(game, 150);
-_squareBaddieExplosion.loop = true;
+_squareBaddieExplosion.loop = false;
 _squareBaddieExplosion.anchor.setTo(.3, .3);
 var _circleBaddieExplosion = GlobalSprites.CircleBadGuyExplosionSheet.getAnimationForAll(game, 150);
-_circleBaddieExplosion.loop = true;
+_circleBaddieExplosion.loop = false;
 _circleBaddieExplosion.anchor.setTo(.3, .3);
 var GlobalAnimations = {
     TriangleBullet: _triangleBulletAnim,
