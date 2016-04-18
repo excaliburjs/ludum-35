@@ -40,7 +40,7 @@ var GlobalSprites = {
 	SquareBadGuySheet: new ex.SpriteSheet(Resources.SquareBadguySheet, 2, 1, 32, 32),
 	TriangleBadGuyExplosionSheet: new ex.SpriteSheet(Resources.TriangleBadguySheet, 5, 1, 32, 32),
 	CircleBadGuyExplosionSheet: new ex.SpriteSheet(Resources.CircleBadguySheet, 5, 1, 32, 32),
-	SquareBadGuyExplosionSheet: new ex.SpriteSheet(Resources.SquareBadguySheet, 5, 1, 32, 32),
+	SquareBadGuyExplosionSheet: new ex.SpriteSheet(Resources.SquareBadguySheet, 5, 1, 32, 32)
 }
 
 var _triangleBulletAnim = GlobalSprites.triangleBulletSheet.getAnimationForAll(game, 100);
@@ -70,6 +70,20 @@ _squareBaddie.anchor.setTo(.3, .3);
 var _circleBaddie = GlobalSprites.CircleBadGuySheet.getAnimationForAll(game, 150);         
 _circleBaddie.loop = true;
 _circleBaddie.anchor.setTo(.3, .3);
+
+var _triangleBaddieExplosion = GlobalSprites.TriangleBadGuyExplosionSheet.getAnimationForAll(game, 150);
+_triangleBaddieExplosion.loop = true;
+_triangleBaddieExplosion.anchor.setTo(.3, .3);
+
+var _squareBaddieExplosion = GlobalSprites.SquareBadGuyExplosionSheet.getAnimationForAll(game, 150);
+_squareBaddieExplosion.loop = true;
+_squareBaddieExplosion.anchor.setTo(.3, .3);
+
+var _circleBaddieExplosion = GlobalSprites.CircleBadGuyExplosionSheet.getAnimationForAll(game, 150);
+_circleBaddieExplosion.loop = true;
+_circleBaddieExplosion.anchor.setTo(.3, .3);
+
+
 
 var GlobalAnimations = {
 	TriangleBullet: _triangleBulletAnim,
