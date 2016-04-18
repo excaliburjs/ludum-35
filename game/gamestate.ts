@@ -77,7 +77,7 @@ class GameState {
             badGuyFactory.nextWave();
       }
       
-      private static _resetPlayer() {
+      private static _resetPlayer() {            
             GameState.state.ship.dx = 0;
             GameState.state.ship.dy = 0;
             GameState.state.ship.x = Config.PlayerSpawn.x;
@@ -91,7 +91,10 @@ class GameState {
             GameState.state.ship.state.trianglePool = 0;
             GameState.state.ship.state.health = Config.playerHealth;
             
-            game.add(GameState.state.ship);
+            // add player if they were removed
+            if (game.currentScene.children.indexOf(GameState.state.ship) < 0) {
+                  game.currentScene.add(GameState.state.ship);
+            }
       }
       
       private static _resetStats() {
