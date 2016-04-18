@@ -49,7 +49,7 @@ class StraightShooter extends WeaponBase {
 class ShapeShooter extends WeaponBase {
       
    constructor(protected source: ex.Actor, public speed: number, public damage: number, public badguyType: Shape) { 
-      super(1500, source);
+      super(Config.BadguyShooterFrequency, source);
    }
    
    shoot() {

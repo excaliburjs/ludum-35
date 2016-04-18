@@ -52,7 +52,7 @@ var StraightShooter = (function (_super) {
 var ShapeShooter = (function (_super) {
     __extends(ShapeShooter, _super);
     function ShapeShooter(source, speed, damage, badguyType) {
-        _super.call(this, 1500, source);
+        _super.call(this, Config.BadguyShooterFrequency, source);
         this.source = source;
         this.speed = speed;
         this.damage = damage;
@@ -135,6 +135,7 @@ var Config = {
     StarfieldMeteorFreqMax: 7000,
     StarfieldMeteorSpeed: 320,
     StraightShooterFrequency: 500,
+    BadguyShooterFrequency: 800,
     // Bullet config
     bullets: {
         speed: 500,
@@ -573,18 +574,21 @@ var Badguy = (function (_super) {
         this.reset();
     }
     Badguy.prototype._preupdate = function (evt) {
-        if (this.dx >= 0) {
-            this.dx = Config.badguy.speed;
+        /*
+        if (this.dx >= 0){
+          this.dx = Config.badguy.speed;
+        } else {
+          this.dx = Config.badguy.speed * -1;
         }
-        else {
-            this.dx = Config.badguy.speed * -1;
-        }
+        
         if (this.dy >= 0) {
-            this.dy = Config.badguy.speed;
+          this.dy = Config.badguy.speed;
+        } else {
+          this.dy = Config.badguy.speed * -1;
         }
-        else {
-            this.dy = Config.badguy.speed * -1;
-        }
+        
+        
+        */
         this.state.weapon.update(evt.delta);
     };
     Badguy.prototype._update = function (evt) {
@@ -613,6 +617,17 @@ var Badguy = (function (_super) {
             //this.dx *= -1;
             hitborder = true;
         }
+        var player = GameState.state.ship;
+        var target = new ex.Vector(player.x, player.y);
+        var randomAngle = ex.Util.randomInRange(0, Math.PI * 2);
+        var missFactor = new ex.Vector(Config.badguy.missRadius * Math.cos(randomAngle), Config.badguy.missRadius * Math.sin(randomAngle));
+        target = target.add(missFactor);
+        var direction = target.minus(new ex.Vector(this.x, this.y));
+        var steering = direction.normalize().scale(5);
+        var currentSpeed = new ex.Vector(this.dx, this.dy);
+        var newVel = steering.add(currentSpeed).normalize().scale(Config.badguy.speed);
+        this.dx = newVel.x;
+        this.dy = newVel.y;
     };
     Badguy.prototype._collision = function (collision) {
         //explode?
