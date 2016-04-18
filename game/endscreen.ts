@@ -16,18 +16,27 @@ class EndScreen {
    public win(){
       pause();
       this._score.innerText = `Score: ${GameState.getGameStat("KILLS")}`;
-      this._el.classList.remove("hidden");
+      this._show();
+      addClass(this._el, "win");
    }
    
    public lose(){
-      // todo
+      pause();
+      this._score.innerText = `Score: ${GameState.getGameStat("KILLS")}`;
+      this._show();
+      addClass(this._el, "lose");
    }
    
-   public restart(){
-      // todo game restart  
+   public restart(){      
       GameState.reset();
-      this._el.classList.add("hidden");
+      this._hide();
       resume();
    }   
    
+   private _hide() {
+      addClass(this._el, "hidden");
+   }
+   private _show() {
+      removeClass(this._el, "hidden");
+   }
 }

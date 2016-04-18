@@ -59,6 +59,7 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable, Pausab
                      collision.other.kill();
                      GameState.state.ship.dx = 0;
                      GameState.state.ship.dy = 0;
+                     endscreen.lose();
                  }
              }  
            }
