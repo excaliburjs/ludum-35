@@ -105,6 +105,7 @@ var Resources = {
     TrianglePortalClose: new ex.Texture('./img/yellowportal2.png'),
     DiabloFontSheet: new ex.Texture("./fonts/DiabloFont.png"),
     Explode: new ex.Sound('./snd/explode1.wav'),
+    BkgrdTrack: new ex.Sound('./snd/backingTrack.wav'),
     On: new ex.Sound('./snd/on.wav'),
     No: new ex.Sound('./snd/no.wav'),
     PlanetBg: new ex.Texture('./img/planet-bg.png'),
@@ -1535,5 +1536,7 @@ game.start(loader).then(function () {
     //health statbar
     var healthStat = new HealthStat(65 + Config.width - HealthStat.width, 5);
     game.add(healthStat);
+    Resources.BkgrdTrack.setLoop(true);
+    Resources.BkgrdTrack.play();
 });
 //# sourceMappingURL=game.js.map

@@ -19,6 +19,7 @@ var Resources = {
    TrianglePortalClose: new ex.Texture('./img/yellowportal2.png'),
    DiabloFontSheet: new ex.Texture("./fonts/DiabloFont.png"),
    Explode: new ex.Sound('./snd/explode1.wav'),
+   BkgrdTrack: new ex.Sound('./snd/backingTrack.wav'),
    On: new ex.Sound('./snd/on.wav'),
    No: new ex.Sound('./snd/no.wav'),
    PlanetBg: new ex.Texture('./img/planet-bg.png'),
