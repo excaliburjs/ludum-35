@@ -53,9 +53,7 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
                  
                  this.kill();
                  return;
-             }else{
-                //
-            }  
+             }  
            }
             if(!(collision.other instanceof Ship)){
                 var currKills = parseInt(GameState.getGameStat("KILLS").toString()) + 1;
@@ -69,11 +67,11 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
                     badguy = <Badguy>collision.other;
                     badguy.explode();
                     badguy.delay(600).die();
+                }else{
+                 collision.other.kill();                   
                 }
-                        Resources.Explode.play();
-                        
-                        //collision.other.kill();
-                         this.kill();
+                Resources.Explode.play();
+                this.kill();
          }
       }
    }
