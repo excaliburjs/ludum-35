@@ -5,6 +5,8 @@
 /// <reference path="config.ts" />
 /// <reference path="stateful.ts" />
 /// <reference path="gamestate.ts" />
+/// <reference path="game.ts" />
+
 
 interface ShipState {
    shieldType: Shape;

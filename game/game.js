@@ -147,6 +147,7 @@ var Config = {
 /// <reference path="config.ts" />
 /// <reference path="stateful.ts" />
 /// <reference path="gamestate.ts" />
+/// <reference path="game.ts" />
 var Ship = (function (_super) {
     __extends(Ship, _super);
     function Ship(x, y, width, height) {
