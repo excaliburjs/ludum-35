@@ -13,24 +13,7 @@ class HealthStat extends ex.UIActor {
       super(x, y, HealthStat.width, HealthStat.height); 
    }
    
-   //private _color: ex.Color;
-   //private _sprite: ex.Sprite;
-   //private _filledHearts: number;
-   
-   onInitialize(engine) {
-      super.onInitialize(engine);
-      
-      //this._sprite = new ex.SpriteSheet(Resources.Heart, 2, 1, 32, 32).getSprite(1);
-      //this._sprite = Resources.Heart.asSprite();
-   }
-   
-   update(engine: ex.Engine, delta: number) {
-      super.update(engine, delta);
-      
-      
-   }
-   draw(ctx: CanvasRenderingContext2D, delta: number) {
-      super.draw(ctx, delta);
+   draw(ctx: CanvasRenderingContext2D) {
       
       var heartsleft = GameState.state.ship.state.health;
       var totalhearts = Config.playerHealth;
