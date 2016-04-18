@@ -153,7 +153,25 @@ class BadGuyFactory {
    closePortal(p: Portal) {
       var idx = this._openPortals.indexOf(p);
       this._openPortals.splice(idx, 1);
-      game.remove(p);
+      
+      pause();
+      
+      var o = new ex.Actor(GameState.state.ship.x, GameState.state.ship.y, 1, 1, ex.Color.Transparent);
+      game.add(o);
+      
+      cameraDestActor = o;
+      
+      // move to portal
+      o.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {
+            //p.setDrawing('death');
+            p.delay(2000).callMethod(() => {
+                  o.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => {
+                        cameraDestActor = GameState.state.ship;
+                        resume();                        
+                  }).die();
+                  
+            }).die();
+      });
    }
    
    getWave(): Wave {

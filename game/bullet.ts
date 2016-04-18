@@ -14,9 +14,10 @@ interface BulletState {
    shape?: Shape;
 }
 
-class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
+class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable, Pausable {
    
    poolId: number;
+   public paused: boolean = false;
    public owner: ex.Actor = null;
    constructor() {
       super(0, 0, 3, 3, ex.Color.Red);
@@ -26,7 +27,7 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
 
       this.on('exitviewport', () => this.kill());// GameState.state.bullets.despawn(this));
       this.on('collision', this._collision);
-      this.on('postdraw', this.postdraw);
+      this.on('postdraw', this.postdraw);      
    }
    
    state: BulletState;
@@ -109,6 +110,11 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
       }
       
       return this;
+   }     
+   
+   update(engine, delta) {
+       if (this.paused) return;
+       super.update(engine, delta);
    }
    
    postdraw(evt: ex.PostDrawEvent){
