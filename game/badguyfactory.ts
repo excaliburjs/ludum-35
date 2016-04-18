@@ -22,6 +22,8 @@ class BadGuyFactory {
    private _portalSpawnWaitTimer = 0;
    private _openPortals: Portal[] = [];
    
+   private _paused: boolean = false;
+   
    constructor() {
       
    }
@@ -54,8 +56,12 @@ class BadGuyFactory {
          }
       }
       
+      if (portalsToClose.length > 0) {
+            this.closePortals(portalsToClose);
+      }
+      
       for (let p of portalsToClose) {
-         this.closePortal(p);
+      //    this.closePortal(p);
          switch(p.state.type) {
             case Shape.Shape1:
                GameState.state.ship.state.squarePool = 0;
@@ -75,34 +81,36 @@ class BadGuyFactory {
       }
       
       // after portal spawns, spawn enemies
-      if (this._portalSpawnWaitTimer <= 0) {
-         
-         // for open portals, spawn baddies
-         for (let p of this._openPortals) {
+      if (!this._paused) {
+            if (this._portalSpawnWaitTimer <= 0) {
             
-            // remove killed baddies
-            let baddiesToRemove: Badguy[] = [];
-            for (let b of p.state.baddies) {
-               if (b.isKilled()) {
-                  baddiesToRemove.push(b);
-               }
-            }
-            for (let b of baddiesToRemove) {
-               p.state.baddies.splice(p.state.baddies.indexOf(b), 1);
+            // for open portals, spawn baddies
+            for (let p of this._openPortals) {
+                  
+                  // remove killed baddies
+                  let baddiesToRemove: Badguy[] = [];
+                  for (let b of p.state.baddies) {
+                  if (b.isKilled()) {
+                        baddiesToRemove.push(b);
+                  }
+                  }
+                  for (let b of baddiesToRemove) {
+                  p.state.baddies.splice(p.state.baddies.indexOf(b), 1);
+                  }
+                  
+                  if (p.state.rateTimer <= 0 && p.state.baddies.length < p.state.maxSimultaneous) {
+                  
+                  this.spawnBaddie(p.state);
+                  p.state.rateTimer = p.state.rate;
+                  } else {
+                  p.state.rateTimer -= delta;
+                  }
             }
             
-            if (p.state.rateTimer <= 0 && p.state.baddies.length < p.state.maxSimultaneous) {
-               
-               this.spawnBaddie(p.state);
-               p.state.rateTimer = p.state.rate;
             } else {
-               p.state.rateTimer -= delta;
+            this._portalSpawnWaitTimer -= delta;
             }
-         }
-         
-      } else {
-         this._portalSpawnWaitTimer -= delta;
-      }                       
+      }                
    }
    
    spawnBaddie(portal: PortalSpawn) {
@@ -134,7 +142,7 @@ class BadGuyFactory {
       var stage = GameState.state.stage += 1;
       
       // set spawn locations
-      if (stage === 1) {
+      if (stage === 100) { //TODO set back to 1
          // place portal in center
          this._waveInfo = {
             portals: [{
@@ -148,7 +156,7 @@ class BadGuyFactory {
             }]
          };
          this.spawnPortals();
-      } else if (stage === 2) {
+      } else if (stage === 1) { //TODO set back to 2
             this._waveInfo = {
             portals: [{
                location: new ex.Point(2500, 420),
@@ -177,35 +185,82 @@ class BadGuyFactory {
    }
    
    spawnPortals() {
+      this._paused = true;
+      var o = new ex.Actor(GameState.state.ship.x, GameState.state.ship.y, 1, 1, ex.Color.Transparent);
+      game.add(o);
+      cameraDestActor = o;
+      
+      o.delay(100).callMethod(() => { pause(); }); // calling pause by itself interrupts the updates before the witch sprite loads
+      
       for(let portal of this._waveInfo.portals) {
+            console.log('adding portal')
+         
          let p = new Portal(portal);
          game.add(p);
          this._openPortals.push(p);
+         
+         o.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {console.log('spawn portal')}).delay(2000);
+         console.log(o.actionQueue);
       }
+      
+      o.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => { 
+            cameraDestActor = GameState.state.ship;
+            // resume();
+      }).die();
+      this._paused = false;
    }
+
+//    spawnPortals() {
+//       for(let portal of this._waveInfo.portals) {
+//          let p = new Portal(portal);
+//          game.add(p);
+//          this._openPortals.push(p);
+//       }
+//    }
    
-   closePortal(p: Portal) {
-      var idx = this._openPortals.indexOf(p);
-      this._openPortals.splice(idx, 1);
+//    closePortal(p: Portal) {
+//       var idx = this._openPortals.indexOf(p);
+//       this._openPortals.splice(idx, 1);
       
-      pause();
+//       pause();
       
-      var o = new ex.Actor(GameState.state.ship.x, GameState.state.ship.y, 1, 1, ex.Color.Transparent);
-      game.add(o);
+//       var o = new ex.Actor(GameState.state.ship.x, GameState.state.ship.y, 1, 1, ex.Color.Transparent);
+//       game.add(o);
       
-      cameraDestActor = o;
+//       cameraDestActor = o;
       
-      // move to portal
-      o.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {
-            //p.setDrawing('death');
-            p.delay(2000).callMethod(() => {
-                  o.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => {
-                        cameraDestActor = GameState.state.ship;
-                        resume();                        
-                  }).die();
+//       // move to portal
+//       o.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {
+//             //p.setDrawing('death');
+//             p.delay(2000).callMethod(() => {
+//                   // move to player
+//                   o.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => {
+//                         cameraDestActor = GameState.state.ship;
+//                         resume();                        
+//                   });//.die();
                   
-            }).die();
-      });
+//             }).die();
+//       });
+//    }
+   
+   closePortals(portals: Portal[]) {
+      this._paused = true;
+      var orc = new ex.Actor(GameState.state.ship.x, GameState.state.ship.y, 1, 1, ex.Color.Transparent);
+      game.add(orc);
+      cameraDestActor = orc;
+      pause();
+      for (let p of portals) {
+            // console.log('closing portal')
+            let idx = this._openPortals.indexOf(p);
+            this._openPortals.splice(idx, 1);
+            
+            orc.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {console.log('close portal')}).delay(2000);
+      }
+      orc.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => { 
+            cameraDestActor = GameState.state.ship;
+            // resume();
+      }).die();
+   this._paused = false; 
    }
    
    getWave(): Wave {
