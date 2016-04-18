@@ -94,7 +94,7 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable, Pausable {
    reset(state?: ShipState) { //TODO calling this on an existing ship breaks the mouse input
       if (!state) {
          this.state = {
-            shieldType: Shape.Shape1,
+            shieldType: Shape.None,
             weapon: new StraightShooter(this, Config.bullets.speed, Config.bullets.damage),
             squarePool: 0,
             circlePool: 0,
