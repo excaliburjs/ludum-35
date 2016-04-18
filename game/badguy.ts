@@ -122,9 +122,15 @@ class Badguy extends ex.Actor implements Stateful<BadguyState>, Pausable {
       this.dx = newVel.x;
       this.dy = newVel.y;
     }
+    
     _collision(collision: ex.CollisionEvent){
-      //explode? - do in bullet
-      //this.explode();
+
+      if (collision.other instanceof Ship) {
+        if (GameState.state.ship.state.shieldType === this.badguytype && Config.playerKillsBadguysOnCollision) {
+          this.explode();
+          this.delay(150).die();
+        }
+      }
     }
    
     explode(){
