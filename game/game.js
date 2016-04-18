@@ -32,11 +32,10 @@ var StraightShooter = (function (_super) {
         this.source = source;
         this.speed = speed;
         this.damage = damage;
-        this._prev = 0;
     }
     StraightShooter.prototype.shoot = function () {
-        ex.Logger.getInstance().debug("Shot straight shooter bullet", (new Date().getTime() - this._prev));
-        this._prev = new Date().getTime();
+        if (!Config.playerCanShoot)
+            return;
         var newBullet = new Bullet();
         newBullet.reset({
             owner: this.source,
@@ -131,6 +130,7 @@ var Config = {
     playerMinVelocity: -500,
     playerMaxVelocity: 500,
     playerHealth: 5,
+    playerCanShoot: false,
     // Baddies
     PortalSpawnWaitTime: 3000,
     poolSizeIncrement: 100,
