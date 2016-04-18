@@ -17,6 +17,7 @@ class EndScreen {
       pause();
       this._score.innerText = `Score: ${GameState.getGameStat("KILLS")}`;
       this._show();
+      removeClass(this._el, "lose");
       addClass(this._el, "win");
    }
    
@@ -24,6 +25,7 @@ class EndScreen {
       pause();
       this._score.innerText = `Score: ${GameState.getGameStat("KILLS")}`;
       this._show();
+      removeClass(this._el, "win");
       addClass(this._el, "lose");
    }
    
