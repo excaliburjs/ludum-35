@@ -51,8 +51,8 @@ var Config = {
       speed: 170,
       bulletSpeed: 300,
       missRadius: 200,
-      bulletSteer: 20,
-      moveSteer: 20,
+      bulletSteer: 2,
+      moveSteer: 70,
       size: 1 //multiplier from original?
       
    },
