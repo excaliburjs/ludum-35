@@ -326,6 +326,11 @@ var Bullet = (function (_super) {
         if (this.visible) {
             if (this.owner.constructor !== collision.other.constructor && this.constructor !== collision.other.constructor) {
                 Resources.Explode.play();
+                if (collision.other instanceof Badguy) {
+                    var badguy;
+                    badguy = collision.other;
+                    badguy.explode();
+                }
                 collision.other.kill();
                 if (!(collision.other instanceof Ship)) {
                     var currKills = parseInt(GameState.getGameStat("KILLS").toString()) + 1;
@@ -634,7 +639,18 @@ var Badguy = (function (_super) {
         this.dy = newVel.y;
     };
     Badguy.prototype._collision = function (collision) {
-        //explode?
+        //explode? - do in bullet
+    };
+    Badguy.prototype.explode = function () {
+        if (this.badguytype == Shape.Shape1) {
+            this.addDrawing('explosion', GlobalAnimations.SquareBaddieExplosion);
+        }
+        else if (this.badguytype == Shape.Shape2) {
+            this.addDrawing('explosion', GlobalAnimations.CircleBaddie);
+        }
+        else if (this.badguytype === Shape.Shape3) {
+            this.addDrawing('explosion', GlobalAnimations.TriangleBaddie);
+        }
     };
     Badguy.prototype.reset = function (state) {
         if (!state) {
