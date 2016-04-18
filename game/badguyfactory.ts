@@ -139,6 +139,7 @@ class BadGuyFactory {
          this.spawnPortals();
       } else {
          // win!
+         endscreen.win();
       }
    }
    
