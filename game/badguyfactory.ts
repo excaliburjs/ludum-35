@@ -159,7 +159,7 @@ class BadGuyFactory implements Pausable {
       } else if (stage === 2) {
             this._waveInfo = {
             portals: [{
-               location: new ex.Point(2500, 420),
+               location: new ex.Point(2000, 420),
                rate: 2000,
                rateTimer: 0,
                baddies: [],
@@ -253,7 +253,8 @@ class BadGuyFactory implements Pausable {
             // console.log('closing portal')
             let idx = this._openPortals.indexOf(p);
             this._openPortals.splice(idx, 1);
-            
+            p.portalclose();
+            p.delay(2000).die();
             orc.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {console.log('close portal')}).delay(2000);
       }
       orc.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => { 
