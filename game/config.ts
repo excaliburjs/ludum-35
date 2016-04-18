@@ -41,7 +41,7 @@ var Config = {
    bullets: {
       speed: 500, // px/s
       damage: 1,
-      rotation: Math.PI 
+      rotation: Math.PI / 3 
    },
    
    badguy: {
