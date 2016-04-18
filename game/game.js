@@ -122,6 +122,7 @@ var Config = {
     // Player
     playerMinVelocity: -500,
     playerMaxVelocity: 500,
+    playerHealth: 5,
     // Baddies
     PortalSpawnWaitTime: 3000,
     poolSizeIncrement: 100,
@@ -225,7 +226,8 @@ var Ship = (function (_super) {
                 weapon: new StraightShooter(this, Config.bullets.speed, Config.bullets.damage),
                 squarePool: 0,
                 circlePool: 0,
-                trianglePool: 0
+                trianglePool: 0,
+                health: Config.playerHealth
             };
         }
         else {
@@ -656,6 +658,7 @@ var GameState = (function () {
         GameState.state.ship.state.squarePool = 0;
         GameState.state.ship.state.circlePool = 0;
         GameState.state.ship.state.trianglePool = 0;
+        GameState.state.ship.state.health = Config.playerHealth;
         game.add(GameState.state.ship);
     };
     GameState._resetStats = function () {

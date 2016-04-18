@@ -89,6 +89,7 @@ class GameState {
             GameState.state.ship.state.squarePool = 0;
             GameState.state.ship.state.circlePool = 0;
             GameState.state.ship.state.trianglePool = 0;
+            GameState.state.ship.state.health = Config.playerHealth;
             
             game.add(GameState.state.ship);
       }
