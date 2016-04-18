@@ -167,6 +167,7 @@ var Ship = (function (_super) {
         _super.call(this, x, y, width, height);
         this._mouseDown = false;
         this._currentTime = 0;
+        this.paused = false;
         this.collisionType = ex.CollisionType.Passive;
         this.color = ex.Color.Red.clone();
         this.scale.setTo(2, 2);
@@ -233,6 +234,8 @@ var Ship = (function (_super) {
         return this;
     };
     Ship.prototype._pointerDown = function (click) {
+        if (this.paused)
+            return false;
         if (!this.isKilled()) {
             //console.log(`Update: ${evt.delta}`);
             GameState.state.ship._mouseDown = true;
@@ -249,6 +252,8 @@ var Ship = (function (_super) {
         }
     };
     Ship.prototype.preupdate = function (evt) {
+        if (this.paused)
+            return false;
         var oppVel = new ex.Vector(this.dx, this.dy).scale(-1).scale(Config.spaceFriction);
         this.dx += oppVel.x;
         this.dy += oppVel.y;
@@ -261,6 +266,8 @@ var Ship = (function (_super) {
         this.state.weapon.update(evt.delta);
     };
     Ship.prototype.update = function (engine, delta) {
+        if (this.paused)
+            return;
         _super.prototype.update.call(this, engine, delta);
         if (this.x > gameBounds.right) {
             this.x = gameBounds.right;
@@ -319,6 +326,7 @@ var Bullet = (function (_super) {
     function Bullet() {
         var _this = this;
         _super.call(this, 0, 0, 3, 3, ex.Color.Red);
+        this.paused = false;
         this.owner = null;
         this.collisionType = ex.CollisionType.Passive;
         this.reset();
@@ -399,6 +407,11 @@ var Bullet = (function (_super) {
             this.dy = normalized.y * this.state.speed;
         }
         return this;
+    };
+    Bullet.prototype.update = function (engine, delta) {
+        if (this.paused)
+            return;
+        _super.prototype.update.call(this, engine, delta);
     };
     Bullet.prototype.postdraw = function (evt) {
         if (this.state.shape === Shape.Shape1) {
@@ -620,6 +633,7 @@ var GameState = (function () {
             stage: 0
         };
         //GameState.state.bullets.fill();
+        cameraDestActor = GameState.state.ship;
         game.add(GameState.state.ship);
         // start the waves
         badGuyFactory.nextWave();
@@ -665,6 +679,7 @@ var Badguy = (function (_super) {
         var _this = this;
         _super.call(this, x, y, 32, 32);
         this.badguytype = badguytype;
+        this.paused = false;
         this._isexploding = false;
         this.collisionType = ex.CollisionType.Passive;
         this.scale.setTo(2, 2);
@@ -690,7 +705,7 @@ var Badguy = (function (_super) {
         this.reset();
     }
     Badguy.prototype._preupdate = function (evt) {
-        if (this._isexploding) {
+        if (this._isexploding || this.paused) {
             return false;
         }
         /*
@@ -714,6 +729,8 @@ var Badguy = (function (_super) {
         //if (this._isexploding){
         //  return false;
         //}
+        if (this.paused)
+            return;
         var hitborder = false;
         if (this.x > gameBounds.right) {
             this.x = gameBounds.right;
@@ -951,7 +968,20 @@ var BadGuyFactory = (function () {
     BadGuyFactory.prototype.closePortal = function (p) {
         var idx = this._openPortals.indexOf(p);
         this._openPortals.splice(idx, 1);
-        game.remove(p);
+        pause();
+        var o = new ex.Actor(GameState.state.ship.x, GameState.state.ship.y, 1, 1, ex.Color.Transparent);
+        game.add(o);
+        cameraDestActor = o;
+        // move to portal
+        o.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(function () {
+            //p.setDrawing('death');
+            p.delay(2000).callMethod(function () {
+                o.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(function () {
+                    cameraDestActor = GameState.state.ship;
+                    resume();
+                }).die();
+            }).die();
+        });
     };
     BadGuyFactory.prototype.getWave = function () {
         return this._waveInfo;
@@ -1140,6 +1170,7 @@ var EndScreen = (function (_super) {
 }(ex.UIActor));
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="../lodash.d.ts" />
+/// <reference path="pausable.ts" />
 /// <reference path="gamestate.ts" />
 /// <reference path="analytics.ts" />
 /// <reference path="config.ts" />
@@ -1258,11 +1289,12 @@ function addClass(element, cls) {
 function removeClass(element, cls) {
     element.classList.remove(cls);
 }
+var cameraDestActor;
 function updateCamera(evt) {
     // Grab the current focus of the camper
     var focus = game.currentScene.camera.getFocus().toVector();
     // Grab the "destination" position, in the spring equation the displacement location
-    var position = new ex.Vector(GameState.state.ship.x, GameState.state.ship.y);
+    var position = new ex.Vector(cameraDestActor.x, cameraDestActor.y);
     // Calculate the strech vector, using the spring equation
     // F = kX
     // https://en.wikipedia.org/wiki/Hooke's_law
@@ -1290,6 +1322,24 @@ game.on('update', function (evt) {
     updateCamera(evt);
     updateDispatchers(evt);
 });
+function pause() {
+    // pause entities
+    for (var _i = 0, _a = game.currentScene.children; _i < _a.length; _i++) {
+        var a = _a[_i];
+        if ('paused' in a) {
+            a.paused = true;
+        }
+    }
+}
+function resume() {
+    // pause entities
+    for (var _i = 0, _a = game.currentScene.children; _i < _a.length; _i++) {
+        var a = _a[_i];
+        if ('paused' in a) {
+            a.paused = false;
+        }
+    }
+}
 var endscreen = new EndScreen();
 var gameBounds = new ex.BoundingBox(0, 0, Config.MapWidth, Config.MapHeight);
 game.start(loader).then(function () {

@@ -1,0 +1,3 @@
+interface Pausable {
+   paused: boolean;
+}

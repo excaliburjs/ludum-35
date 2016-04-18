@@ -1,5 +1,6 @@
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="../lodash.d.ts" />
+/// <reference path="pausable.ts" />
 /// <reference path="gamestate.ts" />
 /// <reference path="analytics.ts" />
 /// <reference path="config.ts" />
@@ -145,14 +146,14 @@ function removeClass(element, cls) {
    element.classList.remove(cls);
 }
   
-
+var cameraDestActor: ex.Actor;
 function updateCamera(evt: ex.UpdateEvent){
 		
 	// Grab the current focus of the camper
 	var focus = game.currentScene.camera.getFocus().toVector();
 	
 	// Grab the "destination" position, in the spring equation the displacement location
-	var position = new ex.Vector(GameState.state.ship.x, GameState.state.ship.y);
+	var position = new ex.Vector(cameraDestActor.x, cameraDestActor.y);
 	
 	// Calculate the strech vector, using the spring equation
 	// F = kX
@@ -189,6 +190,24 @@ game.on('update', (evt: ex.UpdateEvent) => {
 	updateDispatchers(evt);
 	
 });
+
+function pause() {
+	// pause entities
+	for (var a of game.currentScene.children) {
+		if ('paused' in a) {
+			(<any>a).paused = true;
+		}
+	}
+}
+function resume() {
+	// pause entities
+	for (var a of game.currentScene.children) {
+		if ('paused' in a) {
+			(<any>a).paused = false;
+		}
+	}
+}
+
 var endscreen = new EndScreen();
 var gameBounds = new ex.BoundingBox(0, 0, Config.MapWidth, Config.MapHeight);
 game.start(loader).then(() => {
