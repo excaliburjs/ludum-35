@@ -12,6 +12,8 @@
 /// <reference path="torch.ts" />
 /// <reference path="settings.ts" />
 /// <reference path="soundmanager.ts" />
+/// <reference path="endscreen.ts" />
+
 
 var game = new ex.Engine({
    canvasElementId: "game",
@@ -27,6 +29,9 @@ game.input.keyboard.on('down', (evt: ex.Input.KeyEvent) => {
       game.isDebug = !game.isDebug;
    }
 });
+
+game.currentScene.camera.x = Config.PlayerSpawn.x + Config.CameraOffset.x;
+game.currentScene.camera.y = Config.PlayerSpawn.y + Config.CameraOffset.y;
 
 // global sprites 
 
@@ -181,20 +186,23 @@ game.on('update', (evt: ex.UpdateEvent) => {
 	updateDispatchers(evt);
 	
 });
-
+var endscreen = new EndScreen();
 var gameBounds = new ex.BoundingBox(0, 0, Config.MapWidth, Config.MapHeight);
 game.start(loader).then(() => {
 	var sf = new Starfield();
 	var bg = new Background();
 	var fbg = new Frontground();	
+	
 	game.add(sf);
 	game.add(bg);	
 	Torch.place(game);
 	GameState.init();
 	game.add(fbg);
+	
 	var killIdx = GameState.getStatIdx("KILLS");
 	
 	var killHUDUI = new HUDStat(GameState.state.stats[killIdx], 10, 60, 150, 50);
 	game.add(killHUDUI);
+	game.add(endscreen);
 	
 });

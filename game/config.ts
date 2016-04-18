@@ -11,6 +11,7 @@ var Config = {
    // Camera
    CameraElasticity: .08,
 	CameraFriction: .41,
+   CameraOffset: new ex.Vector(0, -100),
    shipSpeedScale: 2,
    spaceFriction: .01,
    ShieldCoolDownTime: 1000,
