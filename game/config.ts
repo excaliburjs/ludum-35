@@ -16,7 +16,7 @@ var Config = {
    CameraOffset: new ex.Vector(0, -100),
    shipSpeedScale: 2,
    spaceFriction: .01,
-   ShieldCoolDownTime: 1000,
+   ShieldCoolDownTime: 100,
    
    // Player
    playerMinVelocity: -500,
