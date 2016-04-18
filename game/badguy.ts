@@ -124,7 +124,7 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
             speed: Config.badguy.speed,
             size: Config.badguy.size,
             shape: this.badguytype,
-            weapon: new ShapeShooter(this, Config.bullets.speed, Config.bullets.damage, this.badguytype)
+            weapon: new ShapeShooter(this, Config.badguy.bulletSpeed, Config.bullets.damage, this.badguytype)
          }
       } else {
          this.state = state;
