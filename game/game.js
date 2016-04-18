@@ -167,6 +167,7 @@ var Resources = {
     BkgrdTrack: new ex.Sound('./snd/backingTrack.wav'),
     On: new ex.Sound('./snd/on.wav'),
     No: new ex.Sound('./snd/no.wav'),
+    Nope: new ex.Sound('./snd/nope.wav'),
     Absorb: new ex.Sound('./snd/absorb.wav'),
     PortalOpen: new ex.Sound('./snd/portalOpen.wav'),
     PortalClose: new ex.Sound('./snd/portalClose.wav'),
@@ -382,6 +383,8 @@ var Ship = (function (_super) {
             Resources.On.play();
         }
         else {
+            // play nah-uh sound
+            Resources.Nope.play();
         }
     };
     Ship.prototype.predraw = function (evt) {
