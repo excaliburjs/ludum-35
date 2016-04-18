@@ -347,8 +347,6 @@ var Bullet = (function (_super) {
                         this.kill();
                         return;
                     }
-                    else {
-                    }
                 }
                 if (!(collision.other instanceof Ship)) {
                     var currKills = parseInt(GameState.getGameStat("KILLS").toString()) + 1;
@@ -364,8 +362,10 @@ var Bullet = (function (_super) {
                     badguy.explode();
                     badguy.delay(500).die();
                 }
+                else {
+                    collision.other.kill();
+                }
                 Resources.Explode.play();
-                //collision.other.kill();
                 this.kill();
             }
         }
