@@ -1,0 +1,80 @@
+body {
+   text-align: center;
+   font: 16px 'Arial', Sans-Serif;
+}
+
+footer { color: #666; }
+
+.rate { font-size: 2em; }
+
+.hidden { display: none;}
+
+#game-wrapper {
+  position: relative;
+}
+
+#gameover {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+}
+
+#gameover > div {
+  position: relative;
+  left: -50%;
+  top: -50%;
+  padding: 3em;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+}
+#score {
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+#message-lose, #message-win {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+#message-lose {
+  color: red;
+}
+#message-win {
+  color: green;
+}
+
+#gameover.win #message-lose {
+  display: none;
+}
+#gameover.lose #message-win {
+  display: none;
+}
+
+#gameover button {
+  border: 0;
+  background: white;
+  font-size: 1.5em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+#commit {
+  position: absolute;
+  bottom: 0.5em;
+  right: 0.5em;
+  font-size: 0.6em;
+  font-family: Consolas, Monospace;
+  width: 50px;
+  overflow: hidden;
+  opacity: .5;
+  color: black;
+}
+#commit:hover {
+  color: red;
+}
+@media (max-width: 480px) {
+  #commit {
+    display: none;
+  }
+}

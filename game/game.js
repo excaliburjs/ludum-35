@@ -367,6 +367,7 @@ var Bullet = (function (_super) {
                             collision.other.kill();
                             GameState.state.ship.dx = 0;
                             GameState.state.ship.dy = 0;
+                            endscreen.lose();
                         }
                     }
                 }
@@ -1286,16 +1287,25 @@ var EndScreen = (function () {
     EndScreen.prototype.win = function () {
         pause();
         this._score.innerText = "Score: " + GameState.getGameStat("KILLS");
-        this._el.classList.remove("hidden");
+        this._show();
+        addClass(this._el, "win");
     };
     EndScreen.prototype.lose = function () {
-        // todo
+        pause();
+        this._score.innerText = "Score: " + GameState.getGameStat("KILLS");
+        this._show();
+        addClass(this._el, "lose");
     };
     EndScreen.prototype.restart = function () {
-        // todo game restart  
         GameState.reset();
-        this._el.classList.add("hidden");
+        this._hide();
         resume();
+    };
+    EndScreen.prototype._hide = function () {
+        addClass(this._el, "hidden");
+    };
+    EndScreen.prototype._show = function () {
+        removeClass(this._el, "hidden");
     };
     return EndScreen;
 }());
