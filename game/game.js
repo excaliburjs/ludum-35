@@ -509,9 +509,10 @@ var GameState = (function () {
         badGuyFactory.nextWave();
     };
     GameState.reset = function () {
-        //TODO
         this._resetPlayer();
         this._resetStats();
+        this.state.stage = 0;
+        badGuyFactory.nextWave();
     };
     GameState._resetPlayer = function () {
         GameState.state.ship.dx = 0;
