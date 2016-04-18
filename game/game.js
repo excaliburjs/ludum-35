@@ -115,6 +115,7 @@ var Config = {
     // Camera
     CameraElasticity: .08,
     CameraFriction: .41,
+    CameraOffset: new ex.Vector(0, -100),
     shipSpeedScale: 2,
     spaceFriction: .01,
     ShieldCoolDownTime: 1000,
@@ -1116,6 +1117,28 @@ var SoundManager = (function () {
     return SoundManager;
 }());
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
+var EndScreen = (function (_super) {
+    __extends(EndScreen, _super);
+    function EndScreen() {
+        _super.call(this, Config.width / 2 - 500 / 2, Config.height / 2 - 1000, 500, 300);
+        this.anchor.setTo(.5, .5);
+    }
+    EndScreen.prototype.gameover = function () {
+        var _this = this;
+        this.moveTo(Config.width / 2 - this.getWidth() / 2, Config.height / 2 - this.getHeight() / 2, 300).delay(500).moveTo(Config.width / 2 - this.getWidth() / 2, 900, 300).asPromise().then(function () {
+            _this.y = Config.height / 2 - 1000;
+        });
+    };
+    EndScreen.prototype.retry = function () {
+    };
+    EndScreen.prototype.draw = function (ctx, delta) {
+        _super.prototype.draw.call(this, ctx, delta);
+        ctx.fillStyle = ex.Color.Azure.clone();
+        ctx.fillRect(this.x, this.y, this.getWidth(), this.getHeight());
+    };
+    return EndScreen;
+}(ex.UIActor));
+/// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="../lodash.d.ts" />
 /// <reference path="gamestate.ts" />
 /// <reference path="analytics.ts" />
@@ -1129,6 +1152,7 @@ var SoundManager = (function () {
 /// <reference path="torch.ts" />
 /// <reference path="settings.ts" />
 /// <reference path="soundmanager.ts" />
+/// <reference path="endscreen.ts" />
 var game = new ex.Engine({
     canvasElementId: "game",
     width: Config.width,
@@ -1142,6 +1166,8 @@ game.input.keyboard.on('down', function (evt) {
         game.isDebug = !game.isDebug;
     }
 });
+game.currentScene.camera.x = Config.PlayerSpawn.x + Config.CameraOffset.x;
+game.currentScene.camera.y = Config.PlayerSpawn.y + Config.CameraOffset.y;
 // global sprites 
 var GlobalSprites = {
     triangleBulletSheet: new ex.SpriteSheet(Resources.TriangleBullet, 3, 1, 32, 32),
@@ -1261,6 +1287,7 @@ game.on('update', function (evt) {
     updateCamera(evt);
     updateDispatchers(evt);
 });
+var endscreen = new EndScreen();
 var gameBounds = new ex.BoundingBox(0, 0, Config.MapWidth, Config.MapHeight);
 game.start(loader).then(function () {
     var sf = new Starfield();
@@ -1274,6 +1301,7 @@ game.start(loader).then(function () {
     var killIdx = GameState.getStatIdx("KILLS");
     var killHUDUI = new HUDStat(GameState.state.stats[killIdx], 10, 60, 150, 50);
     game.add(killHUDUI);
+    game.add(endscreen);
     // portal stats
     var statPadding = 30;
     var statSpacing = 50;
