@@ -104,22 +104,24 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       return this;
    }
    private _pointerDown(click: ex.Input.PointerEvent){
-       //console.log(`Update: ${evt.delta}`);
-      GameState.state.ship._mouseDown = true;
-      var dx = click.x - GameState.state.ship.x;
-      var dy = click.y - GameState.state.ship.y;
-      
-      if (!gameBounds.contains(new ex.Point(this.x, this.y))) {
-          return false;
-      }
-      
-      var clampDx = ex.Util.clamp(dx * Config.shipSpeedScale, Config.playerMinVelocity, Config.playerMaxVelocity);
-      var clampDy = ex.Util.clamp(dy * Config.shipSpeedScale, Config.playerMinVelocity, Config.playerMaxVelocity);
-      
-      GameState.state.ship.dx = clampDx;
-      GameState.state.ship.dy = clampDy;
-      
-      GameState.state.ship.rotation = (new ex.Vector(dx, dy)).toAngle();
+       if (!this.isKilled()) {
+            //console.log(`Update: ${evt.delta}`);
+            GameState.state.ship._mouseDown = true;
+            var dx = click.x - GameState.state.ship.x;
+            var dy = click.y - GameState.state.ship.y;
+            
+            if (!gameBounds.contains(new ex.Point(this.x, this.y))) {
+                return false;
+            }
+            
+            var clampDx = ex.Util.clamp(dx * Config.shipSpeedScale, Config.playerMinVelocity, Config.playerMaxVelocity);
+            var clampDy = ex.Util.clamp(dy * Config.shipSpeedScale, Config.playerMinVelocity, Config.playerMaxVelocity);
+            
+            GameState.state.ship.dx = clampDx;
+            GameState.state.ship.dy = clampDy;
+            
+            GameState.state.ship.rotation = (new ex.Vector(dx, dy)).toAngle();
+       }
    }
    
    preupdate(evt: ex.PreUpdateEvent) {
