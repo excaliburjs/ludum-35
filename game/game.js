@@ -333,7 +333,7 @@ var Bullet = (function (_super) {
         this.collisionType = ex.CollisionType.Passive;
         this.reset();
         this.rx = Config.bullets.rotation;
-        this.on('exitviewport', function () { return _this.kill(); }); // GameState.state.bullets.despawn(this));
+        this.on('exitviewport', function () { return _this.kill(); });
         this.on('collision', this._collision);
         this.on('postdraw', this.postdraw);
     }
@@ -357,6 +357,12 @@ var Bullet = (function (_super) {
                         this.kill();
                         return;
                     }
+                    else {
+                        var currHealth = player.state.health -= 1;
+                        if (currHealth <= 0) {
+                            collision.other.kill();
+                        }
+                    }
                 }
                 if (!(collision.other instanceof Ship)) {
                     var currKills = parseInt(GameState.getGameStat("KILLS").toString()) + 1;
@@ -371,9 +377,6 @@ var Bullet = (function (_super) {
                     badguy = collision.other;
                     badguy.explode();
                     badguy.delay(150).die();
-                }
-                else {
-                    collision.other.kill();
                 }
                 Resources.Explode.play();
                 this.kill();
