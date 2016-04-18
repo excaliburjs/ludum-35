@@ -734,8 +734,11 @@ var Badguy = (function (_super) {
         //if (this._isexploding){
         //  return false;
         //}
-        if (this.paused)
+        if (this.paused) {
+            this.dx = 0;
+            this.dy = 0;
             return;
+        }
         var hitborder = false;
         if (this.x > gameBounds.right) {
             this.x = gameBounds.right;
@@ -849,7 +852,7 @@ var BadGuyFactory = (function () {
         this._waveStarted = false;
         this._portalSpawnWaitTimer = 0;
         this._openPortals = [];
-        this._paused = false;
+        this.paused = false;
     }
     BadGuyFactory.prototype.update = function (engine, delta) {
         if (this._waveStarted) {
@@ -901,7 +904,7 @@ var BadGuyFactory = (function () {
             return;
         }
         // after portal spawns, spawn enemies
-        if (!this._paused) {
+        if (!this.paused) {
             if (this._portalSpawnWaitTimer <= 0) {
                 // for open portals, spawn baddies
                 for (var _c = 0, _d = this._openPortals; _c < _d.length; _c++) {
@@ -1005,25 +1008,25 @@ var BadGuyFactory = (function () {
         }
     };
     BadGuyFactory.prototype.spawnPortals = function () {
-        this._paused = true;
+        var _this = this;
+        this.paused = true;
         var o = new ex.Actor(GameState.state.ship.x, GameState.state.ship.y, 1, 1, ex.Color.Transparent);
         game.add(o);
         cameraDestActor = o;
         o.delay(100).callMethod(function () { pause(); }); // calling pause by itself interrupts the updates before the witch sprite loads
         for (var _i = 0, _a = this._waveInfo.portals; _i < _a.length; _i++) {
             var portal = _a[_i];
-            console.log('adding portal');
+            // console.log('adding portal')
             var p = new Portal(portal);
             game.add(p);
             this._openPortals.push(p);
             o.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(function () { console.log('spawn portal'); }).delay(2000);
-            console.log(o.actionQueue);
         }
         o.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(function () {
             cameraDestActor = GameState.state.ship;
-            // resume();
+            resume();
+            _this.paused = false;
         }).die();
-        this._paused = false;
     };
     //    spawnPortals() {
     //       for(let portal of this._waveInfo.portals) {
@@ -1052,7 +1055,7 @@ var BadGuyFactory = (function () {
     //       });
     //    }
     BadGuyFactory.prototype.closePortals = function (portals) {
-        this._paused = true;
+        // this.paused = true;
         var orc = new ex.Actor(GameState.state.ship.x, GameState.state.ship.y, 1, 1, ex.Color.Transparent);
         game.add(orc);
         cameraDestActor = orc;
@@ -1066,9 +1069,9 @@ var BadGuyFactory = (function () {
         }
         orc.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(function () {
             cameraDestActor = GameState.state.ship;
-            // resume();
+            resume();
+            // this.paused = false;
         }).die();
-        this._paused = false;
     };
     BadGuyFactory.prototype.getWave = function () {
         return this._waveInfo;
@@ -1447,11 +1450,9 @@ function pause() {
         var a = _a[_i];
         if ('paused' in a) {
             a.paused = true;
-            if (a instanceof Badguy) {
-                console.log('pausing bad guy');
-            }
         }
     }
+    badGuyFactory.paused = true;
 }
 function resume() {
     // pause entities
@@ -1461,6 +1462,7 @@ function resume() {
             a.paused = false;
         }
     }
+    badGuyFactory.paused = false;
 }
 var endscreen = new EndScreen();
 var gameBounds = new ex.BoundingBox(0, 0, Config.MapWidth, Config.MapHeight);
