@@ -173,7 +173,8 @@ var Resources = {
     PlanetBg: new ex.Texture('./img/planet-bg.png'),
     FrontBg: new ex.Texture('./img/front-bg.png'),
     Torch: new ex.Texture('./img/torch.png'),
-    Heart: new ex.Texture('./img/Heart.png')
+    Heart: new ex.Texture('./img/Heart.png'),
+    Vignette: new ex.Texture('./img/vignette.png')
 };
 var Config = {
     width: 960,
@@ -1679,6 +1680,9 @@ game.start(loader).then(function () {
     Torch.place(game);
     GameState.init();
     game.add(fbg);
+    var vignette = new ex.UIActor(0, 0, game.width, game.height);
+    vignette.addDrawing(Resources.Vignette);
+    game.add(vignette);
     var killIdx = GameState.getStatIdx("KILLS");
     var killHUDUI = new HUDStat(GameState.state.stats[killIdx], 10, 60, 150, 50);
     game.add(killHUDUI);
