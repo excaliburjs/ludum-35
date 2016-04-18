@@ -111,7 +111,7 @@ var Config = {
     MapWidth: 5000,
     MapHeight: 960,
     // Ship
-    PlayerSpawn: new ex.Point(2500, 700),
+    PlayerSpawn: new ex.Point(2500, 800),
     // Camera
     CameraElasticity: .08,
     CameraFriction: .41,
