@@ -43,6 +43,9 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable {
             if(!(collision.other instanceof Ship)){
                 var currKills = parseInt(GameState.getGameStat("KILLS").toString()) + 1;
                 GameState.setGameStat("KILLS", currKills);
+            } else {
+                GameState.state.ship.dx = 0;
+                GameState.state.ship.dy = 0;
             }
             this.kill();
             //GameState.state.bullets.despawn(this);
