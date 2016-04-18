@@ -35,11 +35,12 @@ class Stat implements Stateful<StatState>{
 
 class HUDStat extends ex.UIActor {
    constructor (public stat: Stat, x: number, y: number, width: number, height: number){
-   super(x, y, width, height);  
-
+      super(x, y, width, height);  
+      this.visible = Config.HUDStatVisible
    }
     private font : ex.SpriteFont;
     private statLabel: ex.Label;
+    
       
    onInitialize(engine: ex.Engine) : void {
      super.onInitialize(engine);
