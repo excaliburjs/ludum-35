@@ -653,7 +653,7 @@ var GameState = (function () {
             ship: new Ship(Config.PlayerSpawn.x, Config.PlayerSpawn.y, 48, 48),
             bullets: null,
             stats: [new Stat("KILLS", 0)],
-            stage: 0
+            stage: 1
         };
         //GameState.state.bullets.fill();
         cameraDestActor = GameState.state.ship;
@@ -664,7 +664,7 @@ var GameState = (function () {
     GameState.reset = function () {
         this._resetPlayer();
         this._resetStats();
-        this.state.stage = 0;
+        this.state.stage = 1;
         badGuyFactory.nextWave();
     };
     GameState._resetPlayer = function () {
@@ -936,16 +936,17 @@ var BadGuyFactory = (function () {
                 portalsToClose.push(p);
             }
         }
+        var promise;
         if (portalsToClose.length > 0) {
             // this.orc.callMethod(() => {this.closePortals(portalsToClose)});
-            this.closePortals(portalsToClose);
-        }
-        if (this._openPortals.length === 0) {
-            this.nextWave();
-            return;
+            promise = this.closePortals(portalsToClose);
         }
         // after portal spawns, spawn enemies
         if (!this.paused) {
+            if (this._openPortals.length === 0) {
+                this.nextWave(promise);
+                return;
+            }
             if (this._portalSpawnWaitTimer <= 0) {
                 // for open portals, spawn baddies
                 for (var _b = 0, _c = this._openPortals; _b < _c.length; _b++) {
@@ -981,14 +982,12 @@ var BadGuyFactory = (function () {
     };
     BadGuyFactory.prototype.spawnBaddie = function (portal) {
         var baddie = new Badguy(portal.location.x, portal.location.y, portal.type);
-        // baddie.on('kill', () => {
-        //    var idx = portal.baddies.indexOf(baddie);
-        //    portal.baddies.splice(idx, 1);         
-        // });
         game.add(baddie);
         portal.baddies.push(baddie);
     };
-    BadGuyFactory.prototype.nextWave = function () {
+    BadGuyFactory.prototype.nextWave = function (promise) {
+        var _this = this;
+        var portalsClosed = promise || ex.Promise.wrap();
         this._waveStarted = true;
         if (this._waveInfo) {
             for (var _i = 0, _a = this._waveInfo.portals; _i < _a.length; _i++) {
@@ -1006,7 +1005,7 @@ var BadGuyFactory = (function () {
             game.remove(p);
         }
         this._openPortals.length = 0;
-        var stage = GameState.state.stage += 1;
+        var stage = GameState.state.stage;
         // set spawn locations
         if (stage === 1) {
             // place portal in center
@@ -1021,7 +1020,7 @@ var BadGuyFactory = (function () {
                         closeAmount: 5
                     }]
             };
-            this.spawnPortals();
+            portalsClosed.then(function () { _this.spawnPortals(); });
         }
         else if (stage === 2) {
             this._waveInfo = {
@@ -1044,13 +1043,11 @@ var BadGuyFactory = (function () {
                         closeAmount: 5
                     }]
             };
-            //    this.orc.callMethod(() => {this.spawnPortals()});
-            this.spawnPortals();
-        }
-        else if (stage === 3) {
+            portalsClosed.then(function () { _this.spawnPortals(); });
         }
         else {
             // win!
+            console.log('stage: ' + stage);
             endscreen.win();
         }
     };
@@ -1061,25 +1058,26 @@ var BadGuyFactory = (function () {
         this.helperOrc.y = GameState.state.ship.y;
         cameraDestActor = this.helperOrc;
         this.helperOrc.delay(100).callMethod(function () { pause(); }); // calling pause by itself interrupts the updates before the witch sprite loads
-        var _loop_1 = function(portal) {
+        var _loop_1 = function() {
             // console.log('adding portal')
             var p = new Portal(portal);
             //    game.add(p);
-            this_1.helperOrc.callMethod(function () { }).callMethod(function () { game.add(p); }); //TODO use delay? param
+            this_1.helperOrc.callMethod(function () { game.add(p); }); //TODO use delay? param
             this_1._openPortals.push(p);
             //p.portalopen();
             //p.delay(2000);
-            this_1.helperOrc.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(function () { }).delay(2000);
+            this_1.helperOrc.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).delay(2000);
         };
         var this_1 = this;
         for (var _i = 0, _a = this._waveInfo.portals; _i < _a.length; _i++) {
             var portal = _a[_i];
-            _loop_1(portal);
+            _loop_1();
         }
         this.helperOrc.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(function () {
             cameraDestActor = GameState.state.ship;
             resume();
             _this.paused = false;
+            GameState.state.stage += 1;
         });
     };
     BadGuyFactory.prototype.closePortals = function (portals) {
@@ -1106,10 +1104,10 @@ var BadGuyFactory = (function () {
                     break;
             }
         }
-        // this.helperOrc.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => { 
-        //       cameraDestActor = GameState.state.ship;
-        //       resume();
-        // });
+        return this.helperOrc.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(function () {
+            cameraDestActor = GameState.state.ship;
+            resume();
+        }).asPromise();
     };
     BadGuyFactory.prototype.getWave = function () {
         return this._waveInfo;
