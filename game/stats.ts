@@ -121,7 +121,7 @@ class PortalStat extends ex.UIActor {
         break;
     }
     
-    this._filledPerc = Math.floor(currentAmount / totalCloseNeeded);
+    this._filledPerc = currentAmount / totalCloseNeeded;
   }
   
   draw(ctx: CanvasRenderingContext2D, delta: number) {
@@ -137,7 +137,7 @@ class PortalStat extends ex.UIActor {
     
     // fill in
     ctx.fillStyle = this._color.toString();
-    ctx.fillRect(this.x, this.y, PortalStat.width * this._filledPerc, PortalStat.height);
+    ctx.fillRect(this.x, this.y, Math.floor(PortalStat.width * this._filledPerc), PortalStat.height);
     
     this._sprite.draw(ctx, this.x - 16, this.y - (this.getHeight()/2) + 3);
   }

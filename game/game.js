@@ -538,7 +538,7 @@ var PortalStat = (function (_super) {
                 currentAmount = GameState.state.ship.state.trianglePool;
                 break;
         }
-        this._filledPerc = Math.floor(currentAmount / totalCloseNeeded);
+        this._filledPerc = currentAmount / totalCloseNeeded;
     };
     PortalStat.prototype.draw = function (ctx, delta) {
         _super.prototype.draw.call(this, ctx, delta);
@@ -551,7 +551,7 @@ var PortalStat = (function (_super) {
         ctx.strokeRect(this.x, this.y, PortalStat.width, PortalStat.height);
         // fill in
         ctx.fillStyle = this._color.toString();
-        ctx.fillRect(this.x, this.y, PortalStat.width * this._filledPerc, PortalStat.height);
+        ctx.fillRect(this.x, this.y, Math.floor(PortalStat.width * this._filledPerc), PortalStat.height);
         this._sprite.draw(ctx, this.x - 16, this.y - (this.getHeight() / 2) + 3);
     };
     PortalStat.width = 100;
