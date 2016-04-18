@@ -32,8 +32,11 @@ var StraightShooter = (function (_super) {
         this.source = source;
         this.speed = speed;
         this.damage = damage;
+        this._prev = 0;
     }
     StraightShooter.prototype.shoot = function () {
+        ex.Logger.getInstance().debug("Shot straight shooter bullet", (new Date().getTime() - this._prev));
+        this._prev = new Date().getTime();
         var newBullet = new Bullet();
         newBullet.reset({
             owner: this.source,
@@ -269,12 +272,12 @@ var Ship = (function (_super) {
         else {
             this.setDrawing('left');
         }
-        this.state.weapon.update(evt.delta);
     };
     Ship.prototype.update = function (engine, delta) {
         if (this.paused)
             return;
         _super.prototype.update.call(this, engine, delta);
+        this.state.weapon.update(delta);
         if (this.x > gameBounds.right) {
             this.x = gameBounds.right;
             this.dx = 0;
@@ -665,7 +668,10 @@ var GameState = (function () {
         GameState.state.ship.state.circlePool = 0;
         GameState.state.ship.state.trianglePool = 0;
         GameState.state.ship.state.health = Config.playerHealth;
-        game.add(GameState.state.ship);
+        // add player if they were removed
+        if (game.currentScene.children.indexOf(GameState.state.ship) < 0) {
+            game.currentScene.add(GameState.state.ship);
+        }
     };
     GameState._resetStats = function () {
         this.setGameStat('KILLS', 0);
