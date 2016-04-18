@@ -334,14 +334,12 @@ var Ship = (function (_super) {
 var Bullet = (function (_super) {
     __extends(Bullet, _super);
     function Bullet() {
-        var _this = this;
         _super.call(this, 0, 0, 3, 3, ex.Color.Red);
         this.paused = false;
         this.owner = null;
         this.collisionType = ex.CollisionType.Passive;
         this.reset();
         this.rx = Config.bullets.rotation;
-        this.on('exitviewport', function () { return _this.kill(); });
         this.on('collision', this._collision);
         this.on('postdraw', this.postdraw);
     }
@@ -434,6 +432,9 @@ var Bullet = (function (_super) {
             var newVel = steering.add(currentSpeed).normalize().scale(Config.badguy.bulletSpeed);
             this.dx = newVel.x;
             this.dy = newVel.y;
+        }
+        if (!gameBounds.contains(new ex.Point(this.x, this.y))) {
+            this.kill();
         }
     };
     Bullet.prototype.postdraw = function (evt) {
@@ -1298,12 +1299,14 @@ var EndScreen = (function () {
         pause();
         this._score.innerText = "Score: " + GameState.getGameStat("KILLS");
         this._show();
+        removeClass(this._el, "lose");
         addClass(this._el, "win");
     };
     EndScreen.prototype.lose = function () {
         pause();
         this._score.innerText = "Score: " + GameState.getGameStat("KILLS");
         this._show();
+        removeClass(this._el, "win");
         addClass(this._el, "lose");
     };
     EndScreen.prototype.restart = function () {
