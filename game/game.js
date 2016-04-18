@@ -300,7 +300,8 @@ var Ship = (function (_super) {
                 squarePool: 0,
                 circlePool: 0,
                 trianglePool: 0,
-                health: Config.playerHealth
+                health: Config.playerHealth,
+                isVulnerable: true
             };
         }
         else {
@@ -433,12 +434,21 @@ var Bullet = (function (_super) {
                     }
                     else {
                         Resources.Hit.play();
-                        var currHealth = player.state.health -= 1;
-                        if (currHealth <= 0) {
-                            collision.other.kill();
-                            GameState.state.ship.dx = 0;
-                            GameState.state.ship.dy = 0;
-                            endscreen.lose();
+                        if (player.state.isVulnerable) {
+                            var currHealth = player.state.health -= 1;
+                            player.state.isVulnerable = false;
+                            player.blink(50, 50, 15).callMethod(function () {
+                                player.state.isVulnerable = true;
+                            });
+                            if (currHealth <= 0) {
+                                collision.other.kill();
+                                GameState.state.ship.dx = 0;
+                                GameState.state.ship.dy = 0;
+                                endscreen.lose();
+                            }
+                        }
+                        else {
+                            return; //player is invulnerable, takes no damage and bullets phase through them
                         }
                     }
                 }
@@ -748,6 +758,7 @@ var GameState = (function () {
         GameState.state.ship.state.circlePool = 0;
         GameState.state.ship.state.trianglePool = 0;
         GameState.state.ship.state.health = Config.playerHealth;
+        GameState.state.ship.state.isVulnerable = true;
         // add player if they were removed
         if (game.currentScene.children.indexOf(GameState.state.ship) < 0) {
             game.currentScene.add(GameState.state.ship);

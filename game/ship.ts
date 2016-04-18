@@ -15,6 +15,7 @@ interface ShipState {
    squarePool: number;
    trianglePool: number;
    health: number;
+   isVulnerable: boolean;
 }
 
 class Ship extends ex.Actor implements Stateful<ShipState>, Poolable, Pausable {
@@ -99,7 +100,8 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable, Pausable {
             squarePool: 0,
             circlePool: 0,
             trianglePool: 0,
-            health: Config.playerHealth
+            health: Config.playerHealth,
+            isVulnerable: true
          }
       } else {
          this.state = state;
