@@ -38,13 +38,13 @@ class BadGuyFactory {
          var poolAmount = 0;
          switch(p.state.type) {
             case Shape.Shape1:
-               poolAmount = GameState.state.ship.state.trianglePool;
+               poolAmount = GameState.state.ship.state.squarePool;
                break;
             case Shape.Shape2:
                poolAmount = GameState.state.ship.state.circlePool;
                break;
             case Shape.Shape3:
-               poolAmount = GameState.state.ship.state.squarePool;
+               poolAmount = GameState.state.ship.state.trianglePool;
                break;
          }
          if (poolAmount >= p.state.closeAmount) {
