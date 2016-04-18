@@ -75,7 +75,11 @@ class Badguy extends ex.Actor implements Stateful<BadguyState>, Pausable {
       //if (this._isexploding){
       //  return false;
       //}
-      if (this.paused) return;
+      if (this.paused) {
+        this.dx = 0;
+        this.dy = 0;
+        return;
+      } 
       
       var hitborder = false;
       

@@ -15,14 +15,14 @@ interface Wave {
    portals: PortalSpawn[];
 }
 
-class BadGuyFactory {
+class BadGuyFactory implements Pausable {
    
    private _waveStarted = false;
    private _waveInfo: Wave;   
    private _portalSpawnWaitTimer = 0;
    private _openPortals: Portal[] = [];
    
-   private _paused: boolean = false;
+   public paused: boolean = false;
    
    constructor() {
       
@@ -81,7 +81,7 @@ class BadGuyFactory {
       }
       
       // after portal spawns, spawn enemies
-      if (!this._paused) {
+      if (!this.paused) {
             if (this._portalSpawnWaitTimer <= 0) {
             
             // for open portals, spawn baddies
@@ -185,7 +185,7 @@ class BadGuyFactory {
    }
    
    spawnPortals() {
-      this._paused = true;
+      this.paused = true;
       var o = new ex.Actor(GameState.state.ship.x, GameState.state.ship.y, 1, 1, ex.Color.Transparent);
       game.add(o);
       cameraDestActor = o;
@@ -193,21 +193,21 @@ class BadGuyFactory {
       o.delay(100).callMethod(() => { pause(); }); // calling pause by itself interrupts the updates before the witch sprite loads
       
       for(let portal of this._waveInfo.portals) {
-            console.log('adding portal')
+            // console.log('adding portal')
          
          let p = new Portal(portal);
          game.add(p);
          this._openPortals.push(p);
          
          o.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {console.log('spawn portal')}).delay(2000);
-         console.log(o.actionQueue);
+      //    console.log(o.actionQueue);
       }
       
       o.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => { 
             cameraDestActor = GameState.state.ship;
-            // resume();
+            resume();
+            this.paused = false;
       }).die();
-      this._paused = false;
    }
 
 //    spawnPortals() {
@@ -244,7 +244,7 @@ class BadGuyFactory {
 //    }
    
    closePortals(portals: Portal[]) {
-      this._paused = true;
+      // this.paused = true;
       var orc = new ex.Actor(GameState.state.ship.x, GameState.state.ship.y, 1, 1, ex.Color.Transparent);
       game.add(orc);
       cameraDestActor = orc;
@@ -258,9 +258,9 @@ class BadGuyFactory {
       }
       orc.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => { 
             cameraDestActor = GameState.state.ship;
-            // resume();
+            resume();
+            // this.paused = false;
       }).die();
-   this._paused = false; 
    }
    
    getWave(): Wave {

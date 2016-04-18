@@ -196,11 +196,9 @@ function pause() {
 	for (var a of game.currentScene.children) {
 		if ('paused' in a) {
 			(<any>a).paused = true;
-			if (a instanceof Badguy) {
-				console.log('pausing bad guy');
-			}
 		}
 	}
+	badGuyFactory.paused = true;
 }
 function resume() {
 	// pause entities
@@ -209,6 +207,7 @@ function resume() {
 			(<any>a).paused = false;
 		}
 	}
+	badGuyFactory.paused = false;
 }
 
 var endscreen = new EndScreen();
