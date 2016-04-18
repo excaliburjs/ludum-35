@@ -1469,6 +1469,7 @@ var HealthStat = (function (_super) {
         _super.call(this, x, y, HealthStat.width, HealthStat.height);
         this._activeHeart = new ex.SpriteSheet(Resources.Heart, 2, 1, 32, 32).getSprite(0);
         this._emptyHeart = new ex.SpriteSheet(Resources.Heart, 2, 1, 32, 32).getSprite(1);
+        this.anchor.setTo(0, 0);
     }
     HealthStat.prototype.draw = function (ctx) {
         var heartsleft = GameState.state.ship.state.health;
@@ -1676,16 +1677,15 @@ game.start(loader).then(function () {
     game.add(killHUDUI);
     // portal stats
     var statPadding = 30;
-    var statSpacing = 50;
-    var squareStat = new PortalStat(statPadding, Config.height - 30, Shape.Shape1);
-    var circleStat = new PortalStat(statPadding + (PortalStat.width + statSpacing), Config.height - 30, Shape.Shape2);
-    var triangleStat = new PortalStat(statPadding + (PortalStat.width * 2 + statSpacing * 2), Config.height - 30, Shape.Shape3);
+    var statSpacing = 30;
+    var healthStat = new HealthStat(statPadding + 75, statSpacing);
+    var squareStat = new PortalStat(statPadding, statSpacing * 2 + PortalStat.height, Shape.Shape1);
+    var circleStat = new PortalStat(statPadding, statSpacing * 3 + PortalStat.height, Shape.Shape2);
+    var triangleStat = new PortalStat(statPadding, statSpacing * 4 + PortalStat.height, Shape.Shape3);
+    game.add(healthStat);
     game.add(squareStat);
     game.add(circleStat);
     game.add(triangleStat);
-    //health statbar
-    var healthStat = new HealthStat(65 + Config.width - HealthStat.width, 5);
-    game.add(healthStat);
     Resources.BkgrdTrack.setLoop(true);
     Resources.BkgrdTrack.play();
 });

@@ -231,20 +231,18 @@ game.start(loader).then(() => {
 	
 	// portal stats
 	const statPadding = 30;
-	const statSpacing = 50;
-	var squareStat = new PortalStat(statPadding, Config.height - 30, Shape.Shape1);
-	var circleStat = new PortalStat(statPadding + (PortalStat.width + statSpacing), Config.height - 30, Shape.Shape2);
-	var triangleStat = new PortalStat(statPadding + (PortalStat.width * 2 + statSpacing * 2), Config.height - 30, Shape.Shape3);
+	const statSpacing = 30;
 	
+	var healthStat = new HealthStat(statPadding + 75, statSpacing);
+	var squareStat = new PortalStat(statPadding, statSpacing*2 + PortalStat.height, Shape.Shape1);
+	var circleStat = new PortalStat(statPadding, statSpacing*3 + PortalStat.height, Shape.Shape2);
+	var triangleStat = new PortalStat(statPadding, statSpacing*4 + PortalStat.height, Shape.Shape3);
+	
+	game.add(healthStat);
 	game.add(squareStat);
 	game.add(circleStat);
 	game.add(triangleStat);
 	
-	
-	//health statbar
-	var healthStat = new HealthStat(65 + Config.width - HealthStat.width, 5);
-	
-	game.add(healthStat);
 	Resources.BkgrdTrack.setLoop(true);
 	Resources.BkgrdTrack.play();
 	
