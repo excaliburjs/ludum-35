@@ -1,5 +1,6 @@
 /// <reference path="../Excalibur/dist/Excalibur.d.ts" />
 /// <reference path="../lodash.d.ts" />
+/// <reference path="pausable.ts" />
 /// <reference path="gamestate.ts" />
 /// <reference path="analytics.ts" />
 /// <reference path="config.ts" />
@@ -76,15 +77,18 @@ var _circleBaddie = GlobalSprites.CircleBadGuySheet.getAnimationForAll(game, 150
 _circleBaddie.loop = true;
 _circleBaddie.anchor.setTo(.3, .3);
 
-var _triangleBaddieExplosion = GlobalSprites.TriangleBadGuyExplosionSheet.getAnimationForAll(game, 150);
+var _triangleBaddieExplosion = GlobalSprites.TriangleBadGuyExplosionSheet.getAnimationBetween(game, 2, 4, 150);
+//var _triangleBaddieExplosion = GlobalSprites.TriangleBadGuyExplosionSheet.getAnimationForAll(game, 150);
 _triangleBaddieExplosion.loop = false;
 _triangleBaddieExplosion.anchor.setTo(.3, .3);
 
-var _squareBaddieExplosion = GlobalSprites.SquareBadGuyExplosionSheet.getAnimationForAll(game, 150);
+var _squareBaddieExplosion = GlobalSprites.SquareBadGuyExplosionSheet.getAnimationBetween(game, 2, 4, 150);
+//var _squareBaddieExplosion = GlobalSprites.SquareBadGuyExplosionSheet.getAnimationForAll(game, 150);
 _squareBaddieExplosion.loop = false;
 _squareBaddieExplosion.anchor.setTo(.3, .3);
 
-var _circleBaddieExplosion = GlobalSprites.CircleBadGuyExplosionSheet.getAnimationForAll(game, 150);
+var _circleBaddieExplosion = GlobalSprites.CircleBadGuyExplosionSheet.getAnimationBetween(game, 2, 4, 150);
+//var _circleBaddieExplosion = GlobalSprites.CircleBadGuyExplosionSheet.getAnimationForAll(game, 150);
 _circleBaddieExplosion.loop = false;
 _circleBaddieExplosion.anchor.setTo(.3, .3);
 
@@ -142,14 +146,14 @@ function removeClass(element, cls) {
    element.classList.remove(cls);
 }
   
-
+var cameraDestActor: ex.Actor;
 function updateCamera(evt: ex.UpdateEvent){
 		
 	// Grab the current focus of the camper
 	var focus = game.currentScene.camera.getFocus().toVector();
 	
 	// Grab the "destination" position, in the spring equation the displacement location
-	var position = new ex.Vector(GameState.state.ship.x, GameState.state.ship.y);
+	var position = new ex.Vector(cameraDestActor.x, cameraDestActor.y);
 	
 	// Calculate the strech vector, using the spring equation
 	// F = kX
@@ -186,6 +190,24 @@ game.on('update', (evt: ex.UpdateEvent) => {
 	updateDispatchers(evt);
 	
 });
+
+function pause() {
+	// pause entities
+	for (var a of game.currentScene.children) {
+		if ('paused' in a) {
+			(<any>a).paused = true;
+		}
+	}
+}
+function resume() {
+	// pause entities
+	for (var a of game.currentScene.children) {
+		if ('paused' in a) {
+			(<any>a).paused = false;
+		}
+	}
+}
+
 var endscreen = new EndScreen();
 var gameBounds = new ex.BoundingBox(0, 0, Config.MapWidth, Config.MapHeight);
 game.start(loader).then(() => {
@@ -202,8 +224,7 @@ game.start(loader).then(() => {
 	var killIdx = GameState.getStatIdx("KILLS");
 	
 	var killHUDUI = new HUDStat(GameState.state.stats[killIdx], 10, 60, 150, 50);
-	game.add(killHUDUI);
-	game.add(endscreen);
+	game.add(killHUDUI);	
 	
 	// portal stats
 	const statPadding = 30;

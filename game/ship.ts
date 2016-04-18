@@ -17,7 +17,7 @@ interface ShipState {
    health: number;
 }
 
-class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
+class Ship extends ex.Actor implements Stateful<ShipState>, Poolable, Pausable {
    private _circle: ex.Animation;
    private _triangle: ex.Animation;
    private _square: ex.Animation;
@@ -30,6 +30,7 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
    
    public poolId: number;
    public state: ShipState;   
+   public paused: boolean = false;
    
    constructor(x, y, width, height){
       super(x, y, width, height);
@@ -106,6 +107,8 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       return this;
    }
    private _pointerDown(click: ex.Input.PointerEvent){
+       if (this.paused) return false;
+       
        if (!this.isKilled()) {
             //console.log(`Update: ${evt.delta}`);
             GameState.state.ship._mouseDown = true;
@@ -127,6 +130,8 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
    }
    
    preupdate(evt: ex.PreUpdateEvent) {
+       if (this.paused) return false;
+       
       var oppVel = new ex.Vector(this.dx, this.dy).scale(-1).scale(Config.spaceFriction);
       this.dx += oppVel.x;
       this.dy += oppVel.y;
@@ -141,6 +146,8 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
    }
    
    update(engine: ex.Engine, delta: number) {
+       if (this.paused) return;
+       
        super.update(engine, delta);
        
        if (this.x > gameBounds.right) {

@@ -55,7 +55,18 @@ class BadGuyFactory {
       }
       
       for (let p of portalsToClose) {
-         this.closePortal(p); 
+         this.closePortal(p);
+         switch(p.state.type) {
+            case Shape.Shape1:
+               GameState.state.ship.state.squarePool = 0;
+               break;
+            case Shape.Shape2:
+               GameState.state.ship.state.circlePool = 0;
+               break;
+            case Shape.Shape3:
+               GameState.state.ship.state.trianglePool = 0;
+               break;
+         }
       }
       
       if (this._openPortals.length === 0) {
@@ -137,8 +148,31 @@ class BadGuyFactory {
             }]
          };
          this.spawnPortals();
+      } else if (stage === 2) {
+            this._waveInfo = {
+            portals: [{
+               location: new ex.Point(2500, 420),
+               rate: 2000,
+               rateTimer: 0,
+               baddies: [],
+               maxSimultaneous: 3,
+               type: Shape.Shape1,
+               closeAmount: 5
+            }, 
+            {
+               location: new ex.Point(3000, 420),
+               rate: 2000,
+               rateTimer: 0,
+               baddies: [],
+               maxSimultaneous: 3,
+               type: Shape.Shape2,
+               closeAmount: 5
+            }]
+         };
+         this.spawnPortals();
       } else {
          // win!
+         endscreen.win();
       }
    }
    
@@ -153,7 +187,25 @@ class BadGuyFactory {
    closePortal(p: Portal) {
       var idx = this._openPortals.indexOf(p);
       this._openPortals.splice(idx, 1);
-      game.remove(p);
+      
+      pause();
+      
+      var o = new ex.Actor(GameState.state.ship.x, GameState.state.ship.y, 1, 1, ex.Color.Transparent);
+      game.add(o);
+      
+      cameraDestActor = o;
+      
+      // move to portal
+      o.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {
+            //p.setDrawing('death');
+            p.delay(2000).callMethod(() => {
+                  o.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => {
+                        cameraDestActor = GameState.state.ship;
+                        resume();                        
+                  }).die();
+                  
+            }).die();
+      });
    }
    
    getWave(): Wave {

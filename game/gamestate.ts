@@ -62,6 +62,8 @@ class GameState {
          };
          //GameState.state.bullets.fill();
          
+         cameraDestActor = GameState.state.ship;
+         
          game.add(GameState.state.ship);
          
          // start the waves
