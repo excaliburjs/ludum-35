@@ -870,7 +870,15 @@ var Portal = (function (_super) {
         this.delay(1400).callMethod(function () { _this.setDrawing('default'); });
     };
     Portal.prototype.portalclose = function () {
+        var _this = this;
         this.setDrawing('close');
+        game.currentScene.children.forEach(function (a) {
+            if (a instanceof Badguy || a instanceof Bullet) {
+                if (a.state.shape === _this.state.type || a.state.shape === _this.state.type) {
+                    a.kill();
+                }
+            }
+        });
     };
     Portal.prototype.portalopen = function () {
         this.setDrawing('open');
