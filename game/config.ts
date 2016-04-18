@@ -20,6 +20,7 @@ var Config = {
    playerMinVelocity: -500,
    playerMaxVelocity: 500,
    playerHealth: 5,
+   playerCanShoot: false,
    
    // Baddies
    PortalSpawnWaitTime: 3000, //ms

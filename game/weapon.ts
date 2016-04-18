@@ -28,11 +28,10 @@ class StraightShooter extends WeaponBase {
       super(Config.StraightShooterFrequency, source);
    }
    
-   private _prev = 0;
    shoot() {
+      if (!Config.playerCanShoot) return;
       
-      
-      this._prev = new Date().getTime();
+    
       var newBullet = new Bullet();
       newBullet.reset({
          owner: this.source,
