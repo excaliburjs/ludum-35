@@ -825,6 +825,7 @@ var Portal = (function (_super) {
         this.state = state;
     }
     Portal.prototype.onInitialize = function () {
+        var _this = this;
         this.setZIndex(1);
         this.scale.setTo(3, 3);
         var tx;
@@ -842,18 +843,28 @@ var Portal = (function (_super) {
                 this._closetexture = Resources.TrianglePortalClose;
                 break;
         }
+        //define drawing for a portal that stays open
         var ss = new ex.SpriteSheet(tx, 5, 1, 48, 48);
-        var anim = ss.getAnimationForAll(game, 125);
-        anim.loop = true;
-        this.addDrawing('default', anim);
-        this.setDrawing('default');
+        var isopenanim = ss.getAnimationForAll(game, 125);
+        isopenanim.loop = true;
+        this.addDrawing('default', isopenanim);
+        //define close portal drawing
+        var spritesheet = new ex.SpriteSheet(this._closetexture, 13, 1, 48, 48);
+        var closeanim = spritesheet.getAnimationForAll(game, 125);
+        this.addDrawing('close', closeanim);
+        //define opening portal drawing
+        var spritesheet = new ex.SpriteSheet(this._closetexture, 13, 1, 48, 48);
+        spritesheet.sprites = spritesheet.sprites.reverse();
+        var openanim = spritesheet.getAnimationForAll(game, 125);
+        this.addDrawing('open', openanim);
+        this.portalopen();
+        this.delay(1400).callMethod(function () { _this.setDrawing('default'); });
     };
     Portal.prototype.portalclose = function () {
-        var spritesheet = new ex.SpriteSheet(this._closetexture, 13, 1, 48, 48);
-        var anim = spritesheet.getAnimationForAll(game, 125);
-        anim.loop = false;
-        this.addDrawing('close', anim);
         this.setDrawing('close');
+    };
+    Portal.prototype.portalopen = function () {
+        this.setDrawing('open');
     };
     return Portal;
 }(ex.Actor));
@@ -1033,6 +1044,8 @@ var BadGuyFactory = (function () {
             var p = new Portal(portal);
             game.add(p);
             this._openPortals.push(p);
+            //p.portalopen();
+            //p.delay(2000);
             o.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(function () { console.log('spawn portal'); }).delay(2000);
         }
         o.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(function () {

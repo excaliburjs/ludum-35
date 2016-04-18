@@ -196,8 +196,11 @@ class BadGuyFactory implements Pausable {
             // console.log('adding portal')
          
          let p = new Portal(portal);
+         
          game.add(p);
          this._openPortals.push(p);
+         //p.portalopen();
+         //p.delay(2000);
          
          o.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {console.log('spawn portal')}).delay(2000);
       //    console.log(o.actionQueue);
