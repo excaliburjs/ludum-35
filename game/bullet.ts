@@ -57,15 +57,14 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable, Pausab
                  var currHealth = player.state.health -= 1;
                  if(currHealth <= 0){
                      collision.other.kill();
+                     GameState.state.ship.dx = 0;
+                     GameState.state.ship.dy = 0;
                  }
              }  
            }
             if(!(collision.other instanceof Ship)){
                 var currKills = parseInt(GameState.getGameStat("KILLS").toString()) + 1;
                 GameState.setGameStat("KILLS", currKills);
-            } else {
-                GameState.state.ship.dx = 0;
-                GameState.state.ship.dy = 0;
             }
             if (collision.other instanceof Badguy){
                     var badguy: Badguy;
