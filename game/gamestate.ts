@@ -8,7 +8,9 @@ interface IGameState {
    ship: Ship;
    bullets: Pool<Bullet, BulletState>;
    stats: Stat[],
-   stage: number
+   stage: number,
+   gameStart: number,
+   gameEnd: number
 }
 
 // one global area to track game state, makes the game easier to restart
@@ -58,7 +60,9 @@ class GameState {
             ship: new Ship(Config.PlayerSpawn.x, Config.PlayerSpawn.y, 48, 48),
             bullets: null,
             stats: [new Stat("KILLS", 0)],
-            stage: 1
+            stage: 1,
+            gameStart: Date.now(),
+            gameEnd: Date.now()
          };
          //GameState.state.bullets.fill();
          
@@ -75,6 +79,7 @@ class GameState {
             this._resetStats();
             this.state.stage = 1;
             badGuyFactory.nextWave();
+            this.state.gameStart = Date.now();
       }
       
       private static _resetPlayer() {            
