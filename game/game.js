@@ -1298,14 +1298,14 @@ var EndScreen = (function () {
         this._restart.onclick = this.restart.bind(this);
     }
     EndScreen.prototype.win = function () {
-        pause();
+        this._gameOver();
         this._score.innerText = "Score: " + GameState.getGameStat("KILLS");
         this._show();
         removeClass(this._el, "lose");
         addClass(this._el, "win");
     };
     EndScreen.prototype.lose = function () {
-        pause();
+        this._gameOver();
         this._score.innerText = "Score: " + GameState.getGameStat("KILLS");
         this._show();
         removeClass(this._el, "win");
@@ -1315,6 +1315,12 @@ var EndScreen = (function () {
         GameState.reset();
         this._hide();
         resume();
+    };
+    EndScreen.prototype._gameOver = function () {
+        pause();
+        // remove all bullets
+        var bulletsToRemove = _.filter(game.currentScene.children, function (c) { return c instanceof Bullet; });
+        _.each(bulletsToRemove, function (b) { return game.remove(b); });
     };
     EndScreen.prototype._hide = function () {
         addClass(this._el, "hidden");
