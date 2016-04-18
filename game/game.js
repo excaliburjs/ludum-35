@@ -1050,7 +1050,10 @@ var GlobalAnimations = {
     PlayerBullet: _playerBulletAnim,
     TriangleBaddie: _triangleBaddie,
     SquareBaddie: _squareBaddie,
-    CircleBaddie: _circleBaddie
+    CircleBaddie: _circleBaddie,
+    TriangleBaddieExplosion: _triangleBaddieExplosion,
+    SquareBaddieExplosion: _squareBaddieExplosion,
+    CircleBaddieExplosion: _circleBaddieExplosion
 };
 // create loader
 var loader = new ex.Loader();
