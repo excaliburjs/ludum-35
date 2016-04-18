@@ -89,7 +89,7 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
       });
    }
    
-   reset(state?: ShipState) {
+   reset(state?: ShipState) { //TODO calling this on an existing ship breaks the mouse input
       if (!state) {
          this.state = {
             shieldType: Shape.Shape1,
