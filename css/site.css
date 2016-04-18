@@ -81,3 +81,22 @@ footer { color: #666; }
     display: none;
   }
 }
+
+a {
+  color: lightblue;
+}
+
+.credits {
+  background: rgba(0, 0, 0, 0.8);
+  padding: 2em;
+  max-width: 480px;
+  margin: 0 auto;
+  color: white;
+}
+
+.credits a {
+  color: lightblue;
+}
+.credits a:hover {
+  color: lightblue;
+}
