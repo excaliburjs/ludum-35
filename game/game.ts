@@ -77,15 +77,15 @@ _circleBaddie.loop = true;
 _circleBaddie.anchor.setTo(.3, .3);
 
 var _triangleBaddieExplosion = GlobalSprites.TriangleBadGuyExplosionSheet.getAnimationForAll(game, 150);
-_triangleBaddieExplosion.loop = true;
+_triangleBaddieExplosion.loop = false;
 _triangleBaddieExplosion.anchor.setTo(.3, .3);
 
 var _squareBaddieExplosion = GlobalSprites.SquareBadGuyExplosionSheet.getAnimationForAll(game, 150);
-_squareBaddieExplosion.loop = true;
+_squareBaddieExplosion.loop = false;
 _squareBaddieExplosion.anchor.setTo(.3, .3);
 
 var _circleBaddieExplosion = GlobalSprites.CircleBadGuyExplosionSheet.getAnimationForAll(game, 150);
-_circleBaddieExplosion.loop = true;
+_circleBaddieExplosion.loop = false;
 _circleBaddieExplosion.anchor.setTo(.3, .3);
 
 
@@ -205,4 +205,13 @@ game.start(loader).then(() => {
 	game.add(killHUDUI);
 	game.add(endscreen);
 	
+	// portal stats
+	const statPadding = 30;
+	const statSpacing = 50;
+	var squareStat = new PortalStat(statPadding, Config.height - 30, Shape.Shape1);
+	var circleStat = new PortalStat(statPadding + (PortalStat.width + statSpacing), Config.height - 30, Shape.Shape2);
+	var triangleStat = new PortalStat(statPadding + (PortalStat.width * 2 + statSpacing * 2), Config.height - 30, Shape.Shape3);
+	game.add(squareStat);
+	game.add(circleStat);
+	game.add(triangleStat);
 });
