@@ -212,10 +212,11 @@ function resume() {
 
 var endscreen = new EndScreen();
 var gameBounds = new ex.BoundingBox(0, 0, Config.MapWidth, Config.MapHeight);
+var fbg = new Frontground();
 game.start(loader).then(() => {
 	var sf = new Starfield();
 	var bg = new Background();
-	var fbg = new Frontground();	
+	//var fbg = new Frontground();	
 	
 	game.add(sf);
 	game.add(bg);	

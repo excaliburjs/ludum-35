@@ -1172,6 +1172,8 @@ var Frontground = (function (_super) {
     __extends(Frontground, _super);
     function Frontground() {
         _super.call(this, 0, -100, 10000, 1920);
+        this._yPos = -100;
+        this._maxHeight = 1920;
         this.anchor.setTo(0, 0);
     }
     Frontground.prototype.onInitialize = function () {
@@ -1180,10 +1182,13 @@ var Frontground = (function (_super) {
     };
     Frontground.prototype.update = function (engine, delta) {
         _super.prototype.update.call(this, engine, delta);
-        var pdx = GameState.state.ship.dx;
-        var pdy = GameState.state.ship.dy;
-        this.dx = -pdx;
-        this.dy = -pdy;
+        this.x = -GameState.state.ship.x * 1;
+        this.y = -GameState.state.ship.y * 1;
+        //console.log(`Ship y:${GameState.state.ship.y} Foreground y:${this.y} `)
+        //var pdx = GameState.state.ship.dx;
+        //var pdy = GameState.state.ship.dy;
+        //this.dx = -pdx;
+        //this.dy = -pdy;
     };
     return Frontground;
 }(ex.Actor));
@@ -1496,10 +1501,11 @@ function resume() {
 }
 var endscreen = new EndScreen();
 var gameBounds = new ex.BoundingBox(0, 0, Config.MapWidth, Config.MapHeight);
+var fbg = new Frontground();
 game.start(loader).then(function () {
     var sf = new Starfield();
     var bg = new Background();
-    var fbg = new Frontground();
+    //var fbg = new Frontground();	
     game.add(sf);
     game.add(bg);
     Torch.place(game);
