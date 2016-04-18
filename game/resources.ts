@@ -30,5 +30,6 @@ var Resources = {
    PlanetBg: new ex.Texture('./img/planet-bg.png'),
    FrontBg: new ex.Texture('./img/front-bg.png'),
    Torch: new ex.Texture('./img/torch.png'),
-   Heart: new ex.Texture('./img/Heart.png')
+   Heart: new ex.Texture('./img/Heart.png'),
+   Vignette: new ex.Texture('./img/vignette.png')
 };
