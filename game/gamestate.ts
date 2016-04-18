@@ -58,7 +58,7 @@ class GameState {
             ship: new Ship(Config.PlayerSpawn.x, Config.PlayerSpawn.y, 48, 48),
             bullets: null,
             stats: [new Stat("KILLS", 0)],
-            stage: 0
+            stage: 1
          };
          //GameState.state.bullets.fill();
          
@@ -73,7 +73,7 @@ class GameState {
       static reset() {
             this._resetPlayer();
             this._resetStats();
-            this.state.stage = 0;
+            this.state.stage = 1;
             badGuyFactory.nextWave();
       }
       

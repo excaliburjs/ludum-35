@@ -24,7 +24,7 @@ class BadGuyFactory implements Pausable {
    
    public paused: boolean = false;
    
-   private orc: ex.Actor; //orchestrates high-level events, such as spawnPortals(), closePortals()
+//    private orc: ex.Actor; //orchestrates high-level events, such as spawnPortals(), closePortals()
    private helperOrc: ex.Actor; //orchestrates minutae of spawn / close portal methods
    
    constructor() {
@@ -61,19 +61,21 @@ class BadGuyFactory implements Pausable {
             portalsToClose.push(p);
          }
       }
-      
+      let promise;
       if (portalsToClose.length > 0) {
             // this.orc.callMethod(() => {this.closePortals(portalsToClose)});
-            this.closePortals(portalsToClose);
+            promise = this.closePortals(portalsToClose);
       }
             
-      if (this._openPortals.length === 0) {
-         this.nextWave();
-         return;
-      }
+      
       
       // after portal spawns, spawn enemies
       if (!this.paused) {
+            if (this._openPortals.length === 0) {
+                  this.nextWave(promise);
+                  return;
+            }
+            
             if (this._portalSpawnWaitTimer <= 0) {
             
             // for open portals, spawn baddies
@@ -111,15 +113,12 @@ class BadGuyFactory implements Pausable {
    
    spawnBaddie(portal: PortalSpawn) {
       var baddie = new Badguy(portal.location.x, portal.location.y, portal.type);
-      // baddie.on('kill', () => {
-      //    var idx = portal.baddies.indexOf(baddie);
-      //    portal.baddies.splice(idx, 1);         
-      // });
       game.add(baddie);
       portal.baddies.push(baddie);
    }     
    
-   nextWave() {
+   nextWave(promise?: ex.Promise<any>) {
+      let portalsClosed = promise || ex.Promise.wrap();
       this._waveStarted = true;
       
       if (this._waveInfo) {
@@ -135,7 +134,7 @@ class BadGuyFactory implements Pausable {
          game.remove(p);         
       }
       this._openPortals.length = 0;
-      var stage = GameState.state.stage += 1;
+      let stage = GameState.state.stage;
       
       // set spawn locations
       if (stage === 1) {
@@ -151,8 +150,7 @@ class BadGuyFactory implements Pausable {
                closeAmount: 5
             }]
          };
-         this.spawnPortals();
-      //    this.orc.callMethod(() => {this.spawnPortals()});
+         portalsClosed.then(() => {this.spawnPortals()});
       } else if (stage === 2) {
             this._waveInfo = {
             portals: [{
@@ -174,12 +172,10 @@ class BadGuyFactory implements Pausable {
                closeAmount: 5
             }]
          };
-      //    this.orc.callMethod(() => {this.spawnPortals()});
-         this.spawnPortals();
-      } else if (stage === 3) {
-            
+         portalsClosed.then(() => {this.spawnPortals()});
       } else {
          // win!
+         console.log('stage: ' + stage);
          endscreen.win();
       }
    }
@@ -192,17 +188,17 @@ class BadGuyFactory implements Pausable {
       
       this.helperOrc.delay(100).callMethod(() => { pause(); }); // calling pause by itself interrupts the updates before the witch sprite loads
       
-      for(let portal of this._waveInfo.portals) {
+      for(var portal of this._waveInfo.portals) {
             // console.log('adding portal')
          
          let p = new Portal(portal);
       //    game.add(p);
-         this.helperOrc.callMethod(() => {/*console.log('adding portal')*/}).callMethod(() => {game.add(p)}); //TODO use delay? param
+         this.helperOrc.callMethod(() => {game.add(p)}); //TODO use delay? param
          this._openPortals.push(p);
          //p.portalopen();
          //p.delay(2000);
          
-         this.helperOrc.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).callMethod(() => {/*console.log('spawn portal')*/}).delay(2000);
+         this.helperOrc.easeTo(p.x, p.y, 400, ex.EasingFunctions.EaseInCubic).delay(2000);
       //    console.log(o.actionQueue);
       }
       
@@ -210,10 +206,11 @@ class BadGuyFactory implements Pausable {
             cameraDestActor = GameState.state.ship;
             resume();
             this.paused = false;
+            GameState.state.stage += 1;
       });
    }
    
-   closePortals(portals: Portal[]) {
+   closePortals(portals: Portal[]): ex.Promise<any> {
       this.helperOrc.x = GameState.state.ship.x;
       this.helperOrc.y = GameState.state.ship.y;
       cameraDestActor = this.helperOrc;
@@ -237,10 +234,10 @@ class BadGuyFactory implements Pausable {
                         break;
             }
       }
-      // this.helperOrc.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => { 
-      //       cameraDestActor = GameState.state.ship;
-      //       resume();
-      // });
+      return this.helperOrc.easeTo(GameState.state.ship.x, GameState.state.ship.y, 400, ex.EasingFunctions.EaseOutCubic).callMethod(() => { 
+            cameraDestActor = GameState.state.ship;
+            resume();
+      }).asPromise();
    }
    
    getWave(): Wave {
