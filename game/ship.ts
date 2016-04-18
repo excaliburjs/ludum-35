@@ -14,6 +14,7 @@ interface ShipState {
    circlePool: number;
    squarePool: number;
    trianglePool: number;
+   health: number;
 }
 
 class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
@@ -96,7 +97,8 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable {
             weapon: new StraightShooter(this, Config.bullets.speed, Config.bullets.damage),
             squarePool: 0,
             circlePool: 0,
-            trianglePool: 0
+            trianglePool: 0,
+            health: Config.playerHealth
          }
       } else {
          this.state = state;
