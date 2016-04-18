@@ -538,6 +538,13 @@ var GameState = (function () {
         GameState.state.ship.x = Config.PlayerSpawn.x;
         GameState.state.ship.y = Config.PlayerSpawn.y;
         GameState.state.ship.rotation = 0;
+        // GameState.state.ship.reset();
+        //TODO calling reset() breaks player input, something related to creating a new Weapon
+        GameState.state.ship.state.shieldType = Shape.Shape1;
+        GameState.state.ship.state.squarePool = 0;
+        GameState.state.ship.state.circlePool = 0;
+        GameState.state.ship.state.trianglePool = 0;
+        game.add(GameState.state.ship);
     };
     GameState._resetStats = function () {
         this.setGameStat('KILLS', 0);
