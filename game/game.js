@@ -1264,6 +1264,9 @@ var SoundManager = (function () {
         _.forIn(Resources, function (resource) {
             if (resource instanceof ex.Sound) {
                 resource.setVolume(volume);
+                if (resource === Resources.BkgrdTrack) {
+                    resource.play();
+                }
             }
         });
     };
