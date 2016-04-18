@@ -1136,18 +1136,18 @@ var BadGuyFactory = (function () {
                         rate: 2000,
                         rateTimer: 0,
                         baddies: [],
-                        maxSimultaneous: 3,
+                        maxSimultaneous: 5,
                         type: Shape.Shape2,
-                        closeAmount: 5
+                        closeAmount: 15
                     },
                     {
                         location: new ex.Point(3150, 420),
                         rate: 2000,
                         rateTimer: 0,
                         baddies: [],
-                        maxSimultaneous: 3,
+                        maxSimultaneous: 5,
                         type: Shape.Shape1,
-                        closeAmount: 5
+                        closeAmount: 15
                     }]
             };
             portalsClosed.then(function () { _this.spawnPortals(); });
@@ -1159,27 +1159,27 @@ var BadGuyFactory = (function () {
                         rate: 2000,
                         rateTimer: 0,
                         baddies: [],
-                        maxSimultaneous: 3,
+                        maxSimultaneous: 5,
                         type: Shape.Shape1,
-                        closeAmount: 5
+                        closeAmount: 15
                     },
                     {
                         location: new ex.Point(3150, 420),
                         rate: 2000,
                         rateTimer: 0,
                         baddies: [],
-                        maxSimultaneous: 3,
+                        maxSimultaneous: 5,
                         type: Shape.Shape2,
-                        closeAmount: 5
+                        closeAmount: 15
                     },
                     {
                         location: new ex.Point(2525, 400),
                         rate: 2000,
                         rateTimer: 0,
                         baddies: [],
-                        maxSimultaneous: 3,
+                        maxSimultaneous: 5,
                         type: Shape.Shape3,
-                        closeAmount: 5
+                        closeAmount: 15
                     }]
             };
             portalsClosed.then(function () { _this.spawnPortals(); });
