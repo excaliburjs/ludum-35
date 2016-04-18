@@ -360,7 +360,7 @@ var Bullet = (function (_super) {
                     var badguy;
                     badguy = collision.other;
                     badguy.explode();
-                    badguy.delay(500).die();
+                    badguy.delay(150).die();
                 }
                 else {
                     collision.other.kill();
@@ -1202,13 +1202,16 @@ _squareBaddie.anchor.setTo(.3, .3);
 var _circleBaddie = GlobalSprites.CircleBadGuySheet.getAnimationForAll(game, 150);
 _circleBaddie.loop = true;
 _circleBaddie.anchor.setTo(.3, .3);
-var _triangleBaddieExplosion = GlobalSprites.TriangleBadGuyExplosionSheet.getAnimationForAll(game, 150);
+var _triangleBaddieExplosion = GlobalSprites.TriangleBadGuyExplosionSheet.getAnimationBetween(game, 2, 4, 150);
+//var _triangleBaddieExplosion = GlobalSprites.TriangleBadGuyExplosionSheet.getAnimationForAll(game, 150);
 _triangleBaddieExplosion.loop = false;
 _triangleBaddieExplosion.anchor.setTo(.3, .3);
-var _squareBaddieExplosion = GlobalSprites.SquareBadGuyExplosionSheet.getAnimationForAll(game, 150);
+var _squareBaddieExplosion = GlobalSprites.SquareBadGuyExplosionSheet.getAnimationBetween(game, 2, 4, 150);
+//var _squareBaddieExplosion = GlobalSprites.SquareBadGuyExplosionSheet.getAnimationForAll(game, 150);
 _squareBaddieExplosion.loop = false;
 _squareBaddieExplosion.anchor.setTo(.3, .3);
-var _circleBaddieExplosion = GlobalSprites.CircleBadGuyExplosionSheet.getAnimationForAll(game, 150);
+var _circleBaddieExplosion = GlobalSprites.CircleBadGuyExplosionSheet.getAnimationBetween(game, 2, 4, 150);
+//var _circleBaddieExplosion = GlobalSprites.CircleBadGuyExplosionSheet.getAnimationForAll(game, 150);
 _circleBaddieExplosion.loop = false;
 _circleBaddieExplosion.anchor.setTo(.3, .3);
 var GlobalAnimations = {
