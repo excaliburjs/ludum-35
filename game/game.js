@@ -227,18 +227,20 @@ var Ship = (function (_super) {
         return this;
     };
     Ship.prototype._pointerDown = function (click) {
-        //console.log(`Update: ${evt.delta}`);
-        GameState.state.ship._mouseDown = true;
-        var dx = click.x - GameState.state.ship.x;
-        var dy = click.y - GameState.state.ship.y;
-        if (!gameBounds.contains(new ex.Point(this.x, this.y))) {
-            return false;
+        if (!this.isKilled()) {
+            //console.log(`Update: ${evt.delta}`);
+            GameState.state.ship._mouseDown = true;
+            var dx = click.x - GameState.state.ship.x;
+            var dy = click.y - GameState.state.ship.y;
+            if (!gameBounds.contains(new ex.Point(this.x, this.y))) {
+                return false;
+            }
+            var clampDx = ex.Util.clamp(dx * Config.shipSpeedScale, Config.playerMinVelocity, Config.playerMaxVelocity);
+            var clampDy = ex.Util.clamp(dy * Config.shipSpeedScale, Config.playerMinVelocity, Config.playerMaxVelocity);
+            GameState.state.ship.dx = clampDx;
+            GameState.state.ship.dy = clampDy;
+            GameState.state.ship.rotation = (new ex.Vector(dx, dy)).toAngle();
         }
-        var clampDx = ex.Util.clamp(dx * Config.shipSpeedScale, Config.playerMinVelocity, Config.playerMaxVelocity);
-        var clampDy = ex.Util.clamp(dy * Config.shipSpeedScale, Config.playerMinVelocity, Config.playerMaxVelocity);
-        GameState.state.ship.dx = clampDx;
-        GameState.state.ship.dy = clampDy;
-        GameState.state.ship.rotation = (new ex.Vector(dx, dy)).toAngle();
     };
     Ship.prototype.preupdate = function (evt) {
         var oppVel = new ex.Vector(this.dx, this.dy).scale(-1).scale(Config.spaceFriction);
