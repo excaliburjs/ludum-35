@@ -349,7 +349,9 @@ var Bullet = (function (_super) {
             if (this.owner.constructor !== collision.other.constructor && this.constructor !== collision.other.constructor) {
                 if (collision.other instanceof Ship) {
                     var player = collision.other;
-                    if (player.state.shieldType === this.state.shape) {
+                    // check if portal type is in current wave
+                    if (player.state.shieldType === this.state.shape &&
+                        badGuyFactory.isPortalTypeOpen(player.state.shieldType)) {
                         switch (this.state.shape) {
                             case (Shape.Shape1):
                                 player.state.squarePool += 1;
@@ -965,6 +967,9 @@ var BadGuyFactory = (function () {
                 this._portalSpawnWaitTimer -= delta;
             }
         }
+    };
+    BadGuyFactory.prototype.isPortalTypeOpen = function (type) {
+        return _.any(this._openPortals, function (p) { return p.state.type === type; });
     };
     BadGuyFactory.prototype.spawnBaddie = function (portal) {
         var baddie = new Badguy(portal.location.x, portal.location.y, portal.type);

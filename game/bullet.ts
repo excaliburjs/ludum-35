@@ -36,7 +36,11 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable, Pausab
          if(this.owner.constructor !== collision.other.constructor && this.constructor !== collision.other.constructor) {
            if(collision.other instanceof Ship){
              var player = <Ship>collision.other;
-             if(player.state.shieldType === this.state.shape){
+             
+             // check if portal type is in current wave
+             if(player.state.shieldType === this.state.shape &&
+                 badGuyFactory.isPortalTypeOpen(player.state.shieldType)){
+                 
                  switch(this.state.shape){
                      case(Shape.Shape1):
                         player.state.squarePool += 1;                         
