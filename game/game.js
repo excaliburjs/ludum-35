@@ -343,6 +343,10 @@ var Bullet = (function (_super) {
                     var currKills = parseInt(GameState.getGameStat("KILLS").toString()) + 1;
                     GameState.setGameStat("KILLS", currKills);
                 }
+                else {
+                    GameState.state.ship.dx = 0;
+                    GameState.state.ship.dy = 0;
+                }
                 Resources.Explode.play();
                 collision.other.kill();
                 this.kill();
