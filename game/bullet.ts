@@ -25,7 +25,7 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable, Pausab
       this.reset();
       this.rx = Config.bullets.rotation;
 
-      this.on('exitviewport', () => this.kill());// GameState.state.bullets.despawn(this));
+      this.on('exitviewport', () => this.kill());
       this.on('collision', this._collision);
       this.on('postdraw', this.postdraw);      
    }
@@ -49,11 +49,15 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable, Pausab
                      case(Shape.Shape3):
                         player.state.trianglePool += 1;
                          break;
-                
                  }
                  
                  this.kill();
                  return;
+             }else{
+                 var currHealth = player.state.health -= 1;
+                 if(currHealth <= 0){
+                     collision.other.kill();
+                 }
              }  
            }
             if(!(collision.other instanceof Ship)){
@@ -68,8 +72,6 @@ class Bullet extends ex.Actor implements Stateful<BulletState>, Poolable, Pausab
                     badguy = <Badguy>collision.other;
                     badguy.explode();
                     badguy.delay(150).die();
-                }else{
-                 collision.other.kill();                   
                 }
                 Resources.Explode.play();
                 this.kill();
