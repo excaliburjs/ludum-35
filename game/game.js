@@ -140,7 +140,7 @@ var Config = {
     bullets: {
         speed: 500,
         damage: 1,
-        rotation: Math.PI
+        rotation: Math.PI / 3
     },
     badguy: {
         speed: 170,
