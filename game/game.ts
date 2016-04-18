@@ -37,7 +37,7 @@ var GlobalSprites = {
    playerBulletSheet: new ex.SpriteSheet(Resources.PlayerBullet, 6, 1, 32, 32),
 	TriangleBadGuySheet: new ex.SpriteSheet(Resources.TriangleBadguySheet, 2, 1, 32, 32),
 	CircleBadGuySheet: new ex.SpriteSheet(Resources.CircleBadguySheet, 2, 1, 32, 32),
-	SquareBadGuySheet: new ex.SpriteSheet(Resources.TriangleBadguySheet, 2, 1, 32, 32),
+	SquareBadGuySheet: new ex.SpriteSheet(Resources.SquareBadguySheet, 2, 1, 32, 32),
 }
 
 var _triangleBulletAnim = GlobalSprites.triangleBulletSheet.getAnimationForAll(game, 100);
