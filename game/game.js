@@ -326,7 +326,6 @@ var Bullet = (function (_super) {
     Bullet.prototype._collision = function (collision) {
         if (this.visible) {
             if (this.owner.constructor !== collision.other.constructor && this.constructor !== collision.other.constructor) {
-                Resources.Explode.play();
                 if (collision.other instanceof Ship) {
                     var player = collision.other;
                     if (player.state.shieldType === this.state.shape) {
@@ -338,16 +337,14 @@ var Bullet = (function (_super) {
                             badguy = collision.other;
                             badguy.explode();
                         }
-                        collision.other.kill();
                     }
-                }
-                else {
-                    collision.other.kill();
                 }
                 if (!(collision.other instanceof Ship)) {
                     var currKills = parseInt(GameState.getGameStat("KILLS").toString()) + 1;
                     GameState.setGameStat("KILLS", currKills);
                 }
+                Resources.Explode.play();
+                collision.other.kill();
                 this.kill();
             }
         }
