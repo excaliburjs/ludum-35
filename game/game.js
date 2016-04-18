@@ -529,7 +529,9 @@ var GameState = (function () {
     GameState._resetPlayer = function () {
         GameState.state.ship.dx = 0;
         GameState.state.ship.dy = 0;
-        //TODO
+        GameState.state.ship.x = Config.PlayerSpawn.x;
+        GameState.state.ship.y = Config.PlayerSpawn.y;
+        GameState.state.ship.rotation = 0;
     };
     GameState._resetStats = function () {
         this.setGameStat('KILLS', 0);
