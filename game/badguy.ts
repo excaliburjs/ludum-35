@@ -61,7 +61,8 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       } else {
         this.dy = Config.badguy.speed * -1;
       }
-    this.state.weapon.update(evt.delta);
+      
+      this.state.weapon.update(evt.delta);
     }
     _update(evt: ex.UpdateEvent){
       var hitborder = false;
