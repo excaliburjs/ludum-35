@@ -196,6 +196,9 @@ function pause() {
 	for (var a of game.currentScene.children) {
 		if ('paused' in a) {
 			(<any>a).paused = true;
+			if (a instanceof Badguy) {
+				console.log('pausing bad guy');
+			}
 		}
 	}
 }
