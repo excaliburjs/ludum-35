@@ -78,7 +78,9 @@ class GameState {
       private static _resetPlayer() {
             GameState.state.ship.dx = 0;
             GameState.state.ship.dy = 0;
-            //TODO
+            GameState.state.ship.x = Config.PlayerSpawn.x;
+            GameState.state.ship.y = Config.PlayerSpawn.y;
+            GameState.state.ship.rotation = 0;
       }
       
       private static _resetStats() {

@@ -110,9 +110,20 @@ class Badguy extends ex.Actor implements Stateful<BadguyState> {
       this.dy = newVel.y;
     }
     _collision(collision: ex.CollisionEvent){
-      //explode?
+      //explode? - do in bullet
       
     }
+   
+   public explode(){
+      if(this.badguytype == Shape.Shape1){
+        this.addDrawing('explosion', GlobalAnimations.SquareBaddieExplosion);
+      }else if (this.badguytype == Shape.Shape2){
+        this.addDrawing('explosion', GlobalAnimations.CircleBaddie);
+      }else if (this.badguytype === Shape.Shape3){
+        this.addDrawing('explosion', GlobalAnimations.TriangleBaddie);
+      }
+     
+   }
        
    reset(state?: BadguyState) {
       if (!state) {
