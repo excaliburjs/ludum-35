@@ -213,6 +213,12 @@ class BadGuyFactory implements Pausable {
    
    spawnPortals() {
       this.paused = true;
+      
+      game.currentScene.children.forEach((a)=>{
+            if(a instanceof Badguy || a instanceof Bullet){
+                  a.kill();
+            }
+      });
       this.helperOrc.x = GameState.state.ship.x;
       this.helperOrc.y = GameState.state.ship.y;
       cameraDestActor = this.helperOrc;
@@ -273,5 +279,10 @@ class BadGuyFactory implements Pausable {
    
    getWave(): Wave {
       return this._waveInfo;
+   }
+   
+   getOpenPortals(): PortalSpawn[] {
+      if (this._openPortals.length === 0) return [];
+      return _.pluck(this._openPortals, 'state');
    }
 }
