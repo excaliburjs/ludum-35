@@ -98,9 +98,9 @@ class PortalStat extends ex.UIActor {
     super.update(engine, delta);
     
     // find all portals of this type     
-    var wave = badGuyFactory.getWave();
+    var portals = badGuyFactory.getOpenPortals();
     
-    var totalCloseNeeded = _.chain(wave.portals).filter(p => p.type === this.type).sum(p => p.closeAmount);
+    var totalCloseNeeded = _.chain(portals).filter(p => p.type === this.type).sum(p => p.closeAmount);
     var currentAmount = 0;
     
     if (totalCloseNeeded <= 0) {
