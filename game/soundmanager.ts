@@ -3,7 +3,7 @@ class SoundManager {
    public static start() {
       // set all sound effect volumes
       if (Options.sound) {
-         SoundManager.setSoundEffectLevels(1);
+         SoundManager.setSoundEffectLevels(0.1);
       } else {
          SoundManager.setSoundEffectLevels(0);
       }

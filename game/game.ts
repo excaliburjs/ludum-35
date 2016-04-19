@@ -246,7 +246,9 @@ game.start(loader).then(() => {
 	game.add(circleStat);
 	game.add(triangleStat);
 	
+	SoundManager.start();
 	Resources.BkgrdTrack.setLoop(true);
 	Resources.BkgrdTrack.play();
+	
 	
 });
