@@ -1427,7 +1427,7 @@ var SoundManager = (function () {
     SoundManager.start = function () {
         // set all sound effect volumes
         if (Options.sound) {
-            SoundManager.setSoundEffectLevels(1);
+            SoundManager.setSoundEffectLevels(0.1);
         }
         else {
             SoundManager.setSoundEffectLevels(0);
@@ -1745,6 +1745,7 @@ game.start(loader).then(function () {
     game.add(squareStat);
     game.add(circleStat);
     game.add(triangleStat);
+    SoundManager.start();
     Resources.BkgrdTrack.setLoop(true);
     Resources.BkgrdTrack.play();
 });
