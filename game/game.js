@@ -1193,6 +1193,11 @@ var BadGuyFactory = (function () {
     BadGuyFactory.prototype.spawnPortals = function () {
         var _this = this;
         this.paused = true;
+        game.currentScene.children.forEach(function (a) {
+            if (a instanceof Badguy || a instanceof Bullet) {
+                a.kill();
+            }
+        });
         this.helperOrc.x = GameState.state.ship.x;
         this.helperOrc.y = GameState.state.ship.y;
         cameraDestActor = this.helperOrc;
