@@ -95,18 +95,18 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable, Pausable {
       
       engine.input.gamepads.on('connect', (ce: ex.GamepadConnectEvent) => {
 		this._gamePad = ce.gamepad;
-		console.log("Gamepad connected", ce);
+		//console.log("Gamepad connected", ce);
 		ce.gamepad.on('button', (be: ex.GamepadButtonEvent) => {
 			if(be.button === ex.Input.Buttons.Face1){
-				console.log("face1");
+				//console.log("face1");
 		      GameState.state.ship._switchShield(Shape.Shape1);
 			}
 			if(be.button === ex.Input.Buttons.Face3){
-			   console.log("face3");
+			   //console.log("face3");
 				GameState.state.ship._switchShield(Shape.Shape2);
 			}
 			if(be.button === ex.Input.Buttons.Face4){
-			   console.log("face4");
+			   //console.log("face4");
 				GameState.state.ship._switchShield(Shape.Shape3);
 			}
 		});
