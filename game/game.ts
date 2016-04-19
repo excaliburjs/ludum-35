@@ -34,6 +34,14 @@ game.input.keyboard.on('down', (evt: ex.Input.KeyEvent) => {
 game.currentScene.camera.x = Config.PlayerSpawn.x + Config.CameraOffset.x;
 game.currentScene.camera.y = Config.PlayerSpawn.y + Config.CameraOffset.y;
 
+// ensures that only gamepads with at least 4 axis and 8 buttons are reported for events
+game.input.gamepads.enabled = true;
+game.input.gamepads.setMinimumGamepadConfiguration({
+   axis: 4,
+   buttons: 8
+});
+
+
 // global sprites 
 
 var GlobalSprites = {
