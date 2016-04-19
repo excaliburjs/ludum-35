@@ -295,6 +295,24 @@ var Ship = (function (_super) {
         engine.input.pointers.primary.on('up', function (evt) {
             _this._mouseDown = false;
         });
+        engine.input.gamepads.on('connect', function (ce) {
+            _this._gamePad = ce.gamepad;
+            //console.log("Gamepad connected", ce);
+            ce.gamepad.on('button', function (be) {
+                if (be.button === ex.Input.Buttons.Face1) {
+                    //console.log("face1");
+                    GameState.state.ship._switchShield(Shape.Shape1);
+                }
+                if (be.button === ex.Input.Buttons.Face3) {
+                    //console.log("face3");
+                    GameState.state.ship._switchShield(Shape.Shape2);
+                }
+                if (be.button === ex.Input.Buttons.Face4) {
+                    //console.log("face4");
+                    GameState.state.ship._switchShield(Shape.Shape3);
+                }
+            });
+        });
     };
     Ship.prototype.reset = function (state) {
         if (!state) {
@@ -316,7 +334,7 @@ var Ship = (function (_super) {
     Ship.prototype._pointerDown = function (click) {
         if (this.paused)
             return false;
-        if (!this.isKilled()) {
+        if (!this.isKilled() && !this._gamePad) {
             //console.log(`Update: ${evt.delta}`);
             GameState.state.ship._mouseDown = true;
             var dx = click.x - GameState.state.ship.x;
@@ -366,6 +384,17 @@ var Ship = (function (_super) {
             this.dy = 0;
         }
         this._currentTime += delta;
+        if (this._gamePad) {
+            var leftX = this._gamePad.getAxes(ex.Input.Axes.LeftStickX);
+            var leftY = this._gamePad.getAxes(ex.Input.Axes.LeftStickY);
+            if (Math.abs(leftX) > 0.05 && Math.abs(leftY) > .05) {
+                var clampDx = ex.Util.clamp(leftX * Config.playerMaxVelocity, Config.playerMinVelocity, Config.playerMaxVelocity);
+                var clampDy = ex.Util.clamp(leftY * Config.playerMaxVelocity, Config.playerMinVelocity, Config.playerMaxVelocity);
+                GameState.state.ship.dx = clampDx;
+                GameState.state.ship.dy = clampDy;
+                GameState.state.ship.rotation = (new ex.Vector(leftX, leftY)).toAngle();
+            }
+        }
         if (engine.input.keyboard.wasPressed(ex.Input.Keys.A)) {
             this._switchShield(Shape.Shape1);
         }
@@ -1538,6 +1567,12 @@ game.input.keyboard.on('down', function (evt) {
 });
 game.currentScene.camera.x = Config.PlayerSpawn.x + Config.CameraOffset.x;
 game.currentScene.camera.y = Config.PlayerSpawn.y + Config.CameraOffset.y;
+// ensures that only gamepads with at least 4 axis and 8 buttons are reported for events
+game.input.gamepads.enabled = true;
+game.input.gamepads.setMinimumGamepadConfiguration({
+    axis: 4,
+    buttons: 8
+});
 // global sprites 
 var GlobalSprites = {
     triangleBulletSheet: new ex.SpriteSheet(Resources.TriangleBullet, 3, 1, 32, 32),
