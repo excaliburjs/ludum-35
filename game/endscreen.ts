@@ -18,7 +18,7 @@ class EndScreen {
    
    public win(){
       this._gameOver();
-      this._score.innerText = `Time: ${this._minutes.toFixed(0)}m ${this._seconds.toFixed(0)}s`;
+      this._score.innerHTML = `Time: ${this._minutes.toFixed(0)}m ${this._seconds.toFixed(0)}s`;
       this._show();
       removeClass(this._el, "lose");
       addClass(this._el, "win");
@@ -26,7 +26,7 @@ class EndScreen {
    
    public lose(){
       this._gameOver();
-      this._score.innerText = `Time: ${this._minutes.toFixed(0)}m ${this._seconds.toFixed(0)}s`;
+      this._score.innerHTML = `Time: ${this._minutes.toFixed(0)}m ${this._seconds.toFixed(0)}s`;
       this._show();
       removeClass(this._el, "win");
       addClass(this._el, "lose");
