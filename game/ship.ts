@@ -29,6 +29,8 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable, Pausable {
    private _mouseDown: boolean = false;
    private _currentTime: number = 0;
    
+   private _gamePad: ex.Input.Gamepad;
+   
    public poolId: number;
    public state: ShipState;   
    public paused: boolean = false;
@@ -90,6 +92,25 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable, Pausable {
       engine.input.pointers.primary.on('up', (evt: ex.Input.PointerEvent) => {
          this._mouseDown = false;
       });
+      
+      engine.input.gamepads.on('connect', (ce: ex.GamepadConnectEvent) => {
+		this._gamePad = ce.gamepad;
+		console.log("Gamepad connected", ce);
+		ce.gamepad.on('button', (be: ex.GamepadButtonEvent) => {
+			if(be.button === ex.Input.Buttons.Face1){
+				console.log("face1");
+		      GameState.state.ship._switchShield(Shape.Shape1);
+			}
+			if(be.button === ex.Input.Buttons.Face3){
+			   console.log("face3");
+				GameState.state.ship._switchShield(Shape.Shape2);
+			}
+			if(be.button === ex.Input.Buttons.Face4){
+			   console.log("face4");
+				GameState.state.ship._switchShield(Shape.Shape3);
+			}
+		});
+	  });
    }
    
    reset(state?: ShipState) { //TODO calling this on an existing ship breaks the mouse input
@@ -111,7 +132,7 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable, Pausable {
    private _pointerDown(click: ex.Input.PointerEvent){
        if (this.paused) return false;
        
-       if (!this.isKilled()) {
+       if (!this.isKilled() && !this._gamePad) {
             //console.log(`Update: ${evt.delta}`);
             GameState.state.ship._mouseDown = true;
             var dx = click.x - GameState.state.ship.x;
@@ -171,6 +192,23 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable, Pausable {
            this.dy = 0;
        }
        this._currentTime += delta;
+       
+       
+       if(this._gamePad){
+           var leftX = this._gamePad.getAxes(ex.Input.Axes.LeftStickX);
+           var leftY = this._gamePad.getAxes(ex.Input.Axes.LeftStickY);
+           if(Math.abs(leftX) > 0.05 && Math.abs(leftY) > .05){
+           
+                var clampDx = ex.Util.clamp(leftX * Config.playerMaxVelocity, Config.playerMinVelocity, Config.playerMaxVelocity);
+                var clampDy = ex.Util.clamp(leftY * Config.playerMaxVelocity, Config.playerMinVelocity, Config.playerMaxVelocity);
+
+                GameState.state.ship.dx = clampDx;
+                GameState.state.ship.dy = clampDy;
+
+              GameState.state.ship.rotation = (new ex.Vector(leftX, leftY)).toAngle();
+           }
+       }
+       
        if(engine.input.keyboard.wasPressed(ex.Input.Keys.A)){
            this._switchShield(Shape.Shape1);
        } else if (engine.input.keyboard.wasPressed(ex.Input.Keys.S)){
@@ -181,7 +219,7 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable, Pausable {
        
    }
    
-   private _switchShield(shape: Shape){
+   public _switchShield(shape: Shape){
        
        if(this._currentTime > Config.ShieldCoolDownTime){
           this._currentTime = 0;
