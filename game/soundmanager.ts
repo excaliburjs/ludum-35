@@ -20,6 +20,7 @@ class SoundManager {
          if (resource instanceof ex.Sound) {
             (<ex.Sound>resource).setVolume(volume);
             if((<ex.Sound>resource) === Resources.BkgrdTrack){
+               (<ex.Sound>resource).setVolume(1);
                (<ex.Sound>resource).play();
             }
          }
