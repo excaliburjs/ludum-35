@@ -256,7 +256,7 @@ game.start(loader).then(() => {
 	
 	SoundManager.start();
 	Resources.BkgrdTrack.setLoop(true);
-	Resources.BkgrdTrack.play();
+	// Resources.BkgrdTrack.play();
 	
 	
 });

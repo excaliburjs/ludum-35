@@ -1443,6 +1443,7 @@ var SoundManager = (function () {
             if (resource instanceof ex.Sound) {
                 resource.setVolume(volume);
                 if (resource === Resources.BkgrdTrack) {
+                    resource.setVolume(1);
                     resource.play();
                 }
             }
@@ -1747,6 +1748,6 @@ game.start(loader).then(function () {
     game.add(triangleStat);
     SoundManager.start();
     Resources.BkgrdTrack.setLoop(true);
-    Resources.BkgrdTrack.play();
+    // Resources.BkgrdTrack.play();
 });
 //# sourceMappingURL=game.js.map
