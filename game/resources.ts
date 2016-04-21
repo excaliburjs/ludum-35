@@ -20,7 +20,7 @@ var Resources = {
    DiabloFontSheet: new ex.Texture("./fonts/DiabloFont.png"),
    Explode: new ex.Sound('./snd/explode1.wav', './snd/explode1.mp3'),
    Hit: new ex.Sound('./snd/explode2.wav', './snd/explode2.mp3'),
-   BkgrdTrack: new ex.Sound('./snd/backingTrack.wav', './snd/backingTrack.mp3'),
+   BkgrdTrack: new ex.Sound('./snd/backingTrack.mp3', './snd/backingTrack.wav'),
    On: new ex.Sound('./snd/on.wav', './snd/on.mp3'),
    No: new ex.Sound('./snd/no.wav', './snd/no.mp3'),
    Nope: new ex.Sound('./snd/nope.wav', './snd/nope.mp3'),
