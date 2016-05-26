@@ -1633,7 +1633,7 @@ var GlobalAnimations = {
     CircleBaddieExplosion: _circleBaddieExplosion
 };
 // create loader
-var loader = new ex.PauseAfterLoader('tap-to-play');
+var loader = new ex.Loader();
 for (var res in Resources) {
     loader.addResource(Resources[res]);
 }
