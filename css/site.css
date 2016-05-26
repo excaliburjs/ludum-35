@@ -13,8 +13,30 @@ footer { color: #666; }
 
 #game-wrapper {
   position: relative;
+  width: 960px;
+  height: 640px;
+  margin: 0 auto;
 }
 
+#tap-to-play {
+  display: none;
+  font-size: 24px;
+  font-family: sans-serif;
+  text-align: center;
+  border: 3px solid white;
+  position: absolute;
+  color: white;
+  width: 200px;
+  height: 50px;
+  line-height: 50px;
+  text-decoration: none;
+  left: 380px; /* 960px / 2 - 100px */
+  top: 80%;
+}
+#tap-to-play:focus {
+  background: #333;
+}
+        
 #gameover {
   position: absolute;
   top: 20%;
