@@ -132,7 +132,7 @@ class Ship extends ex.Actor implements Stateful<ShipState>, Poolable, Pausable {
    private _pointerDown(click: ex.Input.PointerEvent){
        if (this.paused) return false;
        
-       if (!this.isKilled() && !this._gamePad) {
+       if (!this.isKilled()) {
             //console.log(`Update: ${evt.delta}`);
             GameState.state.ship._mouseDown = true;
             var dx = click.x - GameState.state.ship.x;
