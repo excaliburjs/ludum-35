@@ -334,7 +334,7 @@ var Ship = (function (_super) {
     Ship.prototype._pointerDown = function (click) {
         if (this.paused)
             return false;
-        if (!this.isKilled() && !this._gamePad) {
+        if (!this.isKilled()) {
             //console.log(`Update: ${evt.delta}`);
             GameState.state.ship._mouseDown = true;
             var dx = click.x - GameState.state.ship.x;
